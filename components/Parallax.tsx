@@ -21,7 +21,7 @@ const Parallax: React.FC<{
       className="relative w-full h-screen bg-cover bg-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        transform: `translateY(${offsetY * 0.25}px)`,
+        transform: `translateY(${offsetY * 0.025}px)`,
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center">
