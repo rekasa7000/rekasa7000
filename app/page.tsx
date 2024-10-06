@@ -1,73 +1,46 @@
-import Parallax from "@/components/Parallax";
+"use client";
+import Navigation from "@/components/Navigation";
+import SocialMedia from "@/components/SocialMedia";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("#about");
+
+  useEffect(() => {
+    setActiveSection("#about");
+  }, []);
+
+  const handleSetActive = (section: string) => {
+    setActiveSection(section);
+  };
   return (
-    <div>
-      <Parallax backgroundImage="/hero.svg">
-        <h1 className="text-5xl text-white font-bold">
-          Welcome to My Portfolio
+    <div className="flex justify-center items-center h-dvh w-full container max-w-6xl m-auto">
+      <main className="pt-24 lg:w-1/2 lg:py-24" id="content">
+        <section
+          id="about"
+          className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+        >
+          <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-slate-900/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+            <h2 className="text-sm font-bold uppercase tracking-widest  lg:sr-only">
+              About me
+            </h2>
+          </div>
+        </section>
+      </main>
+      <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-end lg:py-24 text-end">
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <a href="/">Regee Casaña</a>
         </h1>
-      </Parallax>
-      <section className="py-20  text-center">
-        <h2 className="text-4xl mb-4 font-semibold">About Me</h2>
-        <p className="max-w-2xl mx-auto text-lg">
-          I am currently the lead full-stack developer of{" "}
-          <a href="https://kloudtechsea.com" target="_blank">
-            Kloudtech
-          </a>
+        <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-700 sm:text-xl">
+          Full Stack & Software Engineer
+        </h2>
+        <p className="mt-4 leading-normal">
+          I build websites and software to the best of my abilities and
+          knowledge.
         </p>
-        <p className="max-w-2xl mx-auto text-lg">
-          I'm a passionate web developer with a focus on creating responsive,
-          high-quality websites using modern technologies like TypeScript,
-          React, and Next.js.
-        </p>
-      </section>
-
-      <Parallax backgroundImage="/projects.svg">
-        <h2 className="text-4xl text-white font-semibold">My Projects</h2>
-      </Parallax>
-      <section className="py-20 bg-gray-100 text-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-10">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-semibold">CultureConnect</h3>
-            <p className="mt-4">Description of the project.</p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-semibold">Databox</h3>
-            <p className="mt-4">Description of the project.</p>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-semibold">Knowt</h3>
-            <p className="mt-4">Description of the project.</p>
-          </div>
-        </div>
-      </section>
-
-      <Parallax backgroundImage="/contact.svg">
-        <h2 className="text-4xl text-white font-semibold">Contact Me</h2>
-      </Parallax>
-      <section className="py-20 bg-gray-100 text-center">
-        <h2 className="text-3xl font-semibold">Get In Touch</h2>
-        <form className="max-w-lg mx-auto mt-6">
-          <input
-            type="text"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
-            placeholder="Your Name"
-          />
-          <input
-            type="email"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
-            placeholder="Your Email"
-          />
-          <textarea
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
-            placeholder="Your Message"
-          />
-          <button className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold">
-            Send Message
-          </button>
-        </form>
-      </section>
+        <Navigation />
+        <SocialMedia />
+      </header>
     </div>
   );
 }
