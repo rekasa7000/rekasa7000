@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import SocialMedia from "@/components/SocialMedia";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   return (
@@ -87,7 +88,7 @@ export default function Home() {
             <Card>
               <CardContent className="grid grid-cols-6 gap-2 py-3">
                 <div className="w-full col-span-2 text-sm">2024 — Present</div>
-                <div className="w-full col-span-4">
+                <div className="w-full col-span-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">
                       Full Stack Developer • Kloudtech
@@ -107,15 +108,27 @@ export default function Home() {
                       ></path>
                     </svg>
                   </div>
+                  <div className="flex flex-col">
+                    <p>
+                      Built an web application of the company, as well as the
+                      applications for the company's clients. Responsible for
+                      maintaining the web server and database. Deployed the
+                      whole app in a virtual private server.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>Typescript</Badge>
+                    <Badge>React</Badge>
+                    <Badge>Express</Badge>
+                    <Badge>TailwindCss</Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="grid grid-cols-6 gap-2 py-3">
-                <div className="w-full col-span-2 text-sm text-center">
-                  2023 — 2024
-                </div>
-                <div className="w-full col-span-4">
+              <CardContent className="grid grid-cols-6 gap-1 py-3">
+                <div className="w-full col-span-2 text-sm">2023 — 2024</div>
+                <div className="w-full col-span-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">
                       Backend Developer Intern • Kloudtech
@@ -134,6 +147,20 @@ export default function Home() {
                         clip-rule="evenodd"
                       ></path>
                     </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <p>
+                      Created and assisted with the design, development, and
+                      support of the company's existing web application
+                      Assisted. in improving the cybersecurity while also
+                      maintaining and optimizing the company's website.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>Php</Badge>
+                    <Badge>Javascript</Badge>
+                    <Badge>C++</Badge>
+                    <Badge>MySql</Badge>
                   </div>
                 </div>
               </CardContent>
