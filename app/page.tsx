@@ -3,8 +3,11 @@ import Navigation from "@/components/Navigation";
 import SocialMedia from "@/components/SocialMedia";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 font-sans md:px-12 md:py-20 lg:px-24 lg:py-0">
       <div className="lg:flex lg:flex-row-reverse lg:justify-between lg:gap-4 container">
@@ -25,7 +28,7 @@ export default function Home() {
 
           <SocialMedia />
         </header>
-        <main className="pt-24 lg:w-1/2 lg:py-24">
+        <main className="pt-24 lg:w-2/3 lg:py-24">
           <section
             id="about"
             className="about-section  scroll-mt-16 md:mb-24 lg:mb-12 lg:scroll-mt-24 lg:text-pretty text-wrap font-medium text-lg"
@@ -85,7 +88,10 @@ export default function Home() {
             id="experience"
             className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24 flex flex-col gap-3"
           >
-            <Card>
+            <Card
+              className="hover:bg-muted cursor-pointer"
+              onClick={() => window.open("https://kloudtechsea.com", "_blank")}
+            >
               <CardContent className="grid grid-cols-6 gap-2 py-3">
                 <div className="w-full col-span-2 text-sm">2024 — Present</div>
                 <div className="w-full col-span-4 flex flex-col gap-2">
@@ -125,7 +131,10 @@ export default function Home() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className="hover:bg-muted cursor-pointer"
+              onClick={() => window.open("https://kloudtechsea.com", "_blank")}
+            >
               <CardContent className="grid grid-cols-6 gap-1 py-3">
                 <div className="w-full col-span-2 text-sm">2023 — 2024</div>
                 <div className="w-full col-span-4 flex flex-col gap-2">
@@ -168,8 +177,149 @@ export default function Home() {
           </section>
           <section
             id="projects"
-            className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
-          ></section>
+            className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24 flex flex-col gap-3"
+          >
+            <Card
+              className="hover:bg-muted cursor-pointer border-none shadow-none"
+              onClick={() =>
+                window.open(
+                  "https://github.com/dadeyyy/CultureConnectResearch.git",
+                  "_blank"
+                )
+              }
+            >
+              <CardContent className="grid grid-cols-6 gap-2 py-3">
+                <div className="w-full col-span-2 text-sm ">
+                  <img src="/cultureconnect.svg" className="w-full" />
+                </div>
+                <div className="w-full col-span-4 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">CultureConnect</span>
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <p>
+                      Built a social media platform that addresses issues like
+                      fostering connections between diverse cultures, tailored
+                      content delivery, spam prevention, hate speech censorship,
+                      and promoting real-time cultural events.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>Typescript</Badge>
+                    <Badge>React</Badge>
+                    <Badge>Express</Badge>
+                    <Badge>Node</Badge>
+                    <Badge>PostgreSQL</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card
+              className="hover:bg-muted cursor-pointer border-none shadow-none"
+              onClick={() =>
+                window.open(
+                  "https://github.com/rekasa7000/knowtproject",
+                  "_blank"
+                )
+              }
+            >
+              <CardContent className="grid grid-cols-6 gap-2 py-3">
+                <div className="w-full col-span-2  text-sm">
+                  <img src="/knowt.png" className="w-full" />
+                </div>
+                <div className="w-full col-span-4 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">Knowt</span>
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <p>
+                      An article summarization tool leveraging machine learning
+                      and sentiment analysis to automate article summarization
+                      from URLs. it provides a mobile-responsive, user-friendly
+                      interface for efficient content processing.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>Python</Badge>
+                    <Badge>Flask</Badge>
+                    <Badge>Firebase</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card
+              className="hover:bg-muted cursor-pointer border-none shadow-none"
+              onClick={() =>
+                window.open("https://github.com/rekasa7000/databox", "_blank")
+              }
+            >
+              <CardContent className="grid grid-cols-6 gap-2 py-3">
+                <div className="w-full col-span-2  text-sm">
+                  <img src="/databox.png" className="w-full" />
+                </div>
+                <div className="w-full col-span-4 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">Databox</span>
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <p>
+                      A digital scheduler and progress tracker aimed at
+                      improving time management and organization for students
+                      and teachers in online learning.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>C#</Badge>
+                    <Badge>.NET</Badge>
+                    <Badge>XAMPP</Badge>
+                    <Badge>MySql</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
           <section
             id="education"
             className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
