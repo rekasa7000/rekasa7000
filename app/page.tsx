@@ -244,9 +244,9 @@ export default function Home() {
                     <div className="flex flex-col">
                       <p>
                         Built an web application of the company, as well as the
-                        applications for the company's clients. Responsible for
-                        maintaining the web server and database. Deployed the
-                        whole app in a virtual private server.
+                        applications for the company&apos;s clients. Responsible
+                        for maintaining the web server and database. Deployed
+                        the whole app in a virtual private server.
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -289,9 +289,9 @@ export default function Home() {
                     <div className="flex flex-col">
                       <p>
                         Created and assisted with the design, development, and
-                        support of the company's existing web application
+                        support of the company&apos;s existing web application
                         Assisted. in improving the cybersecurity while also
-                        maintaining and optimizing the company's website.
+                        maintaining and optimizing the company&apos;s website.
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
