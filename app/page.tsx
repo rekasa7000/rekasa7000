@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const router = useRouter();
-
   return (
     <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 font-sans md:px-12 md:py-20 lg:px-24 lg:py-0">
       <div className="lg:flex lg:flex-row-reverse lg:justify-between lg:gap-4 container">
@@ -25,14 +23,22 @@ export default function Home() {
             </p>
             <Navigation />
           </div>
-
-          <SocialMedia />
+          <div className="flex flex-col gap-2">
+            <SocialMedia />
+            <span className="text-xs text-gray-500">
+              Inspired by{" "}
+              <a
+                href="https://brittanychiang.com/"
+                target="_blank"
+                className="font-bold"
+              >
+                Britanny Chiang
+              </a>
+            </span>
+          </div>
         </header>
-        <main className="pt-24 lg:w-2/3 lg:py-24">
-          <section
-            id="about"
-            className="about-section  scroll-mt-16 md:mb-24 lg:mb-12 lg:scroll-mt-24 lg:text-pretty text-wrap font-medium text-lg"
-          >
+        <main className="pt-24 lg:w-2/3 lg:py-24 scroll-smooth">
+          <section id="about" className="about-section py-10">
             <p>
               Hello there! I’m a passionate software engineer who believes in
               freedom, growth, and doing everything with purpose. I currently
@@ -86,14 +92,14 @@ export default function Home() {
           </section>
           <section
             id="experience"
-            className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24 flex flex-col gap-3"
+            className="about-section flex flex-col gap-5 py-10"
           >
             <Card
               className="hover:bg-muted cursor-pointer"
               onClick={() => window.open("https://kloudtechsea.com", "_blank")}
             >
               <CardContent className="grid grid-cols-6 gap-2 py-3">
-                <div className="w-full col-span-2 text-sm">2024 — Present</div>
+                <div className="w-full col-span-2 text-lg">2024 — Present</div>
                 <div className="w-full col-span-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">
@@ -136,7 +142,7 @@ export default function Home() {
               onClick={() => window.open("https://kloudtechsea.com", "_blank")}
             >
               <CardContent className="grid grid-cols-6 gap-1 py-3">
-                <div className="w-full col-span-2 text-sm">2023 — 2024</div>
+                <div className="w-full col-span-2 text-lg">2023 — 2024</div>
                 <div className="w-full col-span-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">
@@ -177,7 +183,7 @@ export default function Home() {
           </section>
           <section
             id="projects"
-            className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24 flex flex-col gap-3"
+            className="about-section flex flex-col gap-5 py-10"
           >
             <Card
               className="hover:bg-muted cursor-pointer border-none shadow-none"
@@ -322,8 +328,42 @@ export default function Home() {
           </section>
           <section
             id="education"
-            className="about-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
-          ></section>
+            className="about-section flex flex-col gap-5 py-10"
+          >
+            <ol className="relative border-s border-gray-200 dark:border-gray-700">
+              <li className="mb-10 ms-4">
+                <div className="absolute w-3 h-3 bg-gray-500 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                  September 2024
+                </time>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Bataan Peninsula State University
+                </h3>
+                <div className="flex flex-col">
+                  <span className="text-base font-normal text-gray-500 dark:text-gray-400 mr-2">
+                    Bachelor of Science in Computer Science, Major in Software
+                    Development
+                  </span>
+                  <Badge className="m-0 max-w-24">Cum Laude</Badge>
+                </div>
+              </li>
+              <li className="mb-10 ms-4">
+                <div className="absolute w-3 h-3 bg-gray-500 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                  March 2020
+                </time>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Microcity College of Business and Technology
+                </h3>
+                <div className="flex flex-col">
+                  <span className="text-base font-normal text-gray-500 dark:text-gray-400 mr-2">
+                    Science, Technology, Engineering, and Mathematics
+                  </span>
+                  <Badge className="m-0 max-w-24">With Honors</Badge>
+                </div>
+              </li>
+            </ol>
+          </section>
         </main>
       </div>
     </div>
