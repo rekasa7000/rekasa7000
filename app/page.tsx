@@ -81,10 +81,10 @@ export default function Home() {
                       About
                     </span>
                     <div
-                      className={`aspect-square h-1 w-24 bg-blue-500 transform transition-all duration-300 ${
+                      className={`aspect-square h-1 w-0 bg-blue-500 transform transition-all duration-300 ${
                         activeSection === "#about"
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-0 w-0"
+                          ? "opacity-100 scale-100 w-24"
+                          : "opacity-0 scale-0"
                       }`}
                     ></div>
                   </a>
@@ -102,10 +102,10 @@ export default function Home() {
                       Experience & Education
                     </span>
                     <div
-                      className={`aspect-square h-1 w-24 bg-blue-500 transform transition-all duration-300 ${
+                      className={`aspect-square h-1 w-0 bg-blue-500 transform transition-all duration-300 ${
                         activeSection === "#experience"
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-0 w-0"
+                          ? "opacity-100 scale-100 w-24"
+                          : "opacity-0 scale-0"
                       }`}
                     ></div>
                   </a>
@@ -122,10 +122,10 @@ export default function Home() {
                       Projects
                     </span>
                     <div
-                      className={`aspect-square h-1 w-24 bg-blue-500 transform transition-all duration-300 ${
+                      className={`aspect-square h-1 w-0 bg-blue-500 transform transition-all duration-300 ${
                         activeSection === "#projects"
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-0 w-0"
+                          ? "opacity-100 scale-100 w-24"
+                          : "opacity-0 scale-0"
                       }`}
                     ></div>
                   </a>
