@@ -1,26 +1,22 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
+// app/layout.tsx
 import "./globals.css";
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
+import type { Metadata } from "next";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Regee Casaña",
-  description: "Portfolio of Regee Casaña",
+  title: "Regee D. Casaña - Portfolio",
+  description: "Software Engineer",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased leading-relaxed`}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

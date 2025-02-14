@@ -1,69 +1,49 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-  darkMode: ["class"],
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    colors: {
-      ceremonial: "#44624A",
-      classic: "#8BA888",
-      culinary: "#C0CFB2",
-      kitchen: "#F1EBE1",
-    },
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        // Light mode
+        light: {
+          background: "#ffffff",
+          text: "#1a202c",
+          primary: "#4a90e2",
+          secondary: "#f0f4f8",
+          accent: "#3182ce",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        // Dark mode
+        dark: {
+          background: "#1a202c",
+          text: "#f7fafc",
+          primary: "#63b3ed",
+          secondary: "#2d3748",
+          accent: "#4299e1",
         },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+        // Matcha mode
+        matcha: {
+          background: "#44624A",
+          text: "#1e3a29",
+          primary: "#44624A",
+          secondary: "#e8f3e1",
+          accent: "#87af77",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
-export default config;
+// ceremonial: "#44624A",
+// classic: "#8BA888",
+// culinary: "#C0CFB2",
+// kitchen: "#F1EBE1",
