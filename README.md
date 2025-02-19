@@ -2,7 +2,7 @@
 
 # About Me:
 
-I am currently the lead full-stack developer of Kloudtech.
+I am currently the lead software engineer of Kloudtech.
 
 ## Socials:
 
