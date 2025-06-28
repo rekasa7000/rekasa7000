@@ -1,8 +1,8 @@
 # Regee Casana
 
-**Full-Stack Developer | AI Enthusiast | Open Source Contributor**
+**Full-Stack Developer | Software Engineer**
 
-Currently building **HananAI** and exploring the intersection of technology and innovation. I specialize in modern web development with React, Node.js, and TypeScript, while expanding my expertise in systems programming with Golang and Rust.
+A passionate software engineer and developer. A computer science graduate with distinction, software builder, galaxy thinker, and matcha drinker., 
 
 ## Tech Stack
 
