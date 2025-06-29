@@ -17,7 +17,7 @@ export default defineNuxtConfig({
             "Full Stack Developer | Software Engineerspecializing in modern web technologies, AI applications, and desktop development.",
         },
       ],
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [],
     },
   },
   typescript: {
@@ -27,5 +27,9 @@ export default defineNuxtConfig({
     theme: {
       colors: ["primary", "secondary", "tertiary", "info", "success", "warning", "error"],
     },
+  },
+  colorMode: {
+    preference: 'light',
+    fallback: 'light'
   },
 });

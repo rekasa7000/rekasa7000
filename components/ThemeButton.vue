@@ -5,26 +5,45 @@ const colorMode = useColorMode();
 
 const items = ref<DropdownMenuItem[]>([
   {
-    label: "Dark",
-    icon: "i-lucide-moon",
-    value: "dark",
-  },
-  {
     label: "Light",
     icon: "i-lucide-sun",
     value: "light",
+    onSelect() {
+      handleSelect("light");
+    },
+  },
+  {
+    label: "Dark",
+    icon: "i-lucide-moon",
+    value: "dark",
+    onSelect() {
+      handleSelect("dark");
+    },
   },
   {
     label: "Matcha",
     icon: "i-lucide-leaf",
     value: "matcha",
+    onSelect() {
+      handleSelect("matcha");
+    },
+  },
+  {
+    label: "Space",
+    icon: "i-lucide-sparkles",
+    value: "space",
+    onSelect() {
+      handleSelect("space");
+    },
   },
 ]);
 
-// Handle dropdown selection - this gets the selected item
-const handleSelect = (item: any) => {
-  console.log("Selected item:", item); // You can see the full item object here
-  colorMode.preference = item.value;
+const currentTheme = computed((): DropdownMenuItem => {
+  return items.value.find((item) => item.value === colorMode.value) || items.value[0];
+});
+
+const handleSelect = (item: string) => {
+  colorMode.preference = item;
 };
 </script>
 
@@ -43,7 +62,7 @@ const handleSelect = (item: any) => {
       @select="handleSelect"
     >
       <UButton :icon="currentTheme.icon" color="neutral" variant="outline" class="capitalize">
-        {{ colorMode.value }}
+        {{ currentTheme.value }}
       </UButton>
     </UDropdownMenu>
   </ClientOnly>
