@@ -11,8 +11,8 @@ useFavicon();
 
 const timelineItems = ref<TimelineItem[]>([
   {
-    title: "Science and Technology, Engineering and Mathematics (STEM)",
-    description: "Graduated with High Honors - Microcity College of Business and Technology. ",
+    title: "Science, Technology, Engineering and Mathematics (STEM)",
+    description: "Graduated with Honor - Microcity College of Business and Technology. ",
     icon: "i-lucide-graduation-cap",
     date: "2018 - 2020",
   },
@@ -182,7 +182,7 @@ console.log(colorMode.value);
     <section id="timeline" class="py-20">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">Professional & Academic Journey</h2>
-        <UTimeline :items="timelineItems" class="w-full h-[50vh]" size="3xl" />
+        <UTimeline :items="timelineItems" class="w-full h-[50vh]" size="3xl" :default-value="3" />
       </div>
     </section>
 
