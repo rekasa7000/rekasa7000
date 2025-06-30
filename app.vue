@@ -239,7 +239,7 @@ const timelineItems = ref<TimelineItem[]>([
               <div
                 class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
               >
-                <UIcon name="i-lucide-cloud-rain" class="w-12 h-12 text-primary" />
+                <NuxtImg src="/images/projects/kloudtrack.png" class="object-cover aspect-video" />
               </div>
             </template>
             <div class="p-6">
@@ -253,12 +253,7 @@ const timelineItems = ref<TimelineItem[]>([
                 <UBadge size="sm" color="primary">TypeScript</UBadge>
                 <UBadge size="sm" color="warning">Node.js</UBadge>
                 <UBadge size="sm" color="info">PostgreSQL</UBadge>
-              </div>
-              <div class="flex gap-2">
-                <UButton size="sm" variant="outline">
-                  <UIcon name="i-lucide-external-link" class="w-4 h-4 mr-1" />
-                  Demo
-                </UButton>
+                <UBadge size="sm" color="primary">AWS</UBadge>
               </div>
             </div>
           </UCard>
@@ -266,26 +261,27 @@ const timelineItems = ref<TimelineItem[]>([
           <UCard>
             <template #header>
               <div
-                class="aspect-video bg-gradient-to-br from-primary-500/20 to-tertiary-500/20 rounded-t-lg flex items-center justify-center"
+                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
               >
-                <UIcon name="i-lucide-brain" class="w-12 h-12 text-primary-600" />
+                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
               </div>
             </template>
             <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">HananAI</h3>
+              <h3 class="text-xl font-semibold mb-2">Logcha</h3>
               <p class="text-muted-foreground mb-4">
-                AI agent inspired by Hanan, the Tagalog goddess of morning. An intelligent assistant built with modern
-                AI technologies.
+                A simple and modern time tracking app for interns and OJTs, built with Go and React.
               </p>
               <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="primary">Python</UBadge>
-                <UBadge size="sm" color="secondary">Google Gemini</UBadge>
-                <UBadge size="sm" color="info">AI/ML</UBadge>
+                <UBadge size="sm" color="primary">React</UBadge>
+                <UBadge size="sm" color="secondary">Typescript</UBadge>
+                <UBadge size="sm" color="info">Tanstack</UBadge>
+                <UBadge size="sm" color="info">Golang</UBadge>
+                <UBadge size="sm" color="primary">Fiber</UBadge>
               </div>
               <div class="flex gap-2">
                 <UButton size="sm" variant="outline">
-                  <UIcon name="i-lucide-external-link" class="w-4 h-4 mr-1" />
-                  Demo
+                  <UIcon name="i-lucide-code-xml" class="w-4 h-4 mr-1" />
+                  Underdevelopment
                 </UButton>
                 <UButton size="sm" variant="ghost">
                   <UIcon name="i-lucide-github" class="w-4 h-4 mr-1" />
@@ -300,7 +296,7 @@ const timelineItems = ref<TimelineItem[]>([
               <div
                 class="aspect-video bg-gradient-to-br from-secondary-500/20 to-teal-500/20 rounded-t-lg flex items-center justify-center"
               >
-                <UIcon name="i-lucide-briefcase" class="w-12 h-12 text-secondary-600" />
+                <NuxtImg src="/images/projects/jobowl.png" class="object-cover aspect-video" />
               </div>
             </template>
             <div class="p-6">
@@ -314,15 +310,70 @@ const timelineItems = ref<TimelineItem[]>([
                 <UBadge size="sm" color="success">GTK4</UBadge>
                 <UBadge size="sm" color="error">Desktop</UBadge>
               </div>
-              <div class="flex gap-2">
-                <UButton size="sm" variant="outline">
-                  <UIcon name="i-lucide-external-link" class="w-4 h-4 mr-1" />
-                  Demo
-                </UButton>
-                <UButton size="sm" variant="ghost">
-                  <UIcon name="i-lucide-github" class="w-4 h-4 mr-1" />
-                  Code
-                </UButton>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div
+                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
+              >
+                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
+              </div>
+            </template>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Zorb</h3>
+              <p class="text-muted-foreground mb-4">
+                A modern full-stack application with authentication built using React, TypeScript, TanStack Router,
+                TanStack Query, and Node.js.
+              </p>
+              <div class="flex gap-2 mb-4">
+                <UBadge size="sm" color="primary">React</UBadge>
+                <UBadge size="sm" color="secondary">Typescript</UBadge>
+                <UBadge size="sm" color="info">Tanstack</UBadge>
+                <UBadge size="sm" color="info">Node</UBadge>
+                <UBadge size="sm" color="primary">Express</UBadge>
+              </div>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div
+                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
+              >
+                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
+              </div>
+            </template>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">HananAI</h3>
+              <p class="text-muted-foreground mb-4">
+                AI agent inspired by Hanan, the Tagalog goddess of morning, for your breakfast.
+              </p>
+              <div class="flex gap-2 mb-4">
+                <UBadge size="sm" color="primary">Python</UBadge>
+                <UBadge size="sm" color="secondary">AI/ML</UBadge>
+                <UBadge size="sm" color="info">Google Gemini</UBadge>
+              </div>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div
+                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
+              >
+                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
+              </div>
+            </template>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Knowt</h3>
+              <p class="text-muted-foreground mb-4">
+                Advanced article summarization tool with AI-powered sentiment analysis, built using Python Flask and
+                Firebase for secure content processing and management.
+              </p>
+              <div class="flex gap-2 mb-4">
+                <UBadge size="sm" color="primary">Python</UBadge>
+                <UBadge size="sm" color="secondary">Flask</UBadge>
+                <UBadge size="sm" color="info">Firebase</UBadge>
+                <UBadge size="sm" color="info">HTML/CSS</UBadge>
               </div>
             </div>
           </UCard>
