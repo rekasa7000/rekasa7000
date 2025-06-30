@@ -38,6 +38,100 @@ const timelineItems = ref<TimelineItem[]>([
     date: "2024 - present",
   },
 ]);
+
+const getGitHubThumbnail = (url: string): string => {
+  const match = url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+  if (match) {
+    const [, owner, repo] = match;
+    return `https://opengraph.githubassets.com/1/${owner}/${repo}`;
+  }
+  return "/images/fallback.png";
+};
+
+const navigateToGitHub = (url: string) => {
+  window.open(url, "_blank");
+};
+
+const projects = [
+  {
+    title: "KloudTrack Weather System",
+    description:
+      "A comprehensive weather monitoring system with real-time data collection from hardware stations and web dashboard for government officials and citizens.",
+    githubUrl: "https://github.com/rekasa7000/kloudtrack",
+    technologies: ["React", "TypeScript", "Node.js", "PostgreSQL", "AWS"],
+    colors: ["secondary", "primary", "warning", "info", "primary"],
+  },
+  {
+    title: "Logcha",
+    description: "A simple and modern time tracking app for interns and OJTs, built with Go and React.",
+    githubUrl: "https://github.com/rekasa7000/logcha",
+    technologies: ["React", "Typescript", "Tanstack", "Golang", "Fiber"],
+    colors: ["primary", "secondary", "info", "info", "primary"],
+    showButtons: true,
+  },
+  {
+    title: "Jobowl",
+    description:
+      "Desktop job application tracker with intuitive GUI for tracking applications, managing statuses, and monitoring job search progress. Built for GNOME desktop.",
+    githubUrl: "https://github.com/rekasa7000/jobowl",
+    technologies: ["Rust", "GTK4", "Desktop"],
+    colors: ["secondary", "success", "error"],
+  },
+  {
+    title: "Databox",
+    description:
+      "A student scheduler and progress tracker that runs in the background for real-time notification and alerts. Developed using C#, .NET, MySQL, and Apache Server",
+    githubUrl: "https://github.com/rekasa7000/databox",
+    technologies: ["C#", ".NET", "MySQL", "Apache"],
+    colors: ["primary", "secondary", "info", "info"],
+  },
+  {
+    title: "HananAI",
+    description: "AI agent inspired by Hanan, the Tagalog goddess of morning, for your breakfast.",
+    githubUrl: "https://github.com/rekasa7000/hananai",
+    technologies: ["Python", "AI/ML", "Google Gemini"],
+    colors: ["primary", "secondary", "info"],
+  },
+  {
+    title: "Knowt",
+    description:
+      "Advanced article summarization tool with AI-powered sentiment analysis, built using Python Flask and Firebase for secure content processing and management.",
+    githubUrl: "https://github.com/rekasa7000/knowt",
+    technologies: ["Python", "Flask", "Firebase", "HTML/CSS"],
+    colors: ["primary", "secondary", "info", "info"],
+  },
+];
+
+type BadgeColor =
+  | "secondary"
+  | "primary"
+  | "warning"
+  | "info"
+  | "success"
+  | "error"
+  | "tertiary"
+  | "neutral"
+  | undefined;
+
+type ColorThemes = "matcha" | "space" | "dark" | "light";
+
+const colorMode = useColorMode();
+
+const getThemeGradient = (theme: ColorThemes) => {
+  const gradients = {
+    matcha: "from-green-100/20 to-emerald-200/40",
+    space: "from-indigo-900/20 to-purple-900/30",
+    light: "from-primary/10 to-secondary/20",
+    dark: "from-gray-800/20 to-gray-900/30",
+  };
+  return gradients[theme] || gradients.light;
+};
+
+const containerClasses = computed(() => [
+  "aspect-video bg-gradient-to-br rounded-t-lg flex items-center justify-center relative overflow-hidden",
+  getThemeGradient(colorMode.value as ColorThemes),
+]);
+console.log(colorMode.value);
 </script>
 
 <template>
@@ -234,51 +328,61 @@ const timelineItems = ref<TimelineItem[]>([
       <div class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <UCard>
+          <UCard
+            v-for="(project, index) in projects"
+            :key="index"
+            class="transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+            @click="navigateToGitHub(project.githubUrl)"
+          >
             <template #header>
               <div
-                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
+                class="aspect-video rounded-t-lg flex items-center justify-center relative overflow-hidden"
+                :class="containerClasses"
               >
-                <NuxtImg src="/images/projects/kloudtrack.png" class="object-cover aspect-video" />
+                <img
+                  src="/images/projects/kloudtrack.png"
+                  :alt="`${project.title} repository preview`"
+                  class="object-cover w-full h-full"
+                  @error="(e) => { (e.target as HTMLImageElement).src = '/images/fallback.png' }"
+                  v-if="project.title === 'KloudTrack Weather System'"
+                />
+                <img
+                  src="/images/projects/logcha.png"
+                  :alt="`${project.title} repository preview`"
+                  class="object-cover w-full h-full"
+                  @error="(e) => { (e.target as HTMLImageElement).src = '/images/fallback.png' }"
+                  v-else-if="project.title === 'Logcha'"
+                />
+                <img
+                  src="/images/projects/jobowl.png"
+                  :alt="`${project.title} repository preview`"
+                  class="object-cover w-full h-full"
+                  @error="(e) => { (e.target as HTMLImageElement).src = '/images/fallback.png' }"
+                  v-else-if="project.title === 'Jobowl'"
+                />
+                <img
+                  :src="getGitHubThumbnail(project.githubUrl)"
+                  :alt="`${project.title} repository preview`"
+                  class="object-cover w-full h-full"
+                  @error="(e) => { (e.target as HTMLImageElement).src = '/images/fallback.png' }"
+                  v-else
+                />
               </div>
             </template>
             <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">KloudTrack Weather System</h3>
-              <p class="text-muted-foreground mb-4">
-                A comprehensive weather monitoring system with real-time data collection from hardware stations and web
-                dashboard for government officials and citizens.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="secondary">React</UBadge>
-                <UBadge size="sm" color="primary">TypeScript</UBadge>
-                <UBadge size="sm" color="warning">Node.js</UBadge>
-                <UBadge size="sm" color="info">PostgreSQL</UBadge>
-                <UBadge size="sm" color="primary">AWS</UBadge>
+              <h3 class="text-xl font-semibold mb-2">{{ project.title }}</h3>
+              <p class="text-muted-foreground mb-4">{{ project.description }}</p>
+              <div class="flex gap-2 mb-4 flex-wrap">
+                <UBadge
+                  v-for="(tech, techIndex) in project.technologies"
+                  :key="techIndex"
+                  size="sm"
+                  :color="project.colors[techIndex] as BadgeColor"
+                >
+                  {{ tech }}
+                </UBadge>
               </div>
-            </div>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <div
-                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
-              >
-                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
-              </div>
-            </template>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">Logcha</h3>
-              <p class="text-muted-foreground mb-4">
-                A simple and modern time tracking app for interns and OJTs, built with Go and React.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="primary">React</UBadge>
-                <UBadge size="sm" color="secondary">Typescript</UBadge>
-                <UBadge size="sm" color="info">Tanstack</UBadge>
-                <UBadge size="sm" color="info">Golang</UBadge>
-                <UBadge size="sm" color="primary">Fiber</UBadge>
-              </div>
-              <div class="flex gap-2">
+              <div v-if="project.showButtons" class="flex gap-2">
                 <UButton size="sm" variant="outline">
                   <UIcon name="i-lucide-code-xml" class="w-4 h-4 mr-1" />
                   Underdevelopment
@@ -287,93 +391,6 @@ const timelineItems = ref<TimelineItem[]>([
                   <UIcon name="i-lucide-github" class="w-4 h-4 mr-1" />
                   Code
                 </UButton>
-              </div>
-            </div>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <div
-                class="aspect-video bg-gradient-to-br from-secondary-500/20 to-teal-500/20 rounded-t-lg flex items-center justify-center"
-              >
-                <NuxtImg src="/images/projects/jobowl.png" class="object-cover aspect-video" />
-              </div>
-            </template>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">Jobowl</h3>
-              <p class="text-muted-foreground mb-4">
-                Desktop job application tracker with intuitive GUI for tracking applications, managing statuses, and
-                monitoring job search progress. Built for GNOME desktop.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="secondary">Rust</UBadge>
-                <UBadge size="sm" color="success">GTK4</UBadge>
-                <UBadge size="sm" color="error">Desktop</UBadge>
-              </div>
-            </div>
-          </UCard>
-          <UCard>
-            <template #header>
-              <div
-                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
-              >
-                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
-              </div>
-            </template>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">Zorb</h3>
-              <p class="text-muted-foreground mb-4">
-                A modern full-stack application with authentication built using React, TypeScript, TanStack Router,
-                TanStack Query, and Node.js.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="primary">React</UBadge>
-                <UBadge size="sm" color="secondary">Typescript</UBadge>
-                <UBadge size="sm" color="info">Tanstack</UBadge>
-                <UBadge size="sm" color="info">Node</UBadge>
-                <UBadge size="sm" color="primary">Express</UBadge>
-              </div>
-            </div>
-          </UCard>
-          <UCard>
-            <template #header>
-              <div
-                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
-              >
-                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
-              </div>
-            </template>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">HananAI</h3>
-              <p class="text-muted-foreground mb-4">
-                AI agent inspired by Hanan, the Tagalog goddess of morning, for your breakfast.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="primary">Python</UBadge>
-                <UBadge size="sm" color="secondary">AI/ML</UBadge>
-                <UBadge size="sm" color="info">Google Gemini</UBadge>
-              </div>
-            </div>
-          </UCard>
-          <UCard>
-            <template #header>
-              <div
-                class="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg flex items-center justify-center"
-              >
-                <NuxtImg src="/images/projects/logo-logcha-light.png" class="object-cover aspect-video" />
-              </div>
-            </template>
-            <div class="p-6">
-              <h3 class="text-xl font-semibold mb-2">Knowt</h3>
-              <p class="text-muted-foreground mb-4">
-                Advanced article summarization tool with AI-powered sentiment analysis, built using Python Flask and
-                Firebase for secure content processing and management.
-              </p>
-              <div class="flex gap-2 mb-4">
-                <UBadge size="sm" color="primary">Python</UBadge>
-                <UBadge size="sm" color="secondary">Flask</UBadge>
-                <UBadge size="sm" color="info">Firebase</UBadge>
-                <UBadge size="sm" color="info">HTML/CSS</UBadge>
               </div>
             </div>
           </UCard>
