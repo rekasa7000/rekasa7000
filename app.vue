@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useFavicon } from "./composables/useFavicon";
+import type { TimelineItem } from "@nuxt/ui";
 
 useSeoMeta({
   title: "Regee Casaña - Portfolio",
@@ -7,17 +8,49 @@ useSeoMeta({
 });
 
 useFavicon();
+
+const timelineItems = ref<TimelineItem[]>([
+  {
+    title: "Science and Technology, Engineering and Mathematics (STEM)",
+    description: "Graduated with High Honors - Microcity College of Business and Technology. ",
+    icon: "i-lucide-graduation-cap",
+    date: "2018 - 2020",
+  },
+  {
+    title: "Bachelor of Science in Computer Science",
+    description:
+      "Graduated Cum Laude - Bataan Peninsula State University. Graduated with latin honor, specializing in software engineering, algorithms, and system design. Developed strong foundation in programming languages, database management, and software development methodologies.",
+    icon: "i-lucide-graduation-cap",
+    date: "2020 - 2024",
+  },
+  {
+    title: "Software Engineering Intern",
+    description:
+      "Work as an intern in a tech startup company - Kloudtech Corp. Learned about IoT, applied cybersecurity, enhanced and maintained company's web app, and optimized the codebase.",
+    icon: "i-lucide-code",
+    date: "2023 - 2024",
+  },
+  {
+    title: "Software Engineer",
+    description:
+      "Lead Software Engineer - Kloudtech Corp. Absorbed by the company and lead a team of three developers. Architected and developed a comprehensive weather monitoring system with real-time data collection, IoT integration, and web dashboard for clients",
+    icon: "i-lucide-cloud-rain",
+    date: "2024 - present",
+  },
+]);
 </script>
 
 <template>
   <NuxtLayout class="p-0">
     <section id="home" class="min-h-screen flex items-center justify-center">
       <div class="text-center max-w-4xl mx-auto">
-        <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Full Stack Developer
+        <h1
+          class="text-6xl font-bold mb-6 py-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+        >
+          Software Engineer
         </h1>
         <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          A computer science graduate with distinction. Software builder, galaxy thinker, and matcha drinker. Currently
+          A computer science graduate with latin honor. Software builder, galaxy thinker, and matcha drinker. Currently
           working on innovative solutions in weather monitoring systems, time tracking applications, and AI-powered
           tools.
         </p>
@@ -28,7 +61,7 @@ useFavicon();
       </div>
     </section>
 
-    <section id="about" class="py-20">
+    <section id="about" class="py-20 bg-muted/50">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">About Me</h2>
         <div class="grid md:grid-cols-2 gap-12 items-center">
@@ -46,13 +79,19 @@ useFavicon();
             <UButton to="#contact" class="mt-4"> Let's Work Together </UButton>
           </div>
           <div class="flex justify-center">
-            <NuxtImg src="/images/regee.png" />
+            <NuxtImg src="/images/regee.png" class="object-cover size-[720px]" />
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Skills Section -->
+    <section id="timeline" class="py-20">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center">Professional & Academic Journey</h2>
+        <UTimeline :items="timelineItems" class="w-full h-[50vh]" size="3xl" />
+      </div>
+    </section>
+
     <section id="skills" class="py-20 bg-muted/50">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">Skills & Technologies</h2>
@@ -60,24 +99,24 @@ useFavicon();
           <UCard>
             <template #header>
               <div class="flex items-center gap-3">
-                <UIcon name="i-lucide-monitor" class="w-6 h-6 text-primary" />
-                <h3 class="text-xl font-semibold">Frontend</h3>
+                <UIcon name="i-lucide-monitor" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Frontend</h3>
               </div>
             </template>
             <div class="space-y-3">
               <div class="flex items-center gap-2">
-                <UBadge color="primary" variant="soft">Vue.js</UBadge>
-                <UBadge color="secondary" variant="soft">Nuxt.js</UBadge>
-                <UBadge color="tertiary" variant="soft">React</UBadge>
+                <UBadge size="lg" color="success" variant="outline">Vue.js</UBadge>
+                <UBadge size="lg" color="success" variant="outline">Nuxt.js</UBadge>
+                <UBadge size="lg" color="info" variant="outline">React</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="info" variant="soft">TypeScript</UBadge>
-                <UBadge color="success" variant="soft">Tailwind CSS</UBadge>
-                <UBadge color="primary" variant="soft">Next.js</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">TypeScript</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">Tailwind CSS</UBadge>
+                <UBadge size="lg" color="info" variant="outline">Next.js</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="secondary" variant="soft">TanStack</UBadge>
-                <UBadge color="tertiary" variant="soft">Vite</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">TanStack</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">Vite</UBadge>
               </div>
             </div>
           </UCard>
@@ -85,25 +124,25 @@ useFavicon();
           <UCard>
             <template #header>
               <div class="flex items-center gap-3">
-                <UIcon name="i-lucide-server" class="w-6 h-6 text-primary" />
-                <h3 class="text-xl font-semibold">Backend</h3>
+                <UIcon name="i-lucide-server" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Backend</h3>
               </div>
             </template>
             <div class="space-y-3">
               <div class="flex items-center gap-2">
-                <UBadge color="secondary" variant="soft">Node.js</UBadge>
-                <UBadge color="error" variant="soft">Express</UBadge>
-                <UBadge color="success" variant="soft">Python</UBadge>
+                <UBadge size="lg" color="success" variant="outline">Node.js</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">Express</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">Python</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="primary" variant="soft">PostgreSQL</UBadge>
-                <UBadge color="secondary" variant="soft">MongoDB</UBadge>
-                <UBadge color="info" variant="soft">MySQL</UBadge>
+                <UBadge size="lg" color="info" variant="outline">PostgreSQL</UBadge>
+                <UBadge size="lg" color="success" variant="outline">MongoDB</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">MySQL</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="tertiary" variant="soft">Prisma</UBadge>
-                <UBadge color="primary" variant="soft">Flask</UBadge>
-                <UBadge color="secondary" variant="soft">.NET</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">Prisma</UBadge>
+                <UBadge size="lg" color="error" variant="outline">Flask</UBadge>
+                <UBadge size="lg" color="info" variant="outline">Golang</UBadge>
               </div>
             </div>
           </UCard>
@@ -111,25 +150,79 @@ useFavicon();
           <UCard>
             <template #header>
               <div class="flex items-center gap-3">
-                <UIcon name="i-lucide-tools" class="w-6 h-6 text-primary" />
-                <h3 class="text-xl font-semibold">Tools & DevOps</h3>
+                <UIcon name="i-lucide-wrench" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Tools & DevOps</h3>
               </div>
             </template>
             <div class="space-y-3">
               <div class="flex items-center gap-2">
-                <UBadge color="neutral" variant="subtle">Docker</UBadge>
-                <UBadge color="primary" variant="soft">AWS</UBadge>
-                <UBadge color="success" variant="soft">Firebase</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">AWS EC2</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">AWS IoT Core</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">AWS S3</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="info" variant="soft">Git</UBadge>
-                <UBadge color="tertiary" variant="soft">GitHub Actions</UBadge>
-                <UBadge color="error" variant="soft">Unity</UBadge>
+                <UBadge size="lg" color="error" variant="outline">Git</UBadge>
+                <UBadge size="lg" color="info" variant="outline">Docker</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">Github</UBadge>
+                <UBadge size="lg" color="success" variant="outline">GitHub Actions</UBadge>
               </div>
               <div class="flex items-center gap-2">
-                <UBadge color="secondary" variant="soft">Vercel</UBadge>
-                <UBadge color="primary" variant="soft">Go</UBadge>
-                <UBadge color="info" variant="soft">Rust</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">Vercel</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">Hostinger VPS</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">Firebase</UBadge>
+              </div>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div class="flex items-center gap-3">
+                <UIcon name="i-lucide-folder-code" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Software & Game Development</h3>
+              </div>
+            </template>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <UBadge size="lg" color="primary" variant="outline">C#</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">C/C++</UBadge>
+                <UBadge size="lg" color="info" variant="outline">.NET</UBadge>
+              </div>
+              <div class="flex items-center gap-2">
+                <UBadge size="lg" color="warning" variant="outline">Java</UBadge>
+                <UBadge size="lg" color="error" variant="outline">Rust</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">Unity</UBadge>
+              </div>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div class="flex items-center gap-3">
+                <UIcon name="i-lucide-monitor-cog" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Operating Systems</h3>
+              </div>
+            </template>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <UBadge size="lg" color="info" variant="outline">Windows</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">MacOS</UBadge>
+                <UBadge size="lg" color="warning" variant="outline">Ubuntu</UBadge>
+              </div>
+              <div class="flex items-center gap-2">
+                <UBadge size="lg" color="primary" variant="outline">Fedora OS</UBadge>
+                <UBadge size="lg" color="primary" variant="outline">Pop_OS!</UBadge>
+              </div>
+            </div>
+          </UCard>
+          <UCard>
+            <template #header>
+              <div class="flex items-center gap-3">
+                <UIcon name="i-lucide-component" class="w-6 h-6" />
+                <h3 class="text-lg font-semibold">Design & Prototyping</h3>
+              </div>
+            </template>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <UBadge size="lg" color="primary" variant="outline">Figma</UBadge>
+                <UBadge size="lg" color="secondary" variant="outline">Canva</UBadge>
               </div>
             </div>
           </UCard>
@@ -137,7 +230,6 @@ useFavicon();
       </div>
     </section>
 
-    <!-- Projects Section -->
     <section id="projects" class="py-20">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
@@ -159,17 +251,13 @@ useFavicon();
               <div class="flex gap-2 mb-4">
                 <UBadge size="sm" color="secondary">React</UBadge>
                 <UBadge size="sm" color="primary">TypeScript</UBadge>
-                <UBadge size="sm" color="tertiary">Node.js</UBadge>
+                <UBadge size="sm" color="warning">Node.js</UBadge>
                 <UBadge size="sm" color="info">PostgreSQL</UBadge>
               </div>
               <div class="flex gap-2">
                 <UButton size="sm" variant="outline">
                   <UIcon name="i-lucide-external-link" class="w-4 h-4 mr-1" />
                   Demo
-                </UButton>
-                <UButton size="sm" variant="ghost">
-                  <UIcon name="i-lucide-github" class="w-4 h-4 mr-1" />
-                  Code
                 </UButton>
               </div>
             </div>
@@ -242,7 +330,6 @@ useFavicon();
       </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="py-20 bg-muted/50">
       <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-4xl font-bold mb-6">Let's Work Together</h2>

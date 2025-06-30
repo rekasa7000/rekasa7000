@@ -14,7 +14,7 @@ export default defineNuxtConfig({
         {
           name: "description",
           content:
-            "Full Stack Developer | Software Engineerspecializing in modern web technologies, AI applications, and desktop development.",
+            "Full Stack Developer | Software Engineer specializing in modern web technologies, AI applications, and desktop development.",
         },
       ],
       link: [],
@@ -29,7 +29,10 @@ export default defineNuxtConfig({
     },
   },
   colorMode: {
-    preference: 'light',
-    fallback: 'light'
+    preference: "light",
+    fallback: "light",
+  },
+  icon: {
+    cssLayer: "icon",
   },
 });

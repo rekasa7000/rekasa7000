@@ -4,8 +4,9 @@ const colorMode = useColorMode();
 const navItems = [
   { name: "Home", href: "#home", icon: "i-lucide-home" },
   { name: "About", href: "#about", icon: "i-lucide-user" },
-  { name: "Projects", href: "#projects", icon: "i-lucide-briefcase" },
+  { name: "Experience", href: "#timeline", icon: "i-lucide-graduation-cap" },
   { name: "Skills", href: "#skills", icon: "i-lucide-code" },
+  { name: "Projects", href: "#projects", icon: "i-lucide-briefcase" },
   { name: "Contact", href: "#contact", icon: "i-lucide-mail" },
 ];
 
