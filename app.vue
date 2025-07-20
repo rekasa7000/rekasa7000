@@ -131,7 +131,6 @@ const containerClasses = computed(() => [
   "aspect-video bg-gradient-to-br rounded-t-lg flex items-center justify-center relative overflow-hidden",
   getThemeGradient(colorMode.value as ColorThemes),
 ]);
-console.log(colorMode.value);
 </script>
 
 <template>
