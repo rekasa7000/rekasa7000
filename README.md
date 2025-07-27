@@ -29,7 +29,7 @@ I build scalable applications with modern technologies. Computer science graduat
 </tr>
 <tr>
 <td style="padding: 7.5px; border-bottom: 1px solid; border-right: 1px solid;  font-weight: 600; font-size: 15px;">Tools</td>
-<td style="padding: 7.5px; border-bottom: 1px solid; font-size: 15px;">Git, GitHub, Postman, VS Code, XCode, Unity</td>
+<td style="padding: 7.5px; border-bottom: 1px solid; font-size: 15px;">Git, GitHub, Postman, VS Code, Unity</td>
 </tr>
 <tr>
 <td style="padding: 7.5px; border-bottom: 1px solid; border-right: 1px solid;  font-weight: 600; font-size: 15px;">Cloud & DevOps</td>
