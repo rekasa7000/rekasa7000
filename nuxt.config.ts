@@ -4,6 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: ["@nuxt/eslint", "@nuxt/fonts", "@nuxt/icon", "@nuxt/image", "@nuxt/ui"],
+
+  nitro: {
+    esbuild: {
+      options: {
+        target: "esnext"
+      }
+    }
+  },
   css: ["/assets/css/main.css"],
   app: {
     head: {

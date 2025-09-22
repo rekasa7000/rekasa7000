@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "WebFetch(domain:www.keisukewatanuki.work)"
+      "WebFetch(domain:www.keisukewatanuki.work)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []
