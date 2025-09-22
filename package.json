@@ -3,18 +3,25 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt generate",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "1.10.0",
     "@nuxt/ui": "3.2.0",
     "gsap": "^3.13.0",
-    "nuxt": "^3.13.0",
+    "nuxt": "^3.17.5",
     "typescript": "^5.6.3",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1"
+  },
+  "resolutions": {
+    "estree-walker": "^3.0.0"
+  },
+  "overrides": {
+    "estree-walker": "^3.0.0"
   }
 }

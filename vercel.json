@@ -3,5 +3,11 @@
     "env": {
       "NODE_VERSION": "22"
     }
-  }
+  },
+  "builds": [
+    {
+      "src": "nuxt.config.ts",
+      "use": "@nuxtjs/vercel-builder"
+    }
+  ]
 }
