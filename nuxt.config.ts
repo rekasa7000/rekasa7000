@@ -1,9 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { defineNuxtConfig } from 'nuxt/config'
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
 
-  modules: ["@nuxt/fonts", "@nuxt/icon", "@nuxt/image", "@nuxt/ui"],
+  modules: ["@nuxt/ui"],
 
   nitro: {
     esbuild: {
@@ -39,8 +41,5 @@ export default defineNuxtConfig({
   colorMode: {
     preference: "light",
     fallback: "light",
-  },
-  icon: {
-    cssLayer: "icon",
   },
 });
