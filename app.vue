@@ -140,12 +140,13 @@ const skills = [
 
         <!-- Tech Icons Grid - Minimalist Style -->
         <div class="mb-16">
-          <div class="grid grid-cols-6 md:grid-cols-12 gap-6">
-            <div class="flex justify-center">
-              <img src="https://skillicons.dev/icons?i=react" alt="React" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
-            </div>
+          <div class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-6">
+            <!-- Frontend Technologies -->
             <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=nextjs" alt="Next.js" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=react" alt="React" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=vue" alt="Vue.js" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
@@ -154,7 +155,18 @@ const skills = [
               <img src="https://skillicons.dev/icons?i=nuxtjs" alt="Nuxt.js" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=angular" alt="Angular" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=svelte" alt="Svelte" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Languages -->
+            <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=ts" alt="TypeScript" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=js" alt="JavaScript" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=python" alt="Python" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
@@ -163,19 +175,91 @@ const skills = [
               <img src="https://skillicons.dev/icons?i=go" alt="Go" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=php" alt="PHP" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=rust" alt="Rust" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
+
+            <!-- Backend & Frameworks -->
             <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=nodejs" alt="Node.js" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=express" alt="Express" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=flask" alt="Flask" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=fastapi" alt="FastAPI" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Databases -->
+            <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=postgresql" alt="PostgreSQL" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=mongodb" alt="MongoDB" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=mysql" alt="MySQL" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=firebase" alt="Firebase" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=supabase" alt="Supabase" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Desktop Development -->
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=cs" alt="C#" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=cpp" alt="C++" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=java" alt="Java" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Cloud & DevOps -->
             <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=aws" alt="AWS" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
             <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=vercel" alt="Vercel" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=heroku" alt="Heroku" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
               <img src="https://skillicons.dev/icons?i=docker" alt="Docker" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Styling -->
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=tailwind" alt="Tailwind CSS" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+
+            <!-- Tools -->
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=unity" alt="Unity" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=git" alt="Git" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=github" alt="GitHub" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=postman" alt="Postman" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=vscode" alt="VS Code" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
+            </div>
+            <div class="flex justify-center">
+              <img src="https://skillicons.dev/icons?i=figma" alt="Figma" class="w-8 h-8 grayscale hover:grayscale-0 transition-all" />
             </div>
           </div>
         </div>
