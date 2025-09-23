@@ -70,6 +70,7 @@ const skills = [
 
 <template>
   <div class="min-h-screen bg-white text-black font-mono">
+    <ScrollIndicator />
     <header class="z-50 w-full">
       <div class="w-full px-6 py-6">
         <div class="flex items-center justify-center gap-4 text-sm font-bold w-full">
@@ -77,7 +78,7 @@ const skills = [
           <div class="h-[0.07rem] w-full bg-gray-300"></div>
           <div class="w-[720px] text-center">Software Engineer</div>
           <div class="h-[0.07rem] w-full bg-gray-300"></div>
-          <div class="w-[720px] text-center">Aspiring Software Architect</div>
+          <div class="w-[720px] text-center">Technical/Software Architect</div>
         </div>
       </div>
     </header>

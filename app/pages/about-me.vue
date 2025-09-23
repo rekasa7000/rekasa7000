@@ -26,9 +26,7 @@ useSeoMeta({
       <!-- Hero Section -->
       <section class="py-20 border-b border-gray-200">
         <div class="max-w-4xl">
-          <h1 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-            About Me
-          </h1>
+          <h1 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">About Me</h1>
           <p class="text-lg text-gray-600">
             A deeper look into my background, philosophy, and journey as a software engineer.
           </p>
@@ -45,7 +43,8 @@ useSeoMeta({
               <p>
                 I'm a software engineer with a passion for building scalable applications and solving complex problems.
                 My journey in technology began during my college years at Bataan Peninsula State University, where I
-                graduated Cum Laude with latin honor, specializing in software engineering, algorithms, and system design.
+                graduated Cum Laude with latin honor, specializing in software engineering, algorithms, and system
+                design.
               </p>
               <p>
                 What started as curiosity about how things work evolved into a deep appreciation for the craft of
@@ -86,9 +85,7 @@ useSeoMeta({
                 weather monitoring systems with real-time data collection and IoT integration. This role has taught me
                 the importance of balancing technical innovation with practical constraints.
               </p>
-              <p>
-                I'm particularly interested in:
-              </p>
+              <p>I'm particularly interested in:</p>
               <ul class="space-y-2 ml-6">
                 <li>• Real-time data processing and visualization</li>
                 <li>• IoT system architecture and integration</li>
@@ -105,13 +102,13 @@ useSeoMeta({
             <div class="space-y-6 text-gray-600 leading-relaxed">
               <p>
                 When I'm not coding, I enjoy exploring new technologies, contributing to open-source projects, and
-                sharing knowledge with the developer community. I'm particularly fascinated by AI/ML applications
-                and their potential to solve everyday problems.
+                sharing knowledge with the developer community. I'm particularly fascinated by AI/ML applications and
+                their potential to solve everyday problems.
               </p>
               <p>
                 I also believe in the importance of work-life balance and continuous personal growth. Whether it's
-                learning a new programming language, reading about design principles, or simply taking time to
-                reflect on past projects, I'm always looking for ways to improve both professionally and personally.
+                learning a new programming language, reading about design principles, or simply taking time to reflect
+                on past projects, I'm always looking for ways to improve both professionally and personally.
               </p>
             </div>
           </div>
@@ -122,8 +119,8 @@ useSeoMeta({
             <div class="space-y-6 text-gray-600 leading-relaxed">
               <p>
                 Looking ahead, I aspire to become a software architect who can bridge the gap between technical
-                excellence and business value. I want to build systems that not only solve complex problems but
-                also make a positive impact on people's lives.
+                excellence and business value. I want to build systems that not only solve complex problems but also
+                make a positive impact on people's lives.
               </p>
               <p>
                 My long-term goals include mentoring the next generation of developers, contributing to meaningful
@@ -139,9 +136,7 @@ useSeoMeta({
     <!-- Footer -->
     <footer class="border-t border-gray-200 mt-20">
       <div class="max-w-6xl mx-auto px-6 py-8">
-        <div class="text-sm text-gray-500">
-          © 2024 Regee Casaña
-        </div>
+        <div class="text-sm text-gray-500">© 2024 Regee Casaña</div>
       </div>
     </footer>
   </div>
