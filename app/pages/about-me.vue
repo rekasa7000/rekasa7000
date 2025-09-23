@@ -9,37 +9,37 @@ useSeoMeta({
   <div class="min-h-screen bg-white text-black font-mono">
     <!-- Header -->
     <header class="z-50 w-full border-b border-gray-200">
-      <div class="w-full px-6 py-6">
+      <div class="w-full px-4 md:px-6 py-4 md:py-6">
         <div class="flex items-center justify-between max-w-6xl mx-auto">
-          <a href="/" class="text-xl font-bold hover:underline">Regee Casaña</a>
-          <div class="flex gap-8 text-sm">
+          <a href="/" class="text-lg md:text-xl font-bold hover:underline">Regee Casaña</a>
+          <div class="flex gap-4 md:gap-8 text-xs md:text-sm">
             <a href="/" class="hover:underline">Home</a>
             <a href="/about-me" class="hover:underline font-semibold">About Me</a>
-            <a href="/about-portfolio" class="hover:underline">About Portfolio</a>
+            <a href="/about-portfolio" class="hover:underline hidden sm:block">About Portfolio</a>
           </div>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-6">
+    <main class="max-w-6xl mx-auto px-4 md:px-6">
       <!-- Hero Section -->
-      <section class="py-20 border-b border-gray-200">
+      <section class="py-12 md:py-20 border-b border-gray-200">
         <div class="max-w-4xl">
-          <h1 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">About Me</h1>
-          <p class="text-lg text-gray-600">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight">About Me</h1>
+          <p class="text-base md:text-lg text-gray-600">
             A deeper look into my background, philosophy, and journey as a software engineer.
           </p>
         </div>
       </section>
 
       <!-- Content Sections -->
-      <section class="py-20">
-        <div class="max-w-4xl space-y-16">
+      <section class="py-12 md:py-20">
+        <div class="max-w-4xl space-y-12 md:space-y-16">
           <!-- Background -->
           <div>
-            <h2 class="text-2xl font-bold mb-8">Background</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Background</h2>
+            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
               <p>
                 I'm a software engineer with a passion for building scalable applications and solving complex problems.
                 My journey in technology began during my college years at Bataan Peninsula State University, where I
@@ -56,8 +56,8 @@ useSeoMeta({
 
           <!-- Philosophy -->
           <div>
-            <h2 class="text-2xl font-bold mb-8">Philosophy</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Philosophy</h2>
+            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
               <p>
                 I believe in writing clean, maintainable code and focusing on user experience. My approach combines
                 technical excellence with practical problem-solving, always considering the real-world impact of the
@@ -66,7 +66,7 @@ useSeoMeta({
               <p>
                 <strong>Core principles I follow:</strong>
               </p>
-              <ul class="space-y-2 ml-6">
+              <ul class="space-y-2 ml-4 md:ml-6">
                 <li>• Simplicity over complexity</li>
                 <li>• User-centric design and development</li>
                 <li>• Continuous learning and improvement</li>
@@ -78,15 +78,15 @@ useSeoMeta({
 
           <!-- Current Focus -->
           <div>
-            <h2 class="text-2xl font-bold mb-8">Current Focus</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Current Focus</h2>
+            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
               <p>
                 Currently, I'm leading a team of three developers at Kloudtech Corp, where we architect and develop
                 weather monitoring systems with real-time data collection and IoT integration. This role has taught me
                 the importance of balancing technical innovation with practical constraints.
               </p>
               <p>I'm particularly interested in:</p>
-              <ul class="space-y-2 ml-6">
+              <ul class="space-y-2 ml-4 md:ml-6">
                 <li>• Real-time data processing and visualization</li>
                 <li>• IoT system architecture and integration</li>
                 <li>• Team leadership and mentoring</li>
@@ -98,8 +98,8 @@ useSeoMeta({
 
           <!-- Beyond Code -->
           <div>
-            <h2 class="text-2xl font-bold mb-8">Beyond Code</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Beyond Code</h2>
+            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
               <p>
                 When I'm not coding, I enjoy exploring new technologies, contributing to open-source projects, and
                 sharing knowledge with the developer community. I'm particularly fascinated by AI/ML applications and
@@ -115,8 +115,8 @@ useSeoMeta({
 
           <!-- Future Vision -->
           <div>
-            <h2 class="text-2xl font-bold mb-8">Future Vision</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Future Vision</h2>
+            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
               <p>
                 Looking ahead, I aspire to become a software architect who can bridge the gap between technical
                 excellence and business value. I want to build systems that not only solve complex problems but also
@@ -134,8 +134,8 @@ useSeoMeta({
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-20">
-      <div class="max-w-6xl mx-auto px-6 py-8">
+    <footer class="border-t border-gray-200 mt-12 md:mt-20">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
         <div class="text-sm text-gray-500">© 2024 Regee Casaña</div>
       </div>
     </footer>
