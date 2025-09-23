@@ -71,7 +71,7 @@ const skills = [
 <template>
   <div class="min-h-screen bg-white text-black font-mono">
     <ScrollIndicator />
-    <header class="z-50 w-full">
+    <header class="z-50 w-full hidden md:block">
       <div class="w-full px-6 py-6">
         <div class="flex items-center justify-center gap-4 text-sm font-bold w-full">
           <div class="w-[720px] text-center">Full-stack Developer</div>
@@ -86,12 +86,12 @@ const skills = [
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6">
       <!-- Hero Section -->
-      <section class="pt-20 pb-40 border-b border-gray-200">
+      <section class="py-20 md:pt-20 md:pb-40 border-b border-gray-200">
         <div class="w-full">
           <h1 class="text-4xl md:text-[10.25rem] font-bold mb-8 leading-tight">Regee Casaña</h1>
-          <h1 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+          <h2 class="text-2xl md:text-5xl font-bold mb-8 leading-tight">
             Software Engineer specializing in modern web technologies and scalable applications.
-          </h1>
+          </h2>
           <div class="text-lg text-gray-600 space-y-4">
             <p>
               Computer science graduate with latin honor. Currently working as Lead Software Engineer at Kloudtech Corp.
