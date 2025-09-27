@@ -1,1 +1,368 @@
 @import "tailwindcss";
+
+/* Japanese Street Style Theme - Regee Casaña Brand */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Japanese Anime/Samurai Color Palette */
+  --demon-red: #c41e3a;
+  --water-blue: #4a90e2;
+  --thunder-yellow: #ffd700;
+  --flame-orange: #ff6b35;
+  --wind-teal: #40e0d0;
+  --stone-gray: #708090;
+  --sakura-pink: #ffb7c5;
+  --bamboo-green: #9acd32;
+  --midnight-purple: #483d8b;
+  --steel-silver: #c0c0c0;
+
+  /* Light mode */
+  --bg-primary: #ffffff;
+  --bg-secondary: rgba(255, 255, 255, 0.95);
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --border-color: #e5e7eb;
+
+  /* Japanese pattern effects */
+  --katana-glow: 0 0 15px rgba(192, 192, 192, 0.6);
+  --flame-glow: 0 0 20px rgba(255, 107, 53, 0.4);
+  --water-glow: 0 0 15px rgba(74, 144, 226, 0.4);
+}
+
+/* Dark mode - Night/Demon theme */
+.dark {
+  --bg-primary: #0f0e17;
+  --bg-secondary: rgba(15, 14, 23, 0.95);
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+  --border-color: #2a2a3a;
+
+  /* Enhanced glow effects for dark mode */
+  --katana-glow: 0 0 25px rgba(192, 192, 192, 1);
+  --flame-glow: 0 0 30px rgba(255, 107, 53, 0.8);
+  --water-glow: 0 0 25px rgba(74, 144, 226, 0.8);
+  --demon-glow: 0 0 35px rgba(196, 30, 58, 0.6);
+  --moon-glow: 0 0 40px rgba(192, 192, 192, 0.5);
+  --sun-glow: 0 0 40px rgba(255, 215, 0, 0.6);
+}
+
+/* Dark mode specific adjustments */
+.dark .experience-item:hover {
+  background: linear-gradient(90deg, rgba(196, 30, 58, 0.15), transparent);
+}
+
+.dark .project-card:hover {
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), transparent);
+}
+
+.dark .skill-category:hover {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), transparent);
+}
+
+.dark .project-card:hover .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .project-card:hover .bg-gray-100 {
+  background: var(--demon-red) !important;
+  color: var(--bg-primary) !important;
+}
+
+/* Fix tech badges for dark mode */
+.dark .bg-gray-100 {
+  background: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+/* Japanese Street Typography Mix */
+.jp-street-text {
+  font-family: 'Noto Sans JP', 'JetBrains Mono', monospace;
+}
+
+/* Japanese Anime/Samurai Accent Utilities */
+.neon-accent {
+  color: var(--demon-red);
+}
+
+.neon-border {
+  border: 1px solid var(--water-blue);
+  position: relative;
+}
+
+/* Traditional Japanese Patterns */
+.jp-pattern-dots {
+  background-image:
+    radial-gradient(circle at 25% 25%, var(--sakura-pink) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, var(--water-blue) 1px, transparent 1px);
+  background-size: 30px 30px, 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.08;
+}
+
+/* Japanese Street Style Hover Effects */
+.street-hover {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.street-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: var(--water-blue);
+  transition: left 0.3s ease;
+}
+
+.street-hover:hover::before {
+  left: 0;
+}
+
+.street-hover:hover {
+  color: var(--water-blue);
+  transform: translateX(4px);
+}
+
+/* Experience items - Sharp slide animation */
+.experience-item {
+  transition: all 0.2s ease;
+  padding: 1rem;
+  margin: -1rem;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.experience-item:hover {
+  border-left: 3px solid var(--demon-red);
+  background: linear-gradient(90deg, rgba(196, 30, 58, 0.05), transparent);
+  transform: translateX(6px);
+}
+
+.experience-item:hover h3 {
+  color: var(--flame-orange);
+}
+
+/* Project cards - Sharp angular movement */
+.project-card {
+  transition: all 0.2s ease;
+  padding: 1.5rem;
+  margin: -1.5rem;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.project-card:hover {
+  border-left: 3px solid var(--water-blue);
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.03), transparent);
+  transform: translateY(-4px) translateX(2px);
+}
+
+.project-card:hover h3 {
+  color: var(--demon-red);
+}
+
+/* Skills categories - Clean border animation */
+.skill-category {
+  transition: all 0.2s ease;
+  padding: 1rem;
+  margin: -1rem;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.skill-category:hover {
+  border: 1px solid var(--thunder-yellow);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), transparent);
+  transform: translateY(-2px);
+}
+
+.skill-category:hover h3 {
+  color: var(--thunder-yellow);
+}
+
+/* Tech icons - Japanese expandable pill style */
+.tech-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 60px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.tech-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 60px;
+  background: linear-gradient(45deg, var(--water-blue), var(--demon-red));
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.tech-icon::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  height: 100%;
+  border-radius: 60px;
+  background: linear-gradient(45deg, var(--water-blue), var(--demon-red));
+  transition: 0.5s;
+  filter: blur(15px);
+  z-index: -1;
+  opacity: 0;
+}
+
+.tech-icon:hover {
+  width: 180px;
+  border-color: transparent;
+}
+
+.tech-icon:hover::before {
+  opacity: 1;
+}
+
+.tech-icon:hover::after {
+  opacity: 0.3;
+}
+
+.tech-icon img {
+  transition: 0.5s;
+  transition-delay: 0.25s;
+  z-index: 2;
+  position: relative;
+}
+
+.tech-icon:hover img {
+  transform: scale(0);
+  transition-delay: 0s;
+}
+
+.tech-tooltip {
+  position: absolute;
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transform: scale(0);
+  transition: 0.5s;
+  transition-delay: 0s;
+  font-family: 'Noto Sans JP', 'JetBrains Mono', monospace;
+  font-weight: 600;
+  z-index: 3;
+}
+
+.tech-icon:hover .tech-tooltip {
+  transform: scale(1);
+  transition-delay: 0.25s;
+}
+
+/* Different gradient combinations for tech categories */
+.tech-icon.frontend::before,
+.tech-icon.frontend::after {
+  background: linear-gradient(45deg, var(--water-blue), var(--wind-teal));
+}
+
+.tech-icon.language::before,
+.tech-icon.language::after {
+  background: linear-gradient(45deg, var(--demon-red), var(--flame-orange));
+}
+
+.tech-icon.backend::before,
+.tech-icon.backend::after {
+  background: linear-gradient(45deg, var(--thunder-yellow), var(--bamboo-green));
+}
+
+.tech-icon.database::before,
+.tech-icon.database::after {
+  background: linear-gradient(45deg, var(--midnight-purple), var(--sakura-pink));
+}
+
+.tech-icon.cloud::before,
+.tech-icon.cloud::after {
+  background: linear-gradient(45deg, var(--stone-gray), var(--steel-silver));
+}
+
+.tech-icon.tool::before,
+.tech-icon.tool::after {
+  background: linear-gradient(45deg, var(--wind-teal), var(--water-blue));
+}
+
+/* Contact links - Clean slide animation */
+.contact-link {
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+  padding: 0.25rem 0.75rem;
+  margin: -0.25rem -0.75rem;
+  border-left: 2px solid transparent;
+}
+
+.contact-link:hover {
+  color: var(--wind-teal);
+  text-decoration: none;
+  border-left: 2px solid var(--wind-teal);
+  background: linear-gradient(90deg, rgba(64, 224, 208, 0.1), transparent);
+  transform: translateX(6px);
+}
+
+/* Simple Japanese Toggle */
+.jp-toggle {
+  width: 60px;
+  height: 30px;
+  background: var(--border-color);
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.jp-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.jp-toggle .toggle-slider {
+  width: 26px;
+  height: 26px;
+  background: var(--bg-primary);
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+}
+
+.dark .jp-toggle {
+  background: var(--demon-red);
+  border-color: var(--demon-red);
+}
+
+.dark .jp-toggle .toggle-slider {
+  left: 31px;
+  background: var(--bg-primary);
+  border-color: var(--demon-red);
+}

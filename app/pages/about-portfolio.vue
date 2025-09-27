@@ -3,12 +3,41 @@ useSeoMeta({
   title: "About Portfolio - Regee Casaña",
   description: "Learn about the technologies, design decisions, and philosophy behind this portfolio",
 });
+
+// Dark mode functionality
+const { isDark, toggleDarkMode, initializeDarkMode } = useDarkMode()
+
+onMounted(() => {
+  initializeDarkMode()
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-white text-black font-mono">
+  <div
+    class="min-h-screen font-mono relative transition-colors duration-300"
+    :class="isDark ? 'dark' : ''"
+    :style="{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }"
+  >
+    <!-- Subtle Japanese pattern background -->
+    <div class="fixed inset-0 jp-pattern-dots pointer-events-none z-0"></div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="fixed bottom-6 left-6 z-[100]">
+      <button
+        @click="toggleDarkMode"
+        class="jp-toggle"
+        :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <div class="toggle-slider">
+          <span v-if="!isDark">☀️</span>
+          <span v-else>🌙</span>
+        </div>
+      </button>
+    </div>
+
     <!-- Header -->
-    <header class="z-50 w-full border-b border-gray-200">
+    <header class="z-50 w-full border-b backdrop-blur-sm relative"
+            :style="{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)' }">
       <div class="w-full px-4 md:px-6 py-4 md:py-6">
         <div class="flex items-center justify-between max-w-6xl mx-auto">
           <a href="/" class="text-lg md:text-xl font-bold hover:underline">Regee Casaña</a>
@@ -22,12 +51,16 @@ useSeoMeta({
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 md:px-6">
+    <main class="max-w-6xl mx-auto px-4 md:px-6 relative z-10 backdrop-blur-sm"
+          :style="{ backgroundColor: 'var(--bg-secondary)' }">
       <!-- Hero Section -->
-      <section class="py-12 md:py-20 border-b border-gray-200">
+      <section class="py-12 md:py-20 border-b"
+               :style="{ borderColor: 'var(--border-color)' }">
         <div class="max-w-4xl">
-          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight">About Portfolio</h1>
-          <p class="text-base md:text-lg text-gray-600">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight jp-street-text">
+            About Portfolio <span class="text-sm md:text-xl neon-accent ml-2">ポートフォリオについて</span>
+          </h1>
+          <p class="text-base md:text-lg" :style="{ color: 'var(--text-secondary)' }">
             The technologies, design decisions, and philosophy behind this portfolio website.
           </p>
         </div>
@@ -40,9 +73,9 @@ useSeoMeta({
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Technologies Used</h2>
             <div class="space-y-4 md:space-y-6">
-              <div class="border border-gray-200 p-4 md:p-6">
+              <div class="border p-4 md:p-6" :style="{ borderColor: 'var(--border-color)' }">
                 <h3 class="font-semibold mb-3 md:mb-4 text-sm md:text-base">Core Technologies</h3>
-                <ul class="text-gray-600 space-y-2 md:space-y-3 text-sm md:text-base">
+                <ul class="space-y-2 md:space-y-3 text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
                   <li>
                     <strong>Nuxt.js 3</strong> - Vue.js framework for server-side rendering and optimal performance
                   </li>
@@ -52,9 +85,9 @@ useSeoMeta({
                 </ul>
               </div>
 
-              <div class="border border-gray-200 p-4 md:p-6">
+              <div class="border p-4 md:p-6" :style="{ borderColor: 'var(--border-color)' }">
                 <h3 class="font-semibold mb-3 md:mb-4 text-sm md:text-base">Design & Assets</h3>
-                <ul class="text-gray-600 space-y-2 md:space-y-3 text-sm md:text-base">
+                <ul class="space-y-2 md:space-y-3 text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
                   <li><strong>JetBrains Mono</strong> - Clean, professional monospace typography</li>
                   <li><strong>Skillicons.dev</strong> - Technology stack visualization icons</li>
                   <li><strong>Lucide Icons</strong> - Minimal, consistent icon system</li>
@@ -62,9 +95,9 @@ useSeoMeta({
                 </ul>
               </div>
 
-              <div class="border border-gray-200 p-4 md:p-6">
+              <div class="border p-4 md:p-6" :style="{ borderColor: 'var(--border-color)' }">
                 <h3 class="font-semibold mb-3 md:mb-4 text-sm md:text-base">Development Tools</h3>
-                <ul class="text-gray-600 space-y-2 md:space-y-3 text-sm md:text-base">
+                <ul class="space-y-2 md:space-y-3 text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
                   <li><strong>Vite</strong> - Fast build tool and development server</li>
                   <li><strong>ESLint</strong> - Code quality and consistency</li>
                   <li><strong>Git</strong> - Version control and collaboration</li>
@@ -77,7 +110,7 @@ useSeoMeta({
           <!-- Reasons for Creation -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Reasons for Creation</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
               <p>This portfolio was created to serve multiple purposes beyond just showcasing my work:</p>
               <ul class="space-y-3 md:space-y-4 ml-4 md:ml-6">
                 <li>
@@ -107,7 +140,7 @@ useSeoMeta({
           <!-- Design Philosophy -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Design Philosophy</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
               <p>
                 This portfolio follows Japanese minimalist design principles, heavily inspired by designers like Keisuke
                 Watanuki. The design emphasizes clean typography, generous white space, and purposeful interactions.
@@ -132,7 +165,7 @@ useSeoMeta({
           <!-- Technical Approach -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Technical Approach</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
               <p>The portfolio was built with performance, accessibility, and maintainability as core priorities:</p>
               <ul class="space-y-3 md:space-y-4 ml-4 md:ml-6">
                 <li>
@@ -162,7 +195,7 @@ useSeoMeta({
           <!-- Future Development -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Future Development</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
               <p>This portfolio is a living project that continues to evolve. Planned improvements include:</p>
               <ul class="space-y-3 md:space-y-4 ml-4 md:ml-6">
                 <li>
@@ -194,7 +227,7 @@ useSeoMeta({
           <!-- Conclusion -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Conclusion</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base" :style="{ color: 'var(--text-secondary)' }">
               <p>
                 このポートフォリオそのものも制作物の1つと捉えています。
                 <em>(I consider this portfolio itself as one of my works.)</em>
@@ -211,7 +244,7 @@ useSeoMeta({
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-12 md:mt-20">
+    <footer class="border-t mt-12 md:mt-20" :style="{ borderColor: 'var(--border-color)' }">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
         <div class="text-sm text-gray-500">© 2024 Regee Casaña</div>
       </div>

@@ -3,12 +3,41 @@ useSeoMeta({
   title: "About Me - Regee Casaña",
   description: "Learn more about my background, philosophy, and journey as a software engineer",
 });
+
+// Dark mode functionality
+const { isDark, toggleDarkMode, initializeDarkMode } = useDarkMode()
+
+onMounted(() => {
+  initializeDarkMode()
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-white text-black font-mono">
+  <div
+    class="min-h-screen font-mono relative transition-colors duration-300"
+    :class="isDark ? 'dark' : ''"
+    :style="{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }"
+  >
+    <!-- Subtle Japanese pattern background -->
+    <div class="fixed inset-0 jp-pattern-dots pointer-events-none z-0"></div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="fixed bottom-6 left-6 z-[100]">
+      <button
+        @click="toggleDarkMode"
+        class="jp-toggle"
+        :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <div class="toggle-slider">
+          <span v-if="!isDark">☀️</span>
+          <span v-else>🌙</span>
+        </div>
+      </button>
+    </div>
+
     <!-- Header -->
-    <header class="z-50 w-full border-b border-gray-200">
+    <header class="z-50 w-full border-b backdrop-blur-sm relative"
+            :style="{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)' }">
       <div class="w-full px-4 md:px-6 py-4 md:py-6">
         <div class="flex items-center justify-between max-w-6xl mx-auto">
           <a href="/" class="text-lg md:text-xl font-bold hover:underline">Regee Casaña</a>
@@ -22,12 +51,16 @@ useSeoMeta({
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 md:px-6">
+    <main class="max-w-6xl mx-auto px-4 md:px-6 relative z-10 backdrop-blur-sm"
+          :style="{ backgroundColor: 'var(--bg-secondary)' }">
       <!-- Hero Section -->
-      <section class="py-12 md:py-20 border-b border-gray-200">
+      <section class="py-12 md:py-20 border-b"
+               :style="{ borderColor: 'var(--border-color)' }">
         <div class="max-w-4xl">
-          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight">About Me</h1>
-          <p class="text-base md:text-lg text-gray-600">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight jp-street-text">
+            About Me <span class="text-sm md:text-xl neon-accent ml-2">私について</span>
+          </h1>
+          <p class="text-base md:text-lg" :style="{ color: 'var(--text-secondary)' }">
             A deeper look into my background, philosophy, and journey as a software engineer.
           </p>
         </div>
@@ -39,7 +72,8 @@ useSeoMeta({
           <!-- Background -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Background</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
+                 :style="{ color: 'var(--text-secondary)' }">
               <p>
                 I'm a software engineer with a passion for building scalable applications and solving complex problems.
                 My journey in technology began during my college years at Bataan Peninsula State University, where I
@@ -57,7 +91,8 @@ useSeoMeta({
           <!-- Philosophy -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Philosophy</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
+                 :style="{ color: 'var(--text-secondary)' }">
               <p>
                 I believe in writing clean, maintainable code and focusing on user experience. My approach combines
                 technical excellence with practical problem-solving, always considering the real-world impact of the
@@ -79,7 +114,8 @@ useSeoMeta({
           <!-- Current Focus -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Current Focus</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
+                 :style="{ color: 'var(--text-secondary)' }">
               <p>
                 Currently, I'm leading a team of three developers at Kloudtech Corp, where we architect and develop
                 weather monitoring systems with real-time data collection and IoT integration. This role has taught me
@@ -99,7 +135,8 @@ useSeoMeta({
           <!-- Beyond Code -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Beyond Code</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
+                 :style="{ color: 'var(--text-secondary)' }">
               <p>
                 When I'm not coding, I enjoy exploring new technologies, contributing to open-source projects, and
                 sharing knowledge with the developer community. I'm particularly fascinated by AI/ML applications and
@@ -116,7 +153,8 @@ useSeoMeta({
           <!-- Future Vision -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Future Vision</h2>
-            <div class="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base">
+            <div class="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
+                 :style="{ color: 'var(--text-secondary)' }">
               <p>
                 Looking ahead, I aspire to become a software architect who can bridge the gap between technical
                 excellence and business value. I want to build systems that not only solve complex problems but also
@@ -134,7 +172,8 @@ useSeoMeta({
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-12 md:mt-20">
+    <footer class="border-t mt-12 md:mt-20"
+            :style="{ borderColor: 'var(--border-color)' }">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
         <div class="text-sm text-gray-500">© 2024 Regee Casaña</div>
       </div>

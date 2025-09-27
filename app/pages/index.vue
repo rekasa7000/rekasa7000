@@ -4,6 +4,13 @@ useSeoMeta({
   description: "Software Engineer",
 });
 
+// Dark mode functionality
+const { isDark, toggleDarkMode, initializeDarkMode } = useDarkMode()
+
+onMounted(() => {
+  initializeDarkMode()
+})
+
 const projects = [
   {
     title: "KloudTrack Weather System",
@@ -69,30 +76,59 @@ const skills = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-white text-black font-mono">
+  <div
+    class="min-h-screen font-mono relative transition-colors duration-300"
+    :class="isDark ? 'dark' : ''"
+    :style="{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }"
+  >
+    <!-- Subtle Japanese pattern background -->
+    <div class="fixed inset-0 jp-pattern-dots pointer-events-none z-0"></div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="fixed bottom-6 left-6 z-[100]">
+      <button
+        @click="toggleDarkMode"
+        class="jp-toggle"
+        :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <div class="toggle-slider">
+          <span v-if="!isDark">☀️</span>
+          <span v-else>🌙</span>
+        </div>
+      </button>
+    </div>
     <ScrollIndicator />
-    <header class="z-50 w-full hidden md:block">
+    <header
+      class="z-50 w-full hidden md:block relative backdrop-blur-sm"
+      :style="{ backgroundColor: 'var(--bg-secondary)' }"
+    >
       <div class="w-full px-6 py-6">
-        <div class="flex items-center justify-center gap-4 text-sm font-bold w-full">
+        <div class="flex items-center justify-center gap-4 text-sm font-bold w-full jp-street-text">
           <div class="w-[720px] text-center">Full-stack Developer</div>
-          <div class="h-[0.07rem] w-full bg-gray-300"></div>
-          <div class="w-[720px] text-center">Software Engineer</div>
-          <div class="h-[0.07rem] w-full bg-gray-300"></div>
-          <div class="w-[720px] text-center">Technical/Software Architect</div>
+          <div class="h-[0.07rem] w-full bg-gradient-to-r from-pink-500 via-cyan-400 to-purple-500"></div>
+          <div class="w-[720px] text-center neon-accent">Software Engineer</div>
+          <div class="h-[0.07rem] w-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400"></div>
+          <div class="w-[720px] text-center">Technical Architect</div>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-6">
+    <main
+      class="max-w-6xl mx-auto px-6 relative z-10 backdrop-blur-sm"
+      :style="{ backgroundColor: 'var(--bg-secondary)' }"
+    >
       <!-- Hero Section -->
-      <section class="py-20 md:pt-20 md:pb-40 border-b border-gray-200">
+      <section class="py-20 md:pt-20 md:pb-40 border-b" :style="{ borderColor: 'var(--border-color)' }">
         <div class="w-full">
-          <h1 class="text-4xl md:text-[10.25rem] font-bold mb-8 leading-tight">Regee Casaña</h1>
+          <h1 class="text-4xl md:text-[10.25rem] font-bold mb-8 leading-tight jp-street-text">
+            Regee Casaña
+            <span class="text-sm md:text-2xl neon-accent block md:inline md:ml-4">レジー・カサーニャ</span>
+          </h1>
           <h2 class="text-2xl md:text-5xl font-bold mb-8 leading-tight">
             Software Engineer specializing in modern web technologies and scalable applications.
           </h2>
-          <div class="text-lg text-gray-600 space-y-4">
+          <div class="text-lg space-y-4" :style="{ color: 'var(--text-secondary)' }">
             <p>
               Computer science graduate with latin honor. Currently working as Lead Software Engineer at Kloudtech Corp.
             </p>
@@ -104,23 +140,24 @@ const skills = [
         </div>
 
         <div class="flex gap-4 mt-8">
-          <a href="/about-me" class="text-sm border border-gray-300 px-4 py-2 hover:bg-gray-50 transition-colors">
-            About Me
+          <a href="/about-me" class="text-sm neon-border px-4 py-2 street-hover jp-street-text">
+            About Me <span class="text-xs neon-accent ml-1">私について</span>
           </a>
           <a
             href="/about-portfolio"
-            class="text-sm border border-gray-300 px-4 py-2 hover:bg-gray-50 transition-colors"
+            class="text-sm border px-4 py-2 street-hover jp-street-text"
+            :style="{ borderColor: 'var(--border-color)' }"
           >
-            About Portfolio
+            About Portfolio <span class="text-xs ml-1" :style="{ color: 'var(--text-secondary)' }">ポートフォリオ</span>
           </a>
         </div>
       </section>
 
       <!-- Experience Section -->
-      <section class="py-20 border-b border-gray-200" id="experience">
+      <section class="py-20 border-b" id="experience" :style="{ borderColor: 'var(--border-color)' }">
         <h2 class="text-2xl font-bold mb-12">Experience</h2>
         <div class="grid gap-8">
-          <div class="grid md:grid-cols-12 gap-8">
+          <div class="grid md:grid-cols-12 gap-8 experience-item">
             <div class="md:col-span-3">
               <div class="text-sm text-gray-500">2024 - Present</div>
             </div>
@@ -135,7 +172,7 @@ const skills = [
             </div>
           </div>
 
-          <div class="grid md:grid-cols-12 gap-8">
+          <div class="grid md:grid-cols-12 gap-8 experience-item">
             <div class="md:col-span-3">
               <div class="text-sm text-gray-500">2023 - 2024</div>
             </div>
@@ -152,10 +189,10 @@ const skills = [
       </section>
 
       <!-- Education Section -->
-      <section class="py-20 border-b border-gray-200" id="education">
+      <section class="py-20 border-b" id="education" :style="{ borderColor: 'var(--border-color)' }">
         <h2 class="text-2xl font-bold mb-12">Education</h2>
         <div class="grid gap-8">
-          <div class="grid md:grid-cols-12 gap-8">
+          <div class="grid md:grid-cols-12 gap-8 experience-item">
             <div class="md:col-span-3">
               <div class="text-sm text-gray-500">2020 - 2024</div>
             </div>
@@ -170,7 +207,7 @@ const skills = [
             </div>
           </div>
 
-          <div class="grid md:grid-cols-12 gap-8">
+          <div class="grid md:grid-cols-12 gap-8 experience-item">
             <div class="md:col-span-3">
               <div class="text-sm text-gray-500">2018 - 2020</div>
             </div>
@@ -187,7 +224,7 @@ const skills = [
       </section>
 
       <!-- Skills Section -->
-      <section id="skills" class="py-20 border-b border-gray-200">
+      <section id="skills" class="py-20 border-b" :style="{ borderColor: 'var(--border-color)' }">
         <h2 class="text-2xl font-bold mb-12">Skills & Technologies</h2>
 
         <!-- Tech Icons Grid - Minimalist Style -->
@@ -458,7 +495,7 @@ const skills = [
 
         <!-- Skills Categories - Grid Layout -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="skill in skills" :key="skill.category" class="space-y-3">
+          <div v-for="skill in skills" :key="skill.category" class="space-y-3 skill-category">
             <h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500">{{ skill.category }}</h3>
             <div class="space-y-1">
               <div v-for="item in skill.items" :key="item" class="text-sm">{{ item }}</div>
@@ -468,16 +505,16 @@ const skills = [
       </section>
 
       <!-- Works Section -->
-      <section id="works" class="py-20 border-b border-gray-200">
+      <section id="works" class="py-20 border-b" :style="{ borderColor: 'var(--border-color)' }">
         <h2 class="text-2xl font-bold mb-12">Selected Works</h2>
         <div class="grid gap-12">
           <div
             v-for="(project, index) in projects"
             :key="index"
-            class="group cursor-pointer"
+            class="group cursor-pointer project-card"
             @click="navigateToGitHub(project.githubUrl)"
           >
-            <div class="grid md:grid-cols-12 gap-8 items-start">
+            <div class="grid md:grid-cols-12 gap-8 items-start relative z-10">
               <div class="md:col-span-3">
                 <div class="text-sm text-gray-500 mb-2">{{ project.year }}</div>
                 <h3 class="text-xl font-semibold group-hover:underline">{{ project.title }}</h3>
@@ -510,23 +547,19 @@ const skills = [
             <div class="space-y-2">
               <div class="text-sm">
                 <span class="text-gray-500">Email:</span>
-                <a href="mailto:regeecasana57@gmail.com" class="ml-2 hover:underline">regeecasana57@gmail.com</a>
+                <a href="mailto:regeecasana57@gmail.com" class="contact-link">regeecasana57@gmail.com</a>
               </div>
               <div class="text-sm">
                 <span class="text-gray-500">LinkedIn:</span>
-                <a href="https://linkedin.com/in/rekasa" target="_blank" class="ml-2 hover:underline"
-                  >linkedin.com/in/rekasa</a
-                >
+                <a href="https://linkedin.com/in/rekasa" target="_blank" class="contact-link">linkedin.com/in/rekasa</a>
               </div>
               <div class="text-sm">
                 <span class="text-gray-500">GitHub:</span>
-                <a href="https://github.com/rekasa7000" target="_blank" class="ml-2 hover:underline"
-                  >github.com/rekasa7000</a
-                >
+                <a href="https://github.com/rekasa7000" target="_blank" class="contact-link">github.com/rekasa7000</a>
               </div>
               <div class="text-sm">
                 <span class="text-gray-500">Twitter:</span>
-                <a href="https://x.com/regeewashere" target="_blank" class="ml-2 hover:underline">@regeewashere</a>
+                <a href="https://x.com/regeewashere" target="_blank" class="contact-link">@regeewashere</a>
               </div>
             </div>
           </div>
@@ -535,7 +568,7 @@ const skills = [
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-20">
+    <footer class="border-t mt-20" :style="{ borderColor: 'var(--border-color)' }">
       <div class="max-w-6xl mx-auto px-6 py-8">
         <div class="text-sm text-gray-500">© 2024 Regee Casaña</div>
       </div>
