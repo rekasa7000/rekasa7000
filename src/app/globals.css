@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
-/* Japanese Street Style Theme - Regee Casaña Brand */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
-
+/* Japanese Street Style Theme - Regee Casana Brand */
 :root {
   /* Japanese Anime/Samurai Color Palette */
   --demon-red: #c41e3a;
@@ -84,7 +82,7 @@
 
 /* Japanese Street Typography Mix */
 .jp-street-text {
-  font-family: 'Noto Sans JP', 'JetBrains Mono', monospace;
+  font-family: var(--font-noto-sans-jp), var(--font-jetbrains-mono), monospace;
 }
 
 /* Japanese Anime/Samurai Accent Utilities */
@@ -265,7 +263,7 @@
   transform: scale(0);
   transition: 0.5s;
   transition-delay: 0s;
-  font-family: 'Noto Sans JP', 'JetBrains Mono', monospace;
+  font-family: var(--font-noto-sans-jp), var(--font-jetbrains-mono), monospace;
   font-weight: 600;
   z-index: 3;
 }
@@ -365,4 +363,18 @@
   left: 31px;
   background: var(--bg-primary);
   border-color: var(--demon-red);
+}
+
+/* Base styles */
+html {
+  font-family: var(--font-jetbrains-mono), monospace;
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.6;
+}
+
+a:hover {
+  transition: all 0.2s ease;
 }
