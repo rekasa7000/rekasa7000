@@ -9,6 +9,7 @@ import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
+import { EasterEggEffects } from "@/components/easter-egg-effects";
 
 const projects = [
   {
@@ -220,7 +221,7 @@ export function HomeContent() {
 
   return (
     <div
-      className="min-h-screen font-mono relative transition-colors duration-300"
+      className={`min-h-screen font-mono relative transition-colors duration-300${easterEgg ? " dev-mode" : ""}`}
       style={{
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
@@ -278,23 +279,8 @@ export function HomeContent() {
         )}
       </AnimatePresence>
 
-      {/* Easter egg: persistent scanlines */}
-      {easterEgg && (
-        <div className="fixed inset-0 easter-egg-scanlines pointer-events-none z-5" />
-      )}
-
-      {/* Easter egg: DEV MODE badge */}
-      {easterEgg && (
-        <motion.div
-          className="fixed bottom-6 right-6 z-50 text-xs font-mono px-2 py-1 border"
-          style={{ borderColor: "#00ff41", color: "#00ff41", backgroundColor: "rgba(0,0,0,0.85)" }}
-          initial={{ opacity: 0, scale: 0.8, y: 8 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          ◈ DEV MODE
-        </motion.div>
-      )}
+      {/* Easter egg: persistent effects */}
+      {easterEgg && <EasterEggEffects />}
 
       {/* <header
         className="z-50 w-full hidden md:block relative backdrop-blur-sm"
