@@ -41,9 +41,11 @@ export function FadeInSection({
 export function StaggerContainer({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <motion.div
@@ -52,6 +54,7 @@ export function StaggerContainer({
       whileInView="visible"
       viewport={{ once: true, margin: "-60px" }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

@@ -295,28 +295,36 @@ export function HomeContent() {
           </FadeInSection>
 
           {/* Tech Icons Grid */}
-          <StaggerContainer className="mb-16 grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-6">
+          <StaggerContainer className="mb-16 flex flex-wrap gap-4">
             {skillIcons.map((icon) => (
-              <StaggerItem key={icon} className="flex justify-center">
+              <StaggerItem key={icon}>
                 <img
                   src={`https://skillicons.dev/icons?i=${icon}`}
                   alt={icon}
-                  className="w-8 h-8 grayscale hover:grayscale-0 transition-all"
+                  className="w-8 h-8 grayscale hover:grayscale-0 transition-all duration-300"
                 />
               </StaggerItem>
             ))}
           </StaggerContainer>
 
-          {/* Skills Categories */}
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Skills Categories — table layout */}
+          <StaggerContainer className="divide-y" style={{ borderColor: "var(--border-color)" }}>
             {skills.map((skill) => (
-              <StaggerItem key={skill.category} className="space-y-3 skill-category">
-                <h3 className="font-semibold text-sm uppercase tracking-wider text-gray-500">{skill.category}</h3>
-                <div className="space-y-1">
+              <StaggerItem
+                key={skill.category}
+                className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 py-4"
+              >
+                <div
+                  className="text-xs uppercase tracking-widest shrink-0 md:w-36"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {skill.category}
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
                   {skill.items.map((item) => (
-                    <div key={item} className="text-sm">
+                    <span key={item} className="text-sm">
                       {item}
-                    </div>
+                    </span>
                   ))}
                 </div>
               </StaggerItem>
