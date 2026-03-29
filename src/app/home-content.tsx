@@ -9,7 +9,6 @@ import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
-import { StatsBar } from "@/components/counter";
 
 const projects = [
   {
@@ -62,32 +61,46 @@ const projects = [
 
 const experienceEntries: TimelineEntry[] = [
   {
-    period: "June 2024 - Present",
-    title: "Software Engineer",
-    organization: "Kloudtech Corp",
-    description:
-      "Lead Software Engineer leading a team of three developers. Architected and developed a comprehensive weather monitoring system with real-time data collection, IoT integration, and web dashboard for clients.",
-  },
-  {
     period: "August 2025 - Present",
     title: "Software Developer",
-    organization: "Concentrix Catalyst",
-    description:
-      "Design and deliver secure, scalable backend integrations across enterprise CX platforms. Spearheaded TypeScript system modernization, implemented OAuth2/Azure AD B2C authentication with encrypted token lifecycle management, built serverless AWS healthcare verification services, and developed high-volume data migration tooling—cutting manual workload by 80% while ensuring zero data loss.",
+    organization: "Concentrix | Quezon City, Metro Manila",
+    description: [
+      "Collaborated with Romania-based international development team to architect and develop Zendesk integration connector for Polyglot translation platform, implementing OAuth 2.0/Azure AD B2C authentication, per-agent OAuth and real-time WebSocket/SignalR protocol translation enabling 100+ customer support agents to access translation capabilities across 20+ languages.",
+      "Developed TypeScript migration of legacy JavaScript e-commerce platform with Domain-Driven Design and Prisma ORM, creating 800+ item migration checklist and implementing 18-state Shopee return/refund state machine for presales demonstration and internal product development.",
+      "Contributed to MediGuide healthcare platform by developing serverless AWS Lambda function for insurance policy verification, integrating with external insurer APIs using OAuth2 authentication, implementing AWS Parameter Store for encrypted credential management, and scalable multi-insurer architecture with GDPR compliance.",
+      "Engineered Python CLI migration tool for PDIC client, migrating 10,000+ historical tickets from Excel to Zendesk with zero data loss and 80% time reduction compared to manual migration.",
+    ],
+  },
+  {
+    period: "June 2024 - Present",
+    title: "Software Engineer",
+    organization: "Kloudtech Corporation (Tech Startup Funded by US Department of State) | Bataan",
+    description: [
+      "Led and mentored a team of 4 developers through two major platform versions, progressing from initial VPS deployment to production-grade AWS infrastructure with Docker and GitHub Actions CI/CD, achieving 8+ months of continuous operation serving DRRM offices in the Philippines.",
+      "Architected and rebuilt KloudTrack IoT platform from Version 1 to Version 2 (enterprise-grade), implementing distributed architecture integrating ESP32 firmware, MQTT over TLS, Socket.IO real-time communication, and AWS services (IoT Core, S3, EC2, IAM).",
+      "Built high-performance backend systems including custom LRU cache achieving 90%+ hit rate, MQTT telemetry pipeline with <100ms latency, and WebSocket infrastructure supporting 100+ concurrent users with real-time presence tracking.",
+      "Implemented production-grade security with X.509 PKI certificate-based device authentication, JWT with refresh tokens, multi-tier rate limiting, and AWS S3-based OTA firmware update system with checksum validation.",
+      "Developed React 19 frontend using TanStack stack, Tailwind CSS 4, and Mapbox GL for interactive weather visualization with 24-hour timeline animation, supporting multi-tenant SaaS for 25+ weather stations across 4 station types.",
+    ],
   },
   {
     period: "August 2025 - December 2025",
-    title: "Full Stack Developer",
-    organization: "RevEarth",
-    description:
-      "Designed and delivered a production-ready GHG emissions tracking SaaS for Philippine organizations. Architected multi-tenant backend (21 APIs, 13 data models), implemented OAuth2-based authentication and secure session management, and developed standards-aligned emissions calculation engine (EPA, IPCC AR5, DOE). Enabled automated regulatory-ready reporting and analytics dashboards for Scope 1–3 emissions.",
+    title: "Full-Stack Developer",
+    organization: "RevEarth — GHG Emissions Tracking (Freelance) | Bataan",
+    description: [
+      "Developed comprehensive carbon footprint tracking application for Philippine organizations using Next.js 15, React 19, TypeScript, PostgreSQL, and Prisma ORM with 21 API endpoints and 13 database models.",
+      "Built scientifically-backed calculation engine using EPA, IPCC AR5, and Philippine DOE 2024 emission factors for Scope 1, 2, and 3 emissions tracking.",
+      "Created automated PDF/Excel reporting system with Recharts visualizations for emissions breakdown by scope, category, and time period.",
+    ],
   },
   {
-    period: "October 2023 - May 2024",
+    period: "October 2023 - June 2024",
     title: "Software Engineering Intern",
-    organization: "Kloudtech Corp",
-    description:
-      "Learned about IoT, applied cybersecurity, enhanced and maintained company's web app, and optimized the codebase.",
+    organization: "Kloudtech Corporation | Bataan",
+    description: [
+      "Gained hands-on experience with IoT systems and applied cybersecurity practices.",
+      "Enhanced and maintained the company's web application and optimized the codebase.",
+    ],
   },
 ];
 
@@ -226,26 +239,21 @@ export function HomeContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <div className="mb-10">
+            <h1 className="text-4xl md:text-[7rem] font-bold mb-8 leading-tight jp-street-text">
+              Regee
+              <br />
+              Casaña
+              <span className="text-sm md:text-2xl neon-accent block md:inline md:ml-4">レジー・カサーニャ</span>
+            </h1>
+
+            <p className="text-base md:text-lg mb-10" style={{ color: "var(--text-secondary)" }}>
+              Software Engineer · Full-stack Developer · Technical Architect
+            </p>
+
+            <div className="max-w-2xl">
               <TerminalHero />
             </div>
-
-            <h2 className="text-2xl md:text-5xl font-bold mb-8 leading-tight">
-              Software Engineer specializing in modern web technologies and scalable applications.
-            </h2>
-            <div className="text-lg space-y-4" style={{ color: "var(--text-secondary)" }}>
-              <p>
-                Computer science graduate with latin honor. Currently working as Lead Software Engineer at Kloudtech
-                Corp.
-              </p>
-              <p>
-                I build weather monitoring systems, time tracking applications, and AI-powered tools that solve
-                real-world problems.
-              </p>
-            </div>
           </motion.div>
-
-          <StatsBar />
 
           <motion.div
             className="flex gap-4 mt-8"
@@ -369,7 +377,8 @@ export function HomeContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.3 }}
-                    className="project-card cursor-pointer"
+                    className="py-6 border-b cursor-pointer"
+                    style={{ borderColor: "var(--border-color)" }}
                     onClick={() => setExpandedIndex(isExpanded ? null : idx)}
                   >
                     <div className="grid md:grid-cols-12 gap-8 items-start relative z-10">

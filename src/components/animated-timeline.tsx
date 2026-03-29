@@ -6,7 +6,7 @@ export interface TimelineEntry {
   period: string;
   title: string;
   organization: string;
-  description: string;
+  description: string | string[];
 }
 
 export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
@@ -22,7 +22,7 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
-      <div className="grid gap-8">
+      <div className="grid gap-10">
         {entries.map((entry, i) => (
           <motion.div
             key={i}
@@ -47,9 +47,20 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
               <div className="text-sm text-gray-500">{entry.period}</div>
             </div>
             <div className="md:col-span-9">
-              <h3 className="font-semibold mb-2">{entry.title}</h3>
-              <div className="text-gray-600 mb-2">{entry.organization}</div>
-              <p className="text-sm text-gray-600">{entry.description}</p>
+              <h3 className="font-semibold mb-1">{entry.title}</h3>
+              <div className="text-gray-600 mb-3">{entry.organization}</div>
+              {Array.isArray(entry.description) ? (
+                <ul className="space-y-2">
+                  {entry.description.map((point, j) => (
+                    <li key={j} className="text-sm text-gray-600 flex gap-2">
+                      <span className="neon-accent mt-0.75 shrink-0">▸</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-600">{entry.description}</p>
+              )}
             </div>
           </motion.div>
         ))}
