@@ -14,7 +14,7 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
     <div className="relative">
       {/* Vertical line */}
       <motion.div
-        className="absolute left-0 top-0 w-[2px] hidden md:block"
+        className="absolute left-[13px] top-0 w-[2px] hidden md:block"
         style={{ backgroundColor: "var(--border-color)", transformOrigin: "top", height: "100%" }}
         initial={{ scaleY: 0 }}
         whileInView={{ scaleY: 1 }}
@@ -34,7 +34,7 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
           >
             {/* Timeline dot */}
             <motion.div
-              className="absolute -left-[5px] top-6 w-3 h-3 rounded-full border-2 hidden md:block"
+              className="absolute left-2 top-6 w-3 h-3 rounded-full border-2 hidden md:block"
               style={{
                 backgroundColor: "var(--bg-primary)",
                 borderColor: "var(--demon-red)",
@@ -43,7 +43,7 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             />
 
-            <div className="md:col-span-3">
+            <div className="md:col-span-3 ml-5">
               <div className="text-sm text-gray-500">{entry.period}</div>
             </div>
             <div className="md:col-span-9">
