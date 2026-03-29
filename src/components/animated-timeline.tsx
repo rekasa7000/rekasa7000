@@ -11,43 +11,53 @@ export interface TimelineEntry {
 
 export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
   return (
-    <div className="relative">
-      {/* Vertical line */}
-      <motion.div
-        className="absolute left-[13px] top-0 w-[2px] hidden md:block"
-        style={{ backgroundColor: "var(--border-color)", transformOrigin: "top", height: "100%" }}
-        initial={{ scaleY: 0 }}
-        whileInView={{ scaleY: 1 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      />
-
-      <div className="grid gap-10">
-        {entries.map((entry, i) => (
-          <motion.div
-            key={i}
-            className="grid md:grid-cols-12 gap-8 experience-item md:pl-6 relative"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.08 }}
-          >
-            {/* Timeline dot */}
+    <div>
+      {entries.map((entry, i) => (
+        <motion.div
+          key={i}
+          className="flex gap-6 pb-10 group"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.08 }}
+        >
+          {/* Left: dot + line */}
+          <div className="hidden md:flex flex-col items-center shrink-0 w-3">
             <motion.div
-              className="absolute left-2 top-6 w-3 h-3 rounded-full border-2 hidden md:block"
+              className="w-3 h-3 rounded-full border-2 shrink-0"
               style={{
-                backgroundColor: "var(--bg-primary)",
                 borderColor: "var(--demon-red)",
+                backgroundColor: "var(--bg-primary)",
+                marginTop: "3px",
               }}
               whileHover={{ scale: 1.4 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             />
+            {i < entries.length - 1 && (
+              <motion.div
+                className="w-0.5 flex-1 mt-2"
+                style={{ backgroundColor: "var(--border-color)", transformOrigin: "top" }}
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 + 0.2 }}
+              />
+            )}
+          </div>
 
-            <div className="md:col-span-3 ml-5">
+          {/* Content */}
+          <div
+            className="flex-1 grid md:grid-cols-12 gap-8 pb-4 rounded transition-colors duration-200"
+          >
+            <div className="md:col-span-3">
               <div className="text-sm text-gray-500">{entry.period}</div>
             </div>
             <div className="md:col-span-9">
-              <h3 className="font-semibold mb-1">{entry.title}</h3>
+              <h3
+                className="font-semibold mb-1 transition-colors duration-200 group-hover:text-(--water-blue)"
+              >
+                {entry.title}
+              </h3>
               <div className="text-gray-600 mb-3">{entry.organization}</div>
               {Array.isArray(entry.description) ? (
                 <ul className="space-y-2">
@@ -62,9 +72,9 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
                 <p className="text-sm text-gray-600">{entry.description}</p>
               )}
             </div>
-          </motion.div>
-        ))}
-      </div>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
