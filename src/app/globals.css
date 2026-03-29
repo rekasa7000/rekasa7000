@@ -391,3 +391,44 @@ body {
 a:hover {
   transition: all 0.2s ease;
 }
+
+/* ── Easter egg: developer mode ── */
+@keyframes glitch {
+  0%, 84%, 100% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+  86% {
+    transform: translate(-4px, 0);
+    text-shadow: 4px 0 #4a90e2;
+  }
+  88% {
+    transform: translate(4px, 0);
+    text-shadow: -4px 0 #c41e3a;
+  }
+  90% {
+    transform: translate(-2px, 1px);
+    text-shadow: 2px 0 #4a90e2;
+    opacity: 0.9;
+  }
+  92% {
+    transform: translate(0);
+    text-shadow: none;
+    opacity: 1;
+  }
+}
+
+.easter-egg-glitch {
+  animation: glitch 7s infinite;
+}
+
+.easter-egg-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 255, 65, 0.018) 3px,
+    rgba(0, 255, 65, 0.018) 4px
+  );
+  pointer-events: none;
+}

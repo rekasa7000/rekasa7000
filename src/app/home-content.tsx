@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
@@ -187,9 +187,33 @@ const skillIcons = [
   "figma",
 ];
 
+const OVERLAY_LINES = [
+  "████████████████████████████████████",
+  "█                                  █",
+  "█   ▸ SYSTEM ACCESS: GRANTED       █",
+  "█   ▸ USER: rekasa7000             █",
+  "█   ▸ CLEARANCE: DEVELOPER         █",
+  "█                                  █",
+  "████████████████████████████████████",
+];
+
 export function HomeContent() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [easterEgg, setEasterEgg] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  useEffect(() => {
+    const activate = () => {
+      setShowOverlay(true);
+      setTimeout(() => {
+        setShowOverlay(false);
+        setEasterEgg(true);
+      }, 2800);
+    };
+    window.addEventListener("rekasa-easter-egg", activate);
+    return () => window.removeEventListener("rekasa-easter-egg", activate);
+  }, []);
 
   const allTechs = [...new Set(projects.flatMap((p) => p.technologies))];
   const filteredProjects = activeFilter ? projects.filter((p) => p.technologies.includes(activeFilter)) : projects;
@@ -208,6 +232,69 @@ export function HomeContent() {
 
       <DarkModeToggle />
       <ScrollIndicator />
+
+      {/* Easter egg: fullscreen overlay */}
+      <AnimatePresence>
+        {showOverlay && (
+          <motion.div
+            className="fixed inset-0 z-200 flex items-center justify-center"
+            style={{ backgroundColor: "rgba(0,0,0,0.96)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="font-mono text-center select-none" style={{ color: "#00ff41" }}>
+              <p className="text-xs mb-6 opacity-40 tracking-widest">// hidden feature unlocked</p>
+              {OVERLAY_LINES.map((line, i) => (
+                <motion.p
+                  key={i}
+                  className="text-xs md:text-sm leading-relaxed"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07 + 0.1 }}
+                >
+                  {line}
+                </motion.p>
+              ))}
+              <motion.p
+                className="text-sm mt-8 tracking-wider"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.9 }}
+                transition={{ delay: 0.9 }}
+              >
+                developer mode activated
+              </motion.p>
+              <motion.p
+                className="text-xs mt-2 opacity-40"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.4 }}
+                transition={{ delay: 1.2 }}
+              >
+                welcome back, regee.
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Easter egg: persistent scanlines */}
+      {easterEgg && (
+        <div className="fixed inset-0 easter-egg-scanlines pointer-events-none z-5" />
+      )}
+
+      {/* Easter egg: DEV MODE badge */}
+      {easterEgg && (
+        <motion.div
+          className="fixed bottom-6 right-6 z-50 text-xs font-mono px-2 py-1 border"
+          style={{ borderColor: "#00ff41", color: "#00ff41", backgroundColor: "rgba(0,0,0,0.85)" }}
+          initial={{ opacity: 0, scale: 0.8, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          ◈ DEV MODE
+        </motion.div>
+      )}
 
       {/* <header
         className="z-50 w-full hidden md:block relative backdrop-blur-sm"
@@ -234,7 +321,7 @@ export function HomeContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <h1 className="text-4xl md:text-[7rem] font-bold mb-8 leading-tight jp-street-text">
+            <h1 className={`text-4xl md:text-[7rem] font-bold mb-8 leading-tight jp-street-text${easterEgg ? " easter-egg-glitch" : ""}`}>
               Regee
               <br />
               Casaña

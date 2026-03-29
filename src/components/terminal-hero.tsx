@@ -46,6 +46,22 @@ function processCommand(cmd: string): { output: string[]; navigate?: string; cle
 
   if (t === "clear") return { output: [], clear: true };
 
+  if (t === "rekasa7000") {
+    setTimeout(() => window.dispatchEvent(new CustomEvent("rekasa-easter-egg")), 400);
+    return {
+      output: [
+        "████████████████████████████████",
+        "█                              █",
+        "█   ACCESS GRANTED             █",
+        "█   USER: rekasa7000           █",
+        "█   CLEARANCE: DEVELOPER       █",
+        "█                              █",
+        "████████████████████████████████",
+        "initializing developer mode...",
+      ],
+    };
+  }
+
   const openMatch = t.match(/^open\s+(\w+)$/);
   const artifact = openMatch ? openMatch[1] : ARTIFACTS.includes(t as Artifact) ? t : null;
 
