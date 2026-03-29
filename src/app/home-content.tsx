@@ -8,6 +8,7 @@ import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
+import { StatsBar } from "@/components/counter";
 
 const projects = [
   {
@@ -234,6 +235,8 @@ export function HomeContent() {
               </p>
             </div>
           </motion.div>
+
+          <StatsBar />
 
           <motion.div
             className="flex gap-4 mt-8"
