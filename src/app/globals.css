@@ -365,6 +365,16 @@
   border-color: var(--demon-red);
 }
 
+/* Blink animation for cursor effect */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
 /* Base styles */
 html {
   font-family: var(--font-jetbrains-mono), monospace;
