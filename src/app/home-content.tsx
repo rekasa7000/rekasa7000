@@ -312,10 +312,10 @@ export function HomeContent() {
             {skills.map((skill) => (
               <StaggerItem
                 key={skill.category}
-                className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 py-4"
+                className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 py-4 group transition-colors duration-200 hover:bg-[rgba(74,144,226,0.04)] -mx-3 px-3"
               >
                 <div
-                  className="text-xs uppercase tracking-widest shrink-0 md:w-36"
+                  className="text-xs uppercase tracking-widest shrink-0 md:w-36 transition-colors duration-200 group-hover:text-(--water-blue)"
                   style={{ color: "var(--text-secondary)" }}
                 >
                   {skill.category}
@@ -333,7 +333,7 @@ export function HomeContent() {
         </section>
 
         {/* Works Section */}
-        <section id="works" className="py-20 border-b" style={{ borderColor: "var(--border-color)" }}>
+        <section id="works" className="py-20" style={{ borderColor: "var(--border-color)" }}>
           <FadeInSection>
             <h2 className="text-2xl font-bold mb-8">Selected Works</h2>
           </FadeInSection>
@@ -386,14 +386,15 @@ export function HomeContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.3 }}
-                    className="py-6 border-b cursor-pointer"
+                    className="py-6 border-b cursor-pointer group"
                     style={{ borderColor: "var(--border-color)" }}
+                    whileHover={{ backgroundColor: "rgba(74, 144, 226, 0.04)" }}
                     onClick={() => setExpandedIndex(isExpanded ? null : idx)}
                   >
                     <div className="grid md:grid-cols-12 gap-8 items-start relative z-10">
                       <div className="md:col-span-3">
                         <div className="text-sm text-gray-500 mb-2">{project.year}</div>
-                        <h3 className="text-xl font-semibold">{project.title}</h3>
+                        <h3 className="text-xl font-semibold transition-colors duration-200 group-hover:text-(--water-blue)">{project.title}</h3>
                       </div>
                       <div className="md:col-span-6">
                         <p className="text-gray-600 mb-4">{project.description}</p>
