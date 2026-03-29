@@ -7,6 +7,7 @@ import { ScrollIndicator } from "@/components/scroll-indicator";
 import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
+import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
 
 const projects = [
   {
@@ -54,6 +55,54 @@ const projects = [
     githubUrl: "https://github.com/rekasa7000/knowt",
     technologies: ["Python", "Flask", "Firebase", "HTML/CSS"],
     year: "2023",
+  },
+];
+
+const experienceEntries: TimelineEntry[] = [
+  {
+    period: "June 2024 - Present",
+    title: "Software Engineer",
+    organization: "Kloudtech Corp",
+    description:
+      "Lead Software Engineer leading a team of three developers. Architected and developed a comprehensive weather monitoring system with real-time data collection, IoT integration, and web dashboard for clients.",
+  },
+  {
+    period: "August 2025 - Present",
+    title: "Software Developer",
+    organization: "Concentrix Catalyst",
+    description:
+      "Design and deliver secure, scalable backend integrations across enterprise CX platforms. Spearheaded TypeScript system modernization, implemented OAuth2/Azure AD B2C authentication with encrypted token lifecycle management, built serverless AWS healthcare verification services, and developed high-volume data migration tooling—cutting manual workload by 80% while ensuring zero data loss.",
+  },
+  {
+    period: "August 2025 - December 2025",
+    title: "Full Stack Developer",
+    organization: "RevEarth",
+    description:
+      "Designed and delivered a production-ready GHG emissions tracking SaaS for Philippine organizations. Architected multi-tenant backend (21 APIs, 13 data models), implemented OAuth2-based authentication and secure session management, and developed standards-aligned emissions calculation engine (EPA, IPCC AR5, DOE). Enabled automated regulatory-ready reporting and analytics dashboards for Scope 1–3 emissions.",
+  },
+  {
+    period: "October 2023 - May 2024",
+    title: "Software Engineering Intern",
+    organization: "Kloudtech Corp",
+    description:
+      "Learned about IoT, applied cybersecurity, enhanced and maintained company's web app, and optimized the codebase.",
+  },
+];
+
+const educationEntries: TimelineEntry[] = [
+  {
+    period: "2020 - 2024",
+    title: "Bachelor of Science in Computer Science",
+    organization: "Bataan Peninsula State University",
+    description:
+      "Graduated Cum Laude with latin honor, specializing in software engineering, algorithms, and system design. Developed strong foundation in programming languages, database management, and software development methodologies.",
+  },
+  {
+    period: "2018 - 2020",
+    title: "Science, Technology, Engineering and Mathematics (STEM)",
+    organization: "Microcity College of Business and Technology",
+    description:
+      "Graduated with Honor. Focused on mathematics, science, and technology fundamentals that provided a strong foundation for computer science studies.",
   },
 ];
 
@@ -213,74 +262,7 @@ export function HomeContent() {
           <FadeInSection>
             <h2 className="text-2xl font-bold mb-12">Experience</h2>
           </FadeInSection>
-          <div className="grid gap-8">
-            <FadeInSection delay={0.05}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">June 2024 - Present</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Software Engineer</h3>
-                  <div className="text-gray-600 mb-2">Kloudtech Corp</div>
-                  <p className="text-sm text-gray-600">
-                    Lead Software Engineer leading a team of three developers. Architected and developed a comprehensive
-                    weather monitoring system with real-time data collection, IoT integration, and web dashboard for
-                    clients.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-            <FadeInSection delay={0.1}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">August 2025 - Present</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Software Developer</h3>
-                  <div className="text-gray-600 mb-2">Concentrix Catalyst</div>
-                  <p className="text-sm text-gray-600">
-                    Design and deliver secure, scalable backend integrations across enterprise CX platforms. Spearheaded
-                    TypeScript system modernization, implemented OAuth2/Azure AD B2C authentication with encrypted token
-                    lifecycle management, built serverless AWS healthcare verification services, and developed high-volume
-                    data migration tooling—cutting manual workload by 80% while ensuring zero data loss.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-            <FadeInSection delay={0.15}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">August 2025 - December 2025</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Full Stack Developer</h3>
-                  <div className="text-gray-600 mb-2">RevEarth</div>
-                  <p className="text-sm text-gray-600">
-                    Designed and delivered a production-ready GHG emissions tracking SaaS for Philippine organizations.
-                    Architected multi-tenant backend (21 APIs, 13 data models), implemented OAuth2-based authentication
-                    and secure session management, and developed standards-aligned emissions calculation engine (EPA, IPCC
-                    AR5, DOE). Enabled automated regulatory-ready reporting and analytics dashboards for Scope 1–3
-                    emissions.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-            <FadeInSection delay={0.2}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">October 2023 - May 2024</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Software Engineering Intern</h3>
-                  <div className="text-gray-600 mb-2">Kloudtech Corp</div>
-                  <p className="text-sm text-gray-600">
-                    Learned about IoT, applied cybersecurity, enhanced and maintained company&apos;s web app, and
-                    optimized the codebase.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-          </div>
+          <AnimatedTimeline entries={experienceEntries} />
         </section>
 
         {/* Education Section */}
@@ -288,39 +270,7 @@ export function HomeContent() {
           <FadeInSection>
             <h2 className="text-2xl font-bold mb-12">Education</h2>
           </FadeInSection>
-          <div className="grid gap-8">
-            <FadeInSection delay={0.05}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">2020 - 2024</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Bachelor of Science in Computer Science</h3>
-                  <div className="text-gray-600 mb-2">Bataan Peninsula State University</div>
-                  <p className="text-sm text-gray-600">
-                    Graduated Cum Laude with latin honor, specializing in software engineering, algorithms, and system
-                    design. Developed strong foundation in programming languages, database management, and software
-                    development methodologies.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-            <FadeInSection delay={0.1}>
-              <div className="grid md:grid-cols-12 gap-8 experience-item">
-                <div className="md:col-span-3">
-                  <div className="text-sm text-gray-500">2018 - 2020</div>
-                </div>
-                <div className="md:col-span-9">
-                  <h3 className="font-semibold mb-2">Science, Technology, Engineering and Mathematics (STEM)</h3>
-                  <div className="text-gray-600 mb-2">Microcity College of Business and Technology</div>
-                  <p className="text-sm text-gray-600">
-                    Graduated with Honor. Focused on mathematics, science, and technology fundamentals that provided a
-                    strong foundation for computer science studies.
-                  </p>
-                </div>
-              </div>
-            </FadeInSection>
-          </div>
+          <AnimatedTimeline entries={educationEntries} />
         </section>
 
         {/* Skills Section */}
