@@ -192,9 +192,7 @@ export function HomeContent() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const allTechs = [...new Set(projects.flatMap((p) => p.technologies))];
-  const filteredProjects = activeFilter
-    ? projects.filter((p) => p.technologies.includes(activeFilter))
-    : projects;
+  const filteredProjects = activeFilter ? projects.filter((p) => p.technologies.includes(activeFilter)) : projects;
 
   return (
     <div
@@ -211,7 +209,7 @@ export function HomeContent() {
       <DarkModeToggle />
       <ScrollIndicator />
 
-      <header
+      {/* <header
         className="z-50 w-full hidden md:block relative backdrop-blur-sm"
         style={{ backgroundColor: "var(--bg-secondary)" }}
       >
@@ -224,13 +222,10 @@ export function HomeContent() {
             <div className="w-[720px] text-center">Technical Architect</div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Main Content */}
-      <main
-        className="max-w-6xl mx-auto px-6 relative z-10 backdrop-blur-sm"
-        style={{ backgroundColor: "var(--bg-secondary)" }}
-      >
+      <main className="max-w-6xl mx-auto px-6 relative z-10">
         {/* Hero Section */}
         <section className="py-20 md:pt-20 md:pb-40 border-b" style={{ borderColor: "var(--border-color)" }}>
           <motion.div
@@ -339,7 +334,10 @@ export function HomeContent() {
           <FadeInSection delay={0.05}>
             <div className="flex flex-wrap gap-2 mb-10">
               <button
-                onClick={() => { setActiveFilter(null); setExpandedIndex(null); }}
+                onClick={() => {
+                  setActiveFilter(null);
+                  setExpandedIndex(null);
+                }}
                 className="text-xs px-3 py-1 border transition-colors"
                 style={{
                   borderColor: activeFilter === null ? "var(--water-blue)" : "var(--border-color)",
@@ -351,7 +349,10 @@ export function HomeContent() {
               {allTechs.map((tech) => (
                 <button
                   key={tech}
-                  onClick={() => { setActiveFilter(activeFilter === tech ? null : tech); setExpandedIndex(null); }}
+                  onClick={() => {
+                    setActiveFilter(activeFilter === tech ? null : tech);
+                    setExpandedIndex(null);
+                  }}
                   className="text-xs px-3 py-1 border transition-colors"
                   style={{
                     borderColor: activeFilter === tech ? "var(--water-blue)" : "var(--border-color)",
@@ -397,10 +398,7 @@ export function HomeContent() {
                         </div>
                       </div>
                       <div className="md:col-span-3 flex justify-end items-start gap-3">
-                        <span
-                          className="text-xs"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
+                        <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
                           {isExpanded ? "▲ collapse" : "▼ details"}
                         </span>
                       </div>
