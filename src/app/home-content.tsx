@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
 import { ScrollIndicator } from "@/components/scroll-indicator";
 import { CursorSpotlight } from "@/components/cursor-spotlight";
@@ -174,6 +175,14 @@ const skillIcons = [
 ];
 
 export function HomeContent() {
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  const allTechs = [...new Set(projects.flatMap((p) => p.technologies))];
+  const filteredProjects = activeFilter
+    ? projects.filter((p) => p.technologies.includes(activeFilter))
+    : projects;
+
   return (
     <div
       className="min-h-screen font-mono relative transition-colors duration-300"
@@ -315,38 +324,115 @@ export function HomeContent() {
         {/* Works Section */}
         <section id="works" className="py-20 border-b" style={{ borderColor: "var(--border-color)" }}>
           <FadeInSection>
-            <h2 className="text-2xl font-bold mb-12">Selected Works</h2>
+            <h2 className="text-2xl font-bold mb-8">Selected Works</h2>
           </FadeInSection>
-          <StaggerContainer className="grid gap-12">
-            {projects.map((project) => (
-              <StaggerItem key={project.title}>
-                <div
-                  className="group cursor-pointer project-card"
-                  onClick={() => window.open(project.githubUrl, "_blank")}
+
+          {/* Tech filter pills */}
+          <FadeInSection delay={0.05}>
+            <div className="flex flex-wrap gap-2 mb-10">
+              <button
+                onClick={() => { setActiveFilter(null); setExpandedIndex(null); }}
+                className="text-xs px-3 py-1 border transition-colors"
+                style={{
+                  borderColor: activeFilter === null ? "var(--water-blue)" : "var(--border-color)",
+                  color: activeFilter === null ? "var(--water-blue)" : "var(--text-secondary)",
+                }}
+              >
+                All
+              </button>
+              {allTechs.map((tech) => (
+                <button
+                  key={tech}
+                  onClick={() => { setActiveFilter(activeFilter === tech ? null : tech); setExpandedIndex(null); }}
+                  className="text-xs px-3 py-1 border transition-colors"
+                  style={{
+                    borderColor: activeFilter === tech ? "var(--water-blue)" : "var(--border-color)",
+                    color: activeFilter === tech ? "var(--water-blue)" : "var(--text-secondary)",
+                  }}
                 >
-                  <div className="grid md:grid-cols-12 gap-8 items-start relative z-10">
-                    <div className="md:col-span-3">
-                      <div className="text-sm text-gray-500 mb-2">{project.year}</div>
-                      <h3 className="text-xl font-semibold group-hover:underline">{project.title}</h3>
-                    </div>
-                    <div className="md:col-span-6">
-                      <p className="text-gray-600 mb-4">{project.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <span key={tech} className="text-xs px-2 py-1 bg-gray-100 rounded">
-                            {tech}
-                          </span>
-                        ))}
+                  {tech}
+                </button>
+              ))}
+            </div>
+          </FadeInSection>
+
+          <div className="grid gap-6">
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project) => {
+                const idx = projects.indexOf(project);
+                const isExpanded = expandedIndex === idx;
+                return (
+                  <motion.div
+                    key={project.title}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.3 }}
+                    className="project-card cursor-pointer"
+                    onClick={() => setExpandedIndex(isExpanded ? null : idx)}
+                  >
+                    <div className="grid md:grid-cols-12 gap-8 items-start relative z-10">
+                      <div className="md:col-span-3">
+                        <div className="text-sm text-gray-500 mb-2">{project.year}</div>
+                        <h3 className="text-xl font-semibold">{project.title}</h3>
+                      </div>
+                      <div className="md:col-span-6">
+                        <p className="text-gray-600 mb-4">{project.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.map((tech) => (
+                            <span key={tech} className="text-xs px-2 py-1 bg-gray-100 rounded">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="md:col-span-3 flex justify-end items-start gap-3">
+                        <span
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {isExpanded ? "▲ collapse" : "▼ details"}
+                        </span>
                       </div>
                     </div>
-                    <div className="md:col-span-3 flex justify-end">
-                      <div className="text-sm text-gray-500 group-hover:text-black transition-colors">View Project →</div>
-                    </div>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+
+                    {/* Expandable detail */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{ overflow: "hidden" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div
+                            className="mt-6 pt-6 border-t flex justify-between items-center"
+                            style={{ borderColor: "var(--border-color)" }}
+                          >
+                            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                              View the full source code and documentation on GitHub.
+                            </p>
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm px-4 py-2 border street-hover"
+                              style={{ borderColor: "var(--water-blue)", color: "var(--water-blue)" }}
+                            >
+                              View on GitHub →
+                            </a>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
         </section>
 
         {/* Contact Section */}
