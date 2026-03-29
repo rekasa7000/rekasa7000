@@ -132,23 +132,26 @@
   transform: translateX(4px);
 }
 
-/* Experience items - Sharp slide animation */
+/* Experience items */
 .experience-item {
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
   padding: 1rem;
   margin: -1rem;
-  border-left: 3px solid transparent;
+  border-radius: 4px;
   position: relative;
 }
 
 .experience-item:hover {
-  border-left: 3px solid var(--demon-red);
-  background: linear-gradient(90deg, rgba(196, 30, 58, 0.05), transparent);
-  transform: translateX(6px);
+  background: rgba(74, 144, 226, 0.04);
+}
+
+.dark .experience-item:hover {
+  background: rgba(74, 144, 226, 0.06);
 }
 
 .experience-item:hover h3 {
-  color: var(--flame-orange);
+  color: var(--water-blue);
+  transition: color 0.2s ease;
 }
 
 /* Project cards - Sharp angular movement */
