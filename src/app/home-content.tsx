@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
@@ -9,8 +9,7 @@ import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
-import { EasterEggEffects } from "@/components/easter-egg-effects";
-import { MatchaEffects } from "@/components/matcha-effects";
+import { useModeContext } from "@/components/mode-provider";
 
 const projects = [
   {
@@ -189,56 +188,18 @@ const skillIcons = [
   "figma",
 ];
 
-const OVERLAY_LINES = [
-  "████████████████████████████████████",
-  "█                                  █",
-  "█   ▸ SYSTEM ACCESS: GRANTED       █",
-  "█   ▸ USER: rekasa7000             █",
-  "█   ▸ CLEARANCE: DEVELOPER         █",
-  "█                                  █",
-  "████████████████████████████████████",
-];
 
 export function HomeContent() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [easterEgg, setEasterEgg] = useState(false);
-  const [matchaMode, setMatchaMode] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false);
-
-  useEffect(() => {
-    const activateDev = () => {
-      setMatchaMode(false);
-      setShowOverlay(true);
-      setTimeout(() => {
-        setShowOverlay(false);
-        setEasterEgg(true);
-      }, 2800);
-    };
-    const activateMatcha = () => {
-      setEasterEgg(false);
-      setMatchaMode(true);
-    };
-    const exitMode = () => {
-      setEasterEgg(false);
-      setMatchaMode(false);
-    };
-    window.addEventListener("rekasa-easter-egg", activateDev);
-    window.addEventListener("matcha-mode", activateMatcha);
-    window.addEventListener("exit-mode", exitMode);
-    return () => {
-      window.removeEventListener("rekasa-easter-egg", activateDev);
-      window.removeEventListener("matcha-mode", activateMatcha);
-      window.removeEventListener("exit-mode", exitMode);
-    };
-  }, []);
+  const { easterEgg, matchaMode } = useModeContext();
 
   const allTechs = [...new Set(projects.flatMap((p) => p.technologies))];
   const filteredProjects = activeFilter ? projects.filter((p) => p.technologies.includes(activeFilter)) : projects;
 
   return (
     <div
-      className={`min-h-screen font-mono relative transition-colors duration-300${easterEgg ? " dev-mode" : ""}${matchaMode ? " matcha-mode" : ""}`}
+      className="min-h-screen font-mono relative transition-colors duration-300"
       style={{
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
@@ -251,54 +212,6 @@ export function HomeContent() {
       <DarkModeToggle />
       <ScrollIndicator />
 
-      {/* Easter egg: fullscreen overlay */}
-      <AnimatePresence>
-        {showOverlay && (
-          <motion.div
-            className="fixed inset-0 z-200 flex items-center justify-center"
-            style={{ backgroundColor: "rgba(0,0,0,0.96)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
-          >
-            <div className="font-mono text-center select-none" style={{ color: "#00ff41" }}>
-              <p className="text-xs mb-6 opacity-40 tracking-widest">// hidden feature unlocked</p>
-              {OVERLAY_LINES.map((line, i) => (
-                <motion.p
-                  key={i}
-                  className="text-xs md:text-sm leading-relaxed"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07 + 0.1 }}
-                >
-                  {line}
-                </motion.p>
-              ))}
-              <motion.p
-                className="text-sm mt-8 tracking-wider"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.9 }}
-                transition={{ delay: 0.9 }}
-              >
-                developer mode activated
-              </motion.p>
-              <motion.p
-                className="text-xs mt-2 opacity-40"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.4 }}
-                transition={{ delay: 1.2 }}
-              >
-                welcome back, regee.
-              </motion.p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Easter egg: persistent effects */}
-      {easterEgg && <EasterEggEffects />}
-      {matchaMode && <MatchaEffects />}
 
       {/* <header
         className="z-50 w-full hidden md:block relative backdrop-blur-sm"

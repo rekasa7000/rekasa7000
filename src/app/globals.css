@@ -394,8 +394,7 @@ a:hover {
 
 /* ── Easter egg: developer mode ── */
 
-/* dark theme */
-html.dark .dev-mode {
+html.dark.dev-mode {
   --bg-primary: #000d00;
   --bg-secondary: rgba(0, 12, 0, 0.97);
   --border-color: rgba(0, 255, 65, 0.35);
@@ -405,8 +404,7 @@ html.dark .dev-mode {
   --water-blue: #00e870;
 }
 
-/* light theme */
-html:not(.dark) .dev-mode {
+html:not(.dark).dev-mode {
   --bg-primary: #edfff0;
   --bg-secondary: rgba(220, 255, 228, 0.97);
   --border-color: rgba(0, 160, 50, 0.35);
@@ -416,17 +414,17 @@ html:not(.dark) .dev-mode {
   --water-blue: #007c20;
 }
 
-.dev-mode .neon-accent {
+html.dev-mode .neon-accent {
   color: #00ff41;
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.7), 0 0 20px rgba(0, 255, 65, 0.3);
 }
 
-html:not(.dark) .dev-mode .neon-accent {
+html:not(.dark).dev-mode .neon-accent {
   color: #007c20;
   text-shadow: 0 0 6px rgba(0, 160, 50, 0.4);
 }
 
-.dev-mode .jp-pattern-dots {
+html.dev-mode .jp-pattern-dots {
   background-image:
     radial-gradient(circle at 25% 25%, rgba(0, 255, 65, 0.6) 1px, transparent 1px),
     radial-gradient(circle at 75% 75%, rgba(0, 255, 65, 0.3) 1px, transparent 1px);
@@ -466,8 +464,7 @@ html:not(.dark) .dev-mode .neon-accent {
 
 /* ── Matcha mode ── */
 
-/* dark theme */
-html.dark .matcha-mode {
+html.dark.matcha-mode {
   --bg-primary: #080f09;
   --bg-secondary: rgba(8, 15, 9, 0.97);
   --border-color: rgba(143, 188, 90, 0.28);
@@ -477,8 +474,7 @@ html.dark .matcha-mode {
   --water-blue: #7ab648;
 }
 
-/* light theme */
-html:not(.dark) .matcha-mode {
+html:not(.dark).matcha-mode {
   --bg-primary: #f4f9ec;
   --bg-secondary: rgba(238, 248, 224, 0.97);
   --border-color: rgba(100, 148, 55, 0.3);
@@ -488,17 +484,17 @@ html:not(.dark) .matcha-mode {
   --water-blue: #3d6e12;
 }
 
-.matcha-mode .neon-accent {
+html.matcha-mode .neon-accent {
   color: #8fbc5a;
   text-shadow: 0 0 10px rgba(143, 188, 90, 0.5), 0 0 25px rgba(143, 188, 90, 0.2);
 }
 
-html:not(.dark) .matcha-mode .neon-accent {
+html:not(.dark).matcha-mode .neon-accent {
   color: #3d6e12;
   text-shadow: 0 0 6px rgba(100, 148, 55, 0.35);
 }
 
-.matcha-mode .jp-pattern-dots {
+html.matcha-mode .jp-pattern-dots {
   background-image:
     radial-gradient(circle at 25% 25%, rgba(143, 188, 90, 0.5) 1px, transparent 1px),
     radial-gradient(circle at 75% 75%, rgba(143, 188, 90, 0.25) 1px, transparent 1px);

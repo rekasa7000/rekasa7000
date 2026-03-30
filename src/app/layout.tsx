@@ -3,6 +3,7 @@ import { JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
+import { ModeProvider } from "@/components/mode-provider";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -20,6 +21,9 @@ const notoSansJP = Noto_Sans_JP({
 export const metadata: Metadata = {
   title: "Regee Casaña",
   description: "Software Engineer",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +35,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${jetbrainsMono.variable} ${notoSansJP.variable} font-mono antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
-          <PageTransition>{children}</PageTransition>
+          <ModeProvider>
+            <PageTransition>{children}</PageTransition>
+          </ModeProvider>
           <Analytics />
         </ThemeProvider>
       </body>
