@@ -445,3 +445,39 @@ a:hover {
 .easter-egg-glitch {
   animation: glitch 2.5s infinite;
 }
+
+/* ── Matcha mode ── */
+.matcha-mode {
+  --bg-primary: #080f09;
+  --bg-secondary: rgba(8, 15, 9, 0.97);
+  --border-color: rgba(143, 188, 90, 0.28);
+  --text-primary: #deefc8;
+  --text-secondary: rgba(143, 188, 90, 0.55);
+  --demon-red: #8fbc5a;
+  --water-blue: #7ab648;
+}
+
+.matcha-mode .neon-accent {
+  color: #8fbc5a;
+  text-shadow: 0 0 10px rgba(143, 188, 90, 0.5), 0 0 25px rgba(143, 188, 90, 0.2);
+}
+
+.matcha-mode .jp-pattern-dots {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(143, 188, 90, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(143, 188, 90, 0.25) 1px, transparent 1px);
+  opacity: 0.12;
+}
+
+@keyframes matcha-breathe {
+  0%, 100% {
+    text-shadow: 0 0 12px rgba(143, 188, 90, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(143, 188, 90, 0.6), 0 0 60px rgba(143, 188, 90, 0.2);
+  }
+}
+
+.matcha-glow {
+  animation: matcha-breathe 4s ease-in-out infinite;
+}

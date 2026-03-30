@@ -10,6 +10,7 @@ import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
 import { EasterEggEffects } from "@/components/easter-egg-effects";
+import { MatchaEffects } from "@/components/matcha-effects";
 
 const projects = [
   {
@@ -202,18 +203,28 @@ export function HomeContent() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [easterEgg, setEasterEgg] = useState(false);
+  const [matchaMode, setMatchaMode] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
-    const activate = () => {
+    const activateDev = () => {
+      setMatchaMode(false);
       setShowOverlay(true);
       setTimeout(() => {
         setShowOverlay(false);
         setEasterEgg(true);
       }, 2800);
     };
-    window.addEventListener("rekasa-easter-egg", activate);
-    return () => window.removeEventListener("rekasa-easter-egg", activate);
+    const activateMatcha = () => {
+      setEasterEgg(false);
+      setMatchaMode(true);
+    };
+    window.addEventListener("rekasa-easter-egg", activateDev);
+    window.addEventListener("matcha-mode", activateMatcha);
+    return () => {
+      window.removeEventListener("rekasa-easter-egg", activateDev);
+      window.removeEventListener("matcha-mode", activateMatcha);
+    };
   }, []);
 
   const allTechs = [...new Set(projects.flatMap((p) => p.technologies))];
@@ -221,7 +232,7 @@ export function HomeContent() {
 
   return (
     <div
-      className={`min-h-screen font-mono relative transition-colors duration-300${easterEgg ? " dev-mode" : ""}`}
+      className={`min-h-screen font-mono relative transition-colors duration-300${easterEgg ? " dev-mode" : ""}${matchaMode ? " matcha-mode" : ""}`}
       style={{
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
@@ -281,6 +292,7 @@ export function HomeContent() {
 
       {/* Easter egg: persistent effects */}
       {easterEgg && <EasterEggEffects />}
+      {matchaMode && <MatchaEffects />}
 
       {/* <header
         className="z-50 w-full hidden md:block relative backdrop-blur-sm"
@@ -307,7 +319,7 @@ export function HomeContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <h1 className={`text-4xl md:text-[7rem] font-bold mb-8 leading-tight jp-street-text${easterEgg ? " easter-egg-glitch" : ""}`}>
+            <h1 className={`text-4xl md:text-[7rem] font-bold mb-8 leading-tight jp-street-text${easterEgg ? " easter-egg-glitch" : ""}${matchaMode ? " matcha-glow" : ""}`}>
               Regee
               <br />
               Casaña

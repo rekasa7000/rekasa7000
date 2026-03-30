@@ -62,6 +62,20 @@ function processCommand(cmd: string): { output: string[]; navigate?: string; cle
     };
   }
 
+  if (t === "matcha") {
+    setTimeout(() => window.dispatchEvent(new CustomEvent("matcha-mode")), 400);
+    return {
+      output: [
+        "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+        "░  抹茶モード                 ░",
+        "░  matcha mode activated      ░",
+        "░  一期一会                   ░",
+        "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+        "this moment, only once.",
+      ],
+    };
+  }
+
   const openMatch = t.match(/^open\s+(\w+)$/);
   const artifact = openMatch ? openMatch[1] : ARTIFACTS.includes(t as Artifact) ? t : null;
 
