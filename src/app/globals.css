@@ -393,7 +393,9 @@ a:hover {
 }
 
 /* ── Easter egg: developer mode ── */
-.dev-mode {
+
+/* dark theme */
+html.dark .dev-mode {
   --bg-primary: #000d00;
   --bg-secondary: rgba(0, 12, 0, 0.97);
   --border-color: rgba(0, 255, 65, 0.35);
@@ -403,9 +405,25 @@ a:hover {
   --water-blue: #00e870;
 }
 
+/* light theme */
+html:not(.dark) .dev-mode {
+  --bg-primary: #edfff0;
+  --bg-secondary: rgba(220, 255, 228, 0.97);
+  --border-color: rgba(0, 160, 50, 0.35);
+  --text-primary: #042010;
+  --text-secondary: rgba(0, 130, 40, 0.7);
+  --demon-red: #008c28;
+  --water-blue: #007c20;
+}
+
 .dev-mode .neon-accent {
   color: #00ff41;
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.7), 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+html:not(.dark) .dev-mode .neon-accent {
+  color: #007c20;
+  text-shadow: 0 0 6px rgba(0, 160, 50, 0.4);
 }
 
 .dev-mode .jp-pattern-dots {
@@ -447,7 +465,9 @@ a:hover {
 }
 
 /* ── Matcha mode ── */
-.matcha-mode {
+
+/* dark theme */
+html.dark .matcha-mode {
   --bg-primary: #080f09;
   --bg-secondary: rgba(8, 15, 9, 0.97);
   --border-color: rgba(143, 188, 90, 0.28);
@@ -457,9 +477,25 @@ a:hover {
   --water-blue: #7ab648;
 }
 
+/* light theme */
+html:not(.dark) .matcha-mode {
+  --bg-primary: #f4f9ec;
+  --bg-secondary: rgba(238, 248, 224, 0.97);
+  --border-color: rgba(100, 148, 55, 0.3);
+  --text-primary: #1e2e0a;
+  --text-secondary: rgba(80, 120, 30, 0.7);
+  --demon-red: #4a7c18;
+  --water-blue: #3d6e12;
+}
+
 .matcha-mode .neon-accent {
   color: #8fbc5a;
   text-shadow: 0 0 10px rgba(143, 188, 90, 0.5), 0 0 25px rgba(143, 188, 90, 0.2);
+}
+
+html:not(.dark) .matcha-mode .neon-accent {
+  color: #3d6e12;
+  text-shadow: 0 0 6px rgba(100, 148, 55, 0.35);
 }
 
 .matcha-mode .jp-pattern-dots {
