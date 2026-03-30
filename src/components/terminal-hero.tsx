@@ -46,6 +46,11 @@ function processCommand(cmd: string): { output: string[]; navigate?: string; cle
 
   if (t === "clear") return { output: [], clear: true };
 
+  if (t === "exit") {
+    setTimeout(() => window.dispatchEvent(new CustomEvent("exit-mode")), 200);
+    return { output: ["exiting mode...", "returned to normal."] };
+  }
+
   if (t === "rekasa7000") {
     setTimeout(() => window.dispatchEvent(new CustomEvent("rekasa-easter-egg")), 400);
     return {

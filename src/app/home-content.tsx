@@ -219,11 +219,17 @@ export function HomeContent() {
       setEasterEgg(false);
       setMatchaMode(true);
     };
+    const exitMode = () => {
+      setEasterEgg(false);
+      setMatchaMode(false);
+    };
     window.addEventListener("rekasa-easter-egg", activateDev);
     window.addEventListener("matcha-mode", activateMatcha);
+    window.addEventListener("exit-mode", exitMode);
     return () => {
       window.removeEventListener("rekasa-easter-egg", activateDev);
       window.removeEventListener("matcha-mode", activateMatcha);
+      window.removeEventListener("exit-mode", exitMode);
     };
   }, []);
 
