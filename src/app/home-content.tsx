@@ -10,6 +10,7 @@ import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
 import { useModeContext } from "@/components/mode-provider";
+import { VisitorCounter } from "@/components/visitor-counter";
 
 const projects = [
   {
@@ -502,7 +503,10 @@ export function HomeContent() {
       {/* Footer */}
       <footer className="border-t mt-20" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="text-sm text-gray-500">© 2024 Regee Casaña</div>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="text-sm text-gray-500">© 2024 Regee Casaña</div>
+            <VisitorCounter />
+          </div>
         </div>
       </footer>
     </div>
