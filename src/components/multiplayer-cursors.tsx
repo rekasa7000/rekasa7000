@@ -29,8 +29,9 @@ interface CursorState {
 
 export function MultiplayerCursors() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [visitorCount, setVisitorCount] = useState(0);
+  const [visitorCount, setVisitorCount] = useState(1);
   const [totalVisits, setTotalVisits] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const channelRef = useRef<ReturnType<typeof createClient>["channel"] | null>(null);
 
   // ── Fetch/increment total visits, then broadcast new total to all clients ──
@@ -145,13 +146,22 @@ export function MultiplayerCursors() {
         setTotalVisits(total);
       })
       .on("presence", { event: "sync" }, () => {
-        const state = channel.presenceState();
-        setVisitorCount(Object.keys(state).length);
+        const count = Object.keys(channel.presenceState()).length;
+        setVisitorCount(count > 0 ? count : 1);
+      })
+      .on("presence", { event: "join" }, () => {
+        const count = Object.keys(channel.presenceState()).length;
+        setVisitorCount(count > 0 ? count : 1);
+      })
+      .on("presence", { event: "leave" }, () => {
+        const count = Object.keys(channel.presenceState()).length;
+        setVisitorCount(count > 0 ? count : 1);
       })
       .subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
 
         channel.track({ id: myId, color: myColor, label: myLabel, joinedAt: Date.now() });
+        setMounted(true);
 
         const handleMouseMove = (e: MouseEvent) => {
           const now = Date.now();
@@ -182,7 +192,7 @@ export function MultiplayerCursors() {
   return (
     <>
       <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />
-      {(visitorCount > 0 || totalVisits !== null) && (
+      {mounted && (
         <div
           className="fixed top-4 right-4 z-50 text-xs font-mono px-3 py-2 pointer-events-none select-none flex flex-col gap-1 items-end"
           style={{
