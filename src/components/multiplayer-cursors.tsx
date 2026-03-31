@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -11,126 +11,148 @@ const CURSOR_COLORS = [
   "#a84ae2", "#4ae2d4", "#e24aa8", "#e2e24a",
 ];
 
-function shortId(): string {
+function shortId() {
   return Math.random().toString(36).slice(2, 7);
 }
 
-interface RemoteCursor {
+interface CursorState {
   id: string;
-  x: number;
-  y: number;
+  tx: number; // target x
+  ty: number; // target y
+  x: number;  // displayed x (lerped)
+  y: number;  // displayed y (lerped)
   color: string;
   label: string;
+  el: HTMLDivElement | null;
   updatedAt: number;
 }
 
 export function MultiplayerCursors() {
-  const [cursors, setCursors] = useState<Record<string, RemoteCursor>>({});
-  const myIdRef = useRef(shortId());
-  const myColorRef = useRef(CURSOR_COLORS[Math.floor(Math.random() * CURSOR_COLORS.length)]);
-  const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
-  const lastSentRef = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const myId = myIdRef.current;
-    const myColor = myColorRef.current;
+    const myId = shortId();
+    const myColor = CURSOR_COLORS[Math.floor(Math.random() * CURSOR_COLORS.length)];
     const myLabel = `visitor_${myId}`;
 
-    const channel = supabase.channel("cursors", {
-      config: { broadcast: { self: false } },
-    });
+    // Track remote cursors purely in a ref — no React state, no re-renders
+    const cursors: Record<string, CursorState> = {};
+    let rafId = 0;
+    let lastSent = 0;
 
-    channelRef.current = channel;
+    // ── Lerp loop ──────────────────────────────────────────────────────────
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    channel
-      .on("broadcast", { event: "cursor" }, ({ payload }) => {
-        const { id, x, y, color, label } = payload as RemoteCursor;
-        setCursors((prev) => ({
-          ...prev,
-          [id]: { id, x, y, color, label, updatedAt: Date.now() },
-        }));
-      })
-      .on("broadcast", { event: "leave" }, ({ payload }) => {
-        const { id } = payload as { id: string };
-        setCursors((prev) => {
-          const next = { ...prev };
-          delete next[id];
-          return next;
-        });
-      })
-      .subscribe();
-
-    const handleMouseMove = (e: MouseEvent) => {
+    const tick = () => {
       const now = Date.now();
-      if (now - lastSentRef.current < 40) return; // ~25fps throttle
-      lastSentRef.current = now;
-
-      channel.send({
-        type: "broadcast",
-        event: "cursor",
-        payload: { id: myId, x: e.clientX, y: e.clientY, color: myColor, label: myLabel },
-      });
+      for (const _id in cursors) {
+        const c = cursors[_id];
+        // Prune stale
+        if (now - c.updatedAt > 5000) {
+          c.el?.remove();
+          delete cursors[_id];
+          continue;
+        }
+        // Smooth lerp toward target
+        c.x = lerp(c.x, c.tx, 0.18);
+        c.y = lerp(c.y, c.ty, 0.18);
+        if (c.el) {
+          c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+        }
+      }
+      rafId = requestAnimationFrame(tick);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    rafId = requestAnimationFrame(tick);
 
-    // Prune stale cursors every 3s
-    const prune = setInterval(() => {
-      setCursors((prev) => {
-        const now = Date.now();
-        const next = { ...prev };
-        for (const id in next) {
-          if (now - next[id].updatedAt > 5000) delete next[id];
+    // ── DOM helpers ────────────────────────────────────────────────────────
+    function createCursorEl(id: string, color: string, label: string): HTMLDivElement {
+      const wrap = document.createElement("div");
+      wrap.style.cssText = `
+        position: fixed; top: 0; left: 0;
+        pointer-events: none; z-index: 300; will-change: transform;
+      `;
+
+      wrap.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M2 2L14 8L9 9.5L7 15L2 2Z"
+            fill="${color}" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+        </svg>
+        <div style="
+          position:absolute; top:18px; left:4px;
+          font-size:10px; font-family:monospace;
+          padding:2px 6px; border-radius:3px; white-space:nowrap;
+          background:${color}; color:#000; opacity:0.9;
+        ">${label}</div>
+      `;
+
+      containerRef.current?.appendChild(wrap);
+      return wrap;
+    }
+
+    // ── Supabase channel ───────────────────────────────────────────────────
+    const channel = supabase.channel("portfolio-cursors-v1", {
+      config: { broadcast: { self: false, ack: false } },
+    });
+
+    channel
+      .on("broadcast", { event: "cur" }, ({ payload }) => {
+        const { id, x, y, color, label } = payload as {
+          id: string; x: number; y: number; color: string; label: string;
+        };
+        if (!cursors[id]) {
+          cursors[id] = {
+            id, tx: x, ty: y, x, y, color, label,
+            el: createCursorEl(id, color, label),
+            updatedAt: Date.now(),
+          };
+        } else {
+          cursors[id].tx = x;
+          cursors[id].ty = y;
+          cursors[id].updatedAt = Date.now();
         }
-        return next;
+      })
+      .on("broadcast", { event: "bye" }, ({ payload }) => {
+        const { id } = payload as { id: string };
+        cursors[id]?.el?.remove();
+        delete cursors[id];
+      })
+      .subscribe((status) => {
+        if (status !== "SUBSCRIBED") return;
+
+        // Only start sending AFTER channel is ready
+        const handleMouseMove = (e: MouseEvent) => {
+          const now = Date.now();
+          if (now - lastSent < 35) return;
+          lastSent = now;
+          channel.send({
+            type: "broadcast",
+            event: "cur",
+            payload: { id: myId, x: e.clientX, y: e.clientY, color: myColor, label: myLabel },
+          });
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+
+        // Store cleanup ref on channel object
+        (channel as unknown as { _cleanup?: () => void })._cleanup = () => {
+          window.removeEventListener("mousemove", handleMouseMove);
+        };
       });
-    }, 3000);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(prune);
-      channel.send({ type: "broadcast", event: "leave", payload: { id: myId } });
+      cancelAnimationFrame(rafId);
+      (channel as unknown as { _cleanup?: () => void })._cleanup?.();
+      channel.send({ type: "broadcast", event: "bye", payload: { id: myId } });
       supabase.removeChannel(channel);
+      // Clean up DOM nodes
+      for (const id in cursors) cursors[id].el?.remove();
     };
   }, []);
 
-  return (
-    <>
-      {Object.values(cursors).map((cursor) => (
-        <div
-          key={cursor.id}
-          className="fixed pointer-events-none z-[300] transition-none"
-          style={{
-            left: cursor.x,
-            top: cursor.y,
-            transform: "translate(-2px, -2px)",
-          }}
-        >
-          {/* Cursor SVG */}
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path
-              d="M2 2L14 8L9 9.5L7 15L2 2Z"
-              fill={cursor.color}
-              stroke="rgba(0,0,0,0.5)"
-              strokeWidth="1"
-            />
-          </svg>
-          {/* Label */}
-          <div
-            className="absolute top-4 left-3 text-[10px] font-mono px-1.5 py-0.5 rounded whitespace-nowrap"
-            style={{
-              backgroundColor: cursor.color,
-              color: "#000",
-              opacity: 0.9,
-            }}
-          >
-            {cursor.label}
-          </div>
-        </div>
-      ))}
-    </>
-  );
+  // Container just serves as a mount point for imperative DOM cursors
+  return <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />;
 }
