@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -29,6 +29,7 @@ interface CursorState {
 
 export function MultiplayerCursors() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [visitorCount, setVisitorCount] = useState(0);
 
   useEffect(() => {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
@@ -69,7 +70,7 @@ export function MultiplayerCursors() {
     rafId = requestAnimationFrame(tick);
 
     // ── DOM helpers ────────────────────────────────────────────────────────
-    function createCursorEl(id: string, color: string, label: string): HTMLDivElement {
+    function createCursorEl(_id: string, color: string, label: string): HTMLDivElement {
       const wrap = document.createElement("div");
       wrap.style.cssText = `
         position: fixed; top: 0; left: 0;
@@ -95,7 +96,10 @@ export function MultiplayerCursors() {
 
     // ── Supabase channel ───────────────────────────────────────────────────
     const channel = supabase.channel("portfolio-cursors-v1", {
-      config: { broadcast: { self: false, ack: false } },
+      config: {
+        broadcast: { self: false, ack: false },
+        presence: { key: myId },
+      },
     });
 
     channel
@@ -120,8 +124,15 @@ export function MultiplayerCursors() {
         cursors[id]?.el?.remove();
         delete cursors[id];
       })
+      .on("presence", { event: "sync" }, () => {
+        const state = channel.presenceState();
+        setVisitorCount(Object.keys(state).length);
+      })
       .subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
+
+        // Track this visitor in presence
+        channel.track({ id: myId, color: myColor, label: myLabel, joinedAt: Date.now() });
 
         // Only start sending AFTER channel is ready
         const handleMouseMove = (e: MouseEvent) => {
@@ -153,6 +164,23 @@ export function MultiplayerCursors() {
     };
   }, []);
 
-  // Container just serves as a mount point for imperative DOM cursors
-  return <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />;
+  return (
+    <>
+      <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />
+      {visitorCount > 0 && (
+        <div
+          className="fixed bottom-6 left-6 z-50 text-xs font-mono px-3 py-1.5 pointer-events-none select-none"
+          style={{
+            background: "rgba(0,0,0,0.55)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: "4px",
+            color: "rgba(255,255,255,0.7)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          ◈ {visitorCount} {visitorCount === 1 ? "visitor" : "visitors"} online
+        </div>
+      )}
+    </>
+  );
 }
