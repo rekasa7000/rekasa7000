@@ -24,7 +24,7 @@ const FILESYSTEM: FSDir = {
         "Based in the Philippines. Building web products that people",
         "actually enjoy using. Obsessed with clean code and good UX.",
         "",
-        "Contact: regeecasana@gmail.com",
+        "Contact: regeecasana57@gmail.com",
       ],
     },
     "skills.json": {
@@ -43,7 +43,7 @@ const FILESYSTEM: FSDir = {
     "contact.txt": {
       type: "file",
       content: [
-        "email     regeecasana@gmail.com",
+        "email     regeecasana57@gmail.com",
         "github    github.com/rekasa7000",
         "linkedin  linkedin.com/in/regeecasana",
         "",
@@ -99,15 +99,15 @@ const FILESYSTEM: FSDir = {
       children: {
         "piano.exe": {
           type: "file",
-          content: ['Binary. Run with: open piano'],
+          content: ["Binary. Run with: open piano"],
         },
         "matrix.exe": {
           type: "file",
-          content: ['Binary. Run with: open matrix'],
+          content: ["Binary. Run with: open matrix"],
         },
         "snake.exe": {
           type: "file",
-          content: ['Binary. Run with: open snake'],
+          content: ["Binary. Run with: open snake"],
         },
       },
     },
@@ -173,7 +173,7 @@ const TERMINAL_LINES = [
 function processCommand(
   cmd: string,
   cwd: string[],
-  setCwd: (cwd: string[]) => void
+  setCwd: (cwd: string[]) => void,
 ): { output: string[]; navigate?: string; clear?: boolean } {
   const raw = cmd.trim();
   const t = raw.toLowerCase();
@@ -233,7 +233,10 @@ function processCommand(
   // ── cd ──
   if (verbL === "cd") {
     const target = args[0] ?? "";
-    if (!target || target === "~") { setCwd([]); return { output: [] }; }
+    if (!target || target === "~") {
+      setCwd([]);
+      return { output: [] };
+    }
     const newPath = resolvePath(cwd, target.split("/"));
     if (!newPath) return { output: [`cd: ${target}: invalid path`] };
     const node = getNode(newPath);
@@ -298,7 +301,7 @@ function processCommand(
   if (t === "sudo hire regee" || t === "sudo hire") {
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent("hire-confetti"));
-      window.open("mailto:regeecasana@gmail.com?subject=Let's Work Together", "_blank");
+      window.open("mailto:regeecasana57@gmail.com?subject=Let's Work Together", "_blank");
     }, 600);
     return {
       output: [
@@ -339,7 +342,7 @@ function processCommand(
         "       None known. Any bugs are features.",
         "",
         "SEE ALSO",
-        '       sudo hire regee, cat about.md, cat contact.txt',
+        "       sudo hire regee, cat about.md, cat contact.txt",
       ],
     };
   }
@@ -380,12 +383,19 @@ export function TerminalHero() {
 
   const handleSubmit = useCallback(() => {
     const cmd = input.trim();
-    if (!cmd) { setInput(""); return; }
+    if (!cmd) {
+      setInput("");
+      return;
+    }
 
     const prompt = `[${cwdStr(cwd)}]$ ${cmd}`;
     const { output, navigate, clear } = processCommand(cmd, cwd, setCwd);
 
-    if (clear) { setHistory([]); setInput(""); return; }
+    if (clear) {
+      setHistory([]);
+      setInput("");
+      return;
+    }
 
     setHistory((h) => [
       ...h,
@@ -468,7 +478,9 @@ export function TerminalHero() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSubmit();
+              }}
               className="sr-only"
               autoFocus
               autoComplete="off"
