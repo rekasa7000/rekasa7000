@@ -34,24 +34,19 @@ export function MultiplayerCursors() {
   const [mounted, setMounted] = useState(false);
   const channelRef = useRef<ReturnType<typeof createClient>["channel"] | null>(null);
 
-  // ── Fetch/increment total visits, then broadcast new total to all clients ──
+  // ── Fetch/increment total visits ──────────────────────────────────────────
   useEffect(() => {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
-
     const counted = sessionStorage.getItem("vcount");
     const method = counted ? "GET" : "POST";
-
     fetch("/api/visitors", { method })
       .then((r) => r.json())
       .then((d: { total: number }) => {
         setTotalVisits(d.total);
         if (!counted) {
           sessionStorage.setItem("vcount", "1");
-          // Broadcast new total so all open tabs update instantly
           (channelRef.current as unknown as { send: (msg: object) => void } | null)?.send({
-            type: "broadcast",
-            event: "visits",
-            payload: { total: d.total },
+            type: "broadcast", event: "visits", payload: { total: d.total },
           });
         }
       })
@@ -67,6 +62,8 @@ export function MultiplayerCursors() {
     const myLabel = `visitor_${myId}`;
 
     const cursors: Record<string, CursorState> = {};
+    // Track other connected visitor IDs via broadcast handshake
+    const peerIds = new Set<string>();
     let rafId = 0;
     let lastSent = 0;
 
@@ -79,6 +76,9 @@ export function MultiplayerCursors() {
         if (now - c.updatedAt > 5000) {
           c.el?.remove();
           delete cursors[_id];
+          // Also drop from peer set if stale
+          peerIds.delete(_id);
+          setVisitorCount(peerIds.size + 1);
           continue;
         }
         c.x = lerp(c.x, c.tx, 0.18);
@@ -113,13 +113,9 @@ export function MultiplayerCursors() {
     }
 
     const channel = supabase.channel("portfolio-cursors-v1", {
-      config: {
-        broadcast: { self: false, ack: false },
-        presence: { key: myId },
-      },
+      config: { broadcast: { self: false, ack: false } },
     });
 
-    // Store channel ref so the visits fetch effect can broadcast on it
     channelRef.current = channel as unknown as ReturnType<typeof createClient>["channel"];
 
     channel
@@ -135,32 +131,34 @@ export function MultiplayerCursors() {
           cursors[id].updatedAt = Date.now();
         }
       })
+      // ── Broadcast-based visitor count ───────────────────────────────────
+      // When someone new joins they send "hello"; existing clients respond
+      // with their own "hello" so the newcomer learns everyone is there.
+      .on("broadcast", { event: "hello" }, ({ payload }) => {
+        const { id } = payload as { id: string };
+        if (!peerIds.has(id)) {
+          peerIds.add(id);
+          setVisitorCount(peerIds.size + 1);
+          // Reply so the new visitor knows we exist
+          channel.send({ type: "broadcast", event: "hello", payload: { id: myId } });
+        }
+      })
       .on("broadcast", { event: "bye" }, ({ payload }) => {
         const { id } = payload as { id: string };
         cursors[id]?.el?.remove();
         delete cursors[id];
+        peerIds.delete(id);
+        setVisitorCount(peerIds.size + 1);
       })
       .on("broadcast", { event: "visits" }, ({ payload }) => {
-        // Another visitor just joined — update our total count
         const { total } = payload as { total: number };
         setTotalVisits(total);
-      })
-      .on("presence", { event: "sync" }, () => {
-        const count = Object.keys(channel.presenceState()).length;
-        setVisitorCount(count > 0 ? count : 1);
-      })
-      .on("presence", { event: "join" }, () => {
-        const count = Object.keys(channel.presenceState()).length;
-        setVisitorCount(count > 0 ? count : 1);
-      })
-      .on("presence", { event: "leave" }, () => {
-        const count = Object.keys(channel.presenceState()).length;
-        setVisitorCount(count > 0 ? count : 1);
       })
       .subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
 
-        channel.track({ id: myId, color: myColor, label: myLabel, joinedAt: Date.now() });
+        // Announce ourselves — existing clients will reply with their own "hello"
+        channel.send({ type: "broadcast", event: "hello", payload: { id: myId } });
         setMounted(true);
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -168,8 +166,7 @@ export function MultiplayerCursors() {
           if (now - lastSent < 35) return;
           lastSent = now;
           channel.send({
-            type: "broadcast",
-            event: "cur",
+            type: "broadcast", event: "cur",
             payload: { id: myId, x: e.clientX, y: e.clientY, color: myColor, label: myLabel },
           });
         };
@@ -203,9 +200,7 @@ export function MultiplayerCursors() {
             backdropFilter: "blur(8px)",
           }}
         >
-          {visitorCount > 0 && (
-            <span>◈ {visitorCount} {visitorCount === 1 ? "visitor" : "visitors"} online</span>
-          )}
+          <span>◈ {visitorCount} {visitorCount === 1 ? "visitor" : "visitors"} online</span>
           {totalVisits !== null && (
             <span style={{ opacity: 0.55 }}>◈ {totalVisits.toLocaleString()} total visits</span>
           )}
