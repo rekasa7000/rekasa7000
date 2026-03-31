@@ -30,6 +30,19 @@ interface CursorState {
 export function MultiplayerCursors() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visitorCount, setVisitorCount] = useState(0);
+  const [totalVisits, setTotalVisits] = useState<number | null>(null);
+
+  useEffect(() => {
+    const counted = sessionStorage.getItem("vcount");
+    const method = counted ? "GET" : "POST";
+    fetch("/api/visitors", { method })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!counted) sessionStorage.setItem("vcount", "1");
+        setTotalVisits(d.total);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
@@ -167,18 +180,23 @@ export function MultiplayerCursors() {
   return (
     <>
       <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />
-      {visitorCount > 0 && (
+      {(visitorCount > 0 || totalVisits !== null) && (
         <div
-          className="fixed bottom-6 left-6 z-50 text-xs font-mono px-3 py-1.5 pointer-events-none select-none"
+          className="fixed top-4 right-4 z-50 text-xs font-mono px-3 py-2 pointer-events-none select-none flex flex-col gap-1 items-end"
           style={{
             background: "rgba(0,0,0,0.55)",
             border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: "4px",
+            borderRadius: "6px",
             color: "rgba(255,255,255,0.7)",
             backdropFilter: "blur(8px)",
           }}
         >
-          ◈ {visitorCount} {visitorCount === 1 ? "visitor" : "visitors"} online
+          {visitorCount > 0 && (
+            <span>◈ {visitorCount} {visitorCount === 1 ? "visitor" : "visitors"} online</span>
+          )}
+          {totalVisits !== null && (
+            <span style={{ opacity: 0.55 }}>◈ {totalVisits.toLocaleString()} total visits</span>
+          )}
         </div>
       )}
     </>
