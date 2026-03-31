@@ -17,10 +17,10 @@ function shortId() {
 
 interface CursorState {
   id: string;
-  tx: number; // target x
-  ty: number; // target y
-  x: number;  // displayed x (lerped)
-  y: number;  // displayed y (lerped)
+  tx: number;
+  ty: number;
+  x: number;
+  y: number;
   color: string;
   label: string;
   el: HTMLDivElement | null;
@@ -31,15 +31,28 @@ export function MultiplayerCursors() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visitorCount, setVisitorCount] = useState(0);
   const [totalVisits, setTotalVisits] = useState<number | null>(null);
+  const channelRef = useRef<ReturnType<typeof createClient>["channel"] | null>(null);
 
+  // ── Fetch/increment total visits, then broadcast new total to all clients ──
   useEffect(() => {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+
     const counted = sessionStorage.getItem("vcount");
     const method = counted ? "GET" : "POST";
+
     fetch("/api/visitors", { method })
       .then((r) => r.json())
-      .then((d) => {
-        if (!counted) sessionStorage.setItem("vcount", "1");
+      .then((d: { total: number }) => {
         setTotalVisits(d.total);
+        if (!counted) {
+          sessionStorage.setItem("vcount", "1");
+          // Broadcast new total so all open tabs update instantly
+          (channelRef.current as unknown as { send: (msg: object) => void } | null)?.send({
+            type: "broadcast",
+            event: "visits",
+            payload: { total: d.total },
+          });
+        }
       })
       .catch(() => {});
   }, []);
@@ -52,44 +65,36 @@ export function MultiplayerCursors() {
     const myColor = CURSOR_COLORS[Math.floor(Math.random() * CURSOR_COLORS.length)];
     const myLabel = `visitor_${myId}`;
 
-    // Track remote cursors purely in a ref — no React state, no re-renders
     const cursors: Record<string, CursorState> = {};
     let rafId = 0;
     let lastSent = 0;
 
-    // ── Lerp loop ──────────────────────────────────────────────────────────
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     const tick = () => {
       const now = Date.now();
       for (const _id in cursors) {
         const c = cursors[_id];
-        // Prune stale
         if (now - c.updatedAt > 5000) {
           c.el?.remove();
           delete cursors[_id];
           continue;
         }
-        // Smooth lerp toward target
         c.x = lerp(c.x, c.tx, 0.18);
         c.y = lerp(c.y, c.ty, 0.18);
-        if (c.el) {
-          c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
-        }
+        if (c.el) c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
       }
       rafId = requestAnimationFrame(tick);
     };
 
     rafId = requestAnimationFrame(tick);
 
-    // ── DOM helpers ────────────────────────────────────────────────────────
     function createCursorEl(_id: string, color: string, label: string): HTMLDivElement {
       const wrap = document.createElement("div");
       wrap.style.cssText = `
         position: fixed; top: 0; left: 0;
         pointer-events: none; z-index: 300; will-change: transform;
       `;
-
       wrap.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M2 2L14 8L9 9.5L7 15L2 2Z"
@@ -102,12 +107,10 @@ export function MultiplayerCursors() {
           background:${color}; color:#000; opacity:0.9;
         ">${label}</div>
       `;
-
       containerRef.current?.appendChild(wrap);
       return wrap;
     }
 
-    // ── Supabase channel ───────────────────────────────────────────────────
     const channel = supabase.channel("portfolio-cursors-v1", {
       config: {
         broadcast: { self: false, ack: false },
@@ -115,17 +118,16 @@ export function MultiplayerCursors() {
       },
     });
 
+    // Store channel ref so the visits fetch effect can broadcast on it
+    channelRef.current = channel as unknown as ReturnType<typeof createClient>["channel"];
+
     channel
       .on("broadcast", { event: "cur" }, ({ payload }) => {
         const { id, x, y, color, label } = payload as {
           id: string; x: number; y: number; color: string; label: string;
         };
         if (!cursors[id]) {
-          cursors[id] = {
-            id, tx: x, ty: y, x, y, color, label,
-            el: createCursorEl(id, color, label),
-            updatedAt: Date.now(),
-          };
+          cursors[id] = { id, tx: x, ty: y, x, y, color, label, el: createCursorEl(id, color, label), updatedAt: Date.now() };
         } else {
           cursors[id].tx = x;
           cursors[id].ty = y;
@@ -137,6 +139,11 @@ export function MultiplayerCursors() {
         cursors[id]?.el?.remove();
         delete cursors[id];
       })
+      .on("broadcast", { event: "visits" }, ({ payload }) => {
+        // Another visitor just joined — update our total count
+        const { total } = payload as { total: number };
+        setTotalVisits(total);
+      })
       .on("presence", { event: "sync" }, () => {
         const state = channel.presenceState();
         setVisitorCount(Object.keys(state).length);
@@ -144,10 +151,8 @@ export function MultiplayerCursors() {
       .subscribe((status) => {
         if (status !== "SUBSCRIBED") return;
 
-        // Track this visitor in presence
         channel.track({ id: myId, color: myColor, label: myLabel, joinedAt: Date.now() });
 
-        // Only start sending AFTER channel is ready
         const handleMouseMove = (e: MouseEvent) => {
           const now = Date.now();
           if (now - lastSent < 35) return;
@@ -160,8 +165,6 @@ export function MultiplayerCursors() {
         };
 
         window.addEventListener("mousemove", handleMouseMove);
-
-        // Store cleanup ref on channel object
         (channel as unknown as { _cleanup?: () => void })._cleanup = () => {
           window.removeEventListener("mousemove", handleMouseMove);
         };
@@ -172,7 +175,6 @@ export function MultiplayerCursors() {
       (channel as unknown as { _cleanup?: () => void })._cleanup?.();
       channel.send({ type: "broadcast", event: "bye", payload: { id: myId } });
       supabase.removeChannel(channel);
-      // Clean up DOM nodes
       for (const id in cursors) cursors[id].el?.remove();
     };
   }, []);
