@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
 import { ModeProvider } from "@/components/mode-provider";
 import { VisitorScan } from "@/components/visitor-scan";
+import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className={`${jetbrainsMono.variable} ${notoSansJP.variable} font-mono antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <VisitorScan />
+          <MultiplayerCursors />
           <ModeProvider>
             <PageTransition>{children}</PageTransition>
           </ModeProvider>
