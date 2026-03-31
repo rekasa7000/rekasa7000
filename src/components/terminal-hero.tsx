@@ -146,7 +146,7 @@ function getNode(path: string[]): FSNode | null {
   let node: FSNode = FILESYSTEM;
   for (const seg of path) {
     if (node.type !== "dir") return null;
-    const child = node.children[seg];
+    const child: FSNode | undefined = node.children[seg];
     if (!child) return null;
     node = child;
   }
