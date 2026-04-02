@@ -198,6 +198,7 @@ function processCommand(
         "  rekasa7000        → ???",
         "  matcha            → zen mode",
         "  strawberry        → sweet mode",
+        "  galaxy            → 3d space explorer",
         "  exit              → leave current mode",
         "",
         "artifacts:",
@@ -295,6 +296,22 @@ function processCommand(
         "░  一期一会                   ░",
         "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
         "this moment, only once.",
+      ],
+    };
+  }
+
+  if (t === "galaxy") {
+    setTimeout(() => window.dispatchEvent(new CustomEvent("galaxy-mode")), 300);
+    return {
+      output: [
+        "  ★ . · ✦  . · ★ . · ✦  . · ★",
+        "       initiating galaxy mode       ",
+        "  ✦ . · ★ . · ✦  . · ★ . · ✦  .",
+        "",
+        "  planets = work experience",
+        "  asteroids = skills & languages",
+        "",
+        "  drag to explore · click planets",
       ],
     };
   }

@@ -6,6 +6,7 @@ import { PageTransition } from "@/components/page-transition";
 import { ModeProvider } from "@/components/mode-provider";
 import { VisitorScan } from "@/components/visitor-scan";
 import { MultiplayerCursors } from "@/components/multiplayer-cursors";
+import { GalaxyMode } from "@/components/galaxy-mode";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -39,6 +40,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <VisitorScan />
           <MultiplayerCursors />
+          <GalaxyMode />
           <ModeProvider>
             <PageTransition>{children}</PageTransition>
           </ModeProvider>
