@@ -37,13 +37,13 @@ export function GalaxyLauncher() {
 
   return (
     <div
-      className="fixed top-4 left-4 z-50 select-none flex flex-col gap-1.5 px-3 py-2.5 rounded"
+      className="fixed top-4 left-4 z-100 select-none flex flex-col gap-1.5 px-3 py-2.5 rounded"
       style={{
         backdropFilter: "blur(8px)",
       }}
     >
       {/* Track row */}
-      <div className="relative flex items-center" style={{ width: THRESHOLD + 16, height: 36 }}>
+      <div className="relative flex items-center" style={{ width: THRESHOLD + 16, height: 18 }}>
         {/* Dashed base track */}
         <div
           className="absolute left-4 border-t border-dashed"
@@ -71,7 +71,7 @@ export function GalaxyLauncher() {
         >
           <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
             <motion.div
-              className="w-8 h-8 rounded-full relative"
+              className="w-5 h-5 rounded-full relative"
               style={{
                 background: "radial-gradient(circle at 36% 30%, #93c5fd, #3b82f6 45%, #1e3a8a 75%, #0c1a3d)",
                 filter: planetGlow,

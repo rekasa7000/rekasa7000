@@ -191,7 +191,7 @@ export function MultiplayerCursors() {
       <div ref={containerRef} className="fixed inset-0 pointer-events-none z-300" />
       {mounted && (
         <div
-          className="fixed top-4 right-4 z-50 text-xs font-mono px-3 py-2 pointer-events-none select-none flex flex-col gap-1 items-end"
+          className="fixed top-4 right-4 z-100 text-xs font-mono px-3 py-2 pointer-events-none select-none flex flex-col gap-1 items-end"
           style={{
             background: "rgba(0,0,0,0.55)",
             border: "1px solid rgba(255,255,255,0.12)",
