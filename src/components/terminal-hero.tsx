@@ -416,7 +416,7 @@ export function TerminalHero() {
     <div
       className="w-full rounded-md overflow-hidden border font-mono text-sm md:text-base cursor-text"
       style={{ borderColor: "var(--border-color)", backgroundColor: "var(--bg-primary)" }}
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => inputRef.current?.focus({ preventScroll: true })}
     >
       {/* Title bar */}
       <div
@@ -473,23 +473,25 @@ export function TerminalHero() {
             <span className="shrink-0">{prompt}&nbsp;</span>
             <span>{input}</span>
             <BlinkingCursor className="ml-px" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSubmit();
-              }}
-              className="sr-only"
-              autoFocus
-              autoComplete="off"
-              spellCheck={false}
-              aria-label="terminal input"
-            />
           </div>
         )}
       </div>
+
+      {/* Hidden input outside scroll container so browser doesn't scroll on focus */}
+      <input
+        ref={inputRef}
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleSubmit();
+        }}
+        className="sr-only"
+        autoFocus
+        autoComplete="off"
+        spellCheck={false}
+        aria-label="terminal input"
+      />
     </div>
   );
 }

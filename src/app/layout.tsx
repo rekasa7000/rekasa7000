@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title: "Regee Casaña",
   description: "Software Engineer",
   icons: {
-    icon: "/logo.svg",
+    icon: "/favicon.ico",
   },
 };
 
