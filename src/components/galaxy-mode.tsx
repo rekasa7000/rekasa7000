@@ -563,6 +563,62 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(label);
   }
 
+  // ── Comets ────────────────────────────────────────────────────────────
+  // Shared coma glow texture
+  const comaCv = document.createElement("canvas"); comaCv.width = 64; comaCv.height = 64;
+  { const ctx = comaCv.getContext("2d")!;
+    const grd = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0,   "rgba(220,240,255,1)");
+    grd.addColorStop(0.3, "rgba(170,210,255,0.6)");
+    grd.addColorStop(1,   "rgba(100,150,255,0)");
+    ctx.fillStyle = grd; ctx.fillRect(0, 0, 64, 64); }
+  const comaTex = new THREE.CanvasTexture(comaCv);
+
+  type CometDatum = {
+    nucleus: InstanceType<typeof THREE.Mesh>;
+    coma: InstanceType<typeof THREE.Sprite>;
+    tail: InstanceType<typeof THREE.Mesh>;
+    start: InstanceType<typeof THREE.Vector3>;
+    end: InstanceType<typeof THREE.Vector3>;
+    t: number;
+    speed: number; // loops per second
+  };
+
+  // Each comet flies a straight line through the system; paths chosen so they
+  // pass within ~5-30 units of the sun for a dramatic close approach.
+  const COMET_CONFIGS = [
+    { start: new THREE.Vector3(-185, 55, -75),  end: new THREE.Vector3(175, -45, 85),  speed: 1/18, t0: 0.02 },
+    { start: new THREE.Vector3(105, -75, -165), end: new THREE.Vector3(-95, 65, 145),  speed: 1/26, t0: 0.42 },
+    { start: new THREE.Vector3(-55, 95, 175),   end: new THREE.Vector3(75, -85, -135), speed: 1/15, t0: 0.71 },
+  ];
+
+  const comets: CometDatum[] = [];
+  const TAIL_H = 22; // cone height (units)
+
+  for (const cc of COMET_CONFIGS) {
+    const nucleus = new THREE.Mesh(
+      new THREE.SphereGeometry(0.38, 8, 8),
+      new THREE.MeshStandardMaterial({ color: 0xddeeff, emissive: 0xaaccff, emissiveIntensity: 5, roughness: 0.1 }),
+    );
+    scene.add(nucleus);
+
+    const coma = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: comaTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    scene.add(coma);
+
+    // Cone: base at local origin, tip extends in +Y → will be oriented away from sun.
+    const tailGeo = new THREE.ConeGeometry(0.9, TAIL_H, 8, 1, true);
+    tailGeo.translate(0, TAIL_H / 2, 0); // shift so base sits at origin
+    const tail = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({
+      color: 0xaaccff, transparent: true, opacity: 0.3,
+      side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending,
+    }));
+    scene.add(tail);
+
+    comets.push({ nucleus, coma, tail, start: cc.start, end: cc.end, t: cc.t0, speed: cc.speed });
+  }
+
   // ── Raycaster ──────────────────────────────────────────────────────────
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -616,11 +672,19 @@ async function buildScene(): Promise<SceneHandle> {
     canvas.addEventListener("pointerup", onPointerUp);
     window.addEventListener("resize", onResize);
 
+    // Reusable vectors for comet animation (avoid per-frame allocations)
+    const _cPos = new THREE.Vector3();
+    const _away = new THREE.Vector3();
+    const _tailFwd = new THREE.Vector3(0, 1, 0);
+
+    let prevTime = Date.now() * 0.001;
     running = true;
     const tick = () => {
       if (!running) return;
       rafId = requestAnimationFrame(tick);
       const now = Date.now() * 0.001;
+      const dt = Math.min(now - prevTime, 0.1); // cap to avoid large jumps
+      prevTime = now;
 
       sun.rotation.y += 0.004;
       const pulse = 1 + Math.sin(now * 1.8) * 0.06;
@@ -659,6 +723,37 @@ async function buildScene(): Promise<SceneHandle> {
         projMeshes[i].position.set(x, y, z);
         projMeshes[i].rotation.y += 0.011;
         projLabels[i].position.set(x, y + p.size + 1.5, z);
+      }
+
+      // ── Comets ──
+      for (const comet of comets) {
+        comet.t = (comet.t + comet.speed * dt) % 1;
+        _cPos.lerpVectors(comet.start, comet.end, comet.t);
+
+        const dist = _cPos.length();
+        // Fully visible within 45 units, fades out to 110, invisible beyond
+        const alpha = 1 - Math.min(1, Math.max(0, (dist - 45) / 65));
+        const visible = alpha > 0.01;
+
+        comet.nucleus.visible = visible;
+        comet.coma.visible    = visible;
+        comet.tail.visible    = visible;
+
+        if (visible) {
+          comet.nucleus.position.copy(_cPos);
+          comet.coma.position.copy(_cPos);
+          comet.tail.position.copy(_cPos);
+
+          // Orient tail away from sun (base at comet, tip pointing out)
+          if (dist > 0.1) {
+            _away.copy(_cPos).normalize();
+            comet.tail.quaternion.setFromUnitVectors(_tailFwd, _away);
+          }
+
+          comet.coma.scale.set(6 * alpha, 6 * alpha, 1);
+          (comet.tail.material as import("three").MeshBasicMaterial).opacity = 0.32 * alpha;
+          (comet.nucleus.material as import("three").MeshStandardMaterial).emissiveIntensity = 5 * alpha;
+        }
       }
 
       controls.update();
