@@ -10,6 +10,7 @@ import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
 import { useModeContext } from "@/components/mode-provider";
+import { GalaxyLauncher } from "@/components/galaxy-launcher";
 
 const projects = [
   {
@@ -276,6 +277,8 @@ export function HomeContent() {
               </span>
             </Link>
           </motion.div>
+
+          <GalaxyLauncher />
         </section>
 
         {/* Role marquee ticker */}
