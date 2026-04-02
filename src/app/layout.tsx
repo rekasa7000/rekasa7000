@@ -7,6 +7,7 @@ import { ModeProvider } from "@/components/mode-provider";
 import { VisitorScan } from "@/components/visitor-scan";
 import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import { GalaxyMode } from "@/components/galaxy-mode";
+import { GalaxyLauncher } from "@/components/galaxy-launcher";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -41,6 +42,7 @@ export default function RootLayout({
           <VisitorScan />
           <MultiplayerCursors />
           <GalaxyMode />
+          <GalaxyLauncher />
           <ModeProvider>
             <PageTransition>{children}</PageTransition>
           </ModeProvider>
