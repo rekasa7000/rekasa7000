@@ -367,16 +367,24 @@ async function buildScene(): Promise<SceneHandle> {
     return sprite;
   }
 
-  // Orbit ring with matching inclination/orientation to the orbit path.
-  // ring.rotation.x = π/2 - inc  →  ring lying flat at inc=0, more upright as inc grows
-  // ring.rotation.y = rotY        →  rotates the orbit plane around Y
+  // Orbit ring whose plane exactly matches the orbitPos() formula.
+  // The orbit plane normal is derived analytically from inc and rotY,
+  // then the ring is aligned using a quaternion — no Euler angle order issues.
   function makeOrbitRing(radius: number, color: number, opacity: number, inc = 0, rotY = 0) {
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(radius, 0.06, 8, 160),
       new THREE.MeshBasicMaterial({ color, transparent: true, opacity }),
     );
-    ring.rotation.x = Math.PI / 2 - inc;
-    ring.rotation.y = rotY;
+    // orbitPos() basis: start in XZ plane, rotate around X by inc, then around Y by rotY.
+    // The resulting orbit plane normal is:  n = (sin(inc)*sin(rotY), -cos(inc), sin(inc)*cos(rotY))
+    // Three.js TorusGeometry lies in the XY plane with local normal (0, 0, 1).
+    // Align local Z → orbit normal so the ring lies in the orbit plane.
+    const orbitNormal = new THREE.Vector3(
+      Math.sin(inc) * Math.sin(rotY),
+      -Math.cos(inc),
+      Math.sin(inc) * Math.cos(rotY),
+    ).normalize();
+    ring.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), orbitNormal);
     return ring;
   }
 
