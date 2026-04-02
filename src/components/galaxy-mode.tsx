@@ -616,6 +616,14 @@ async function buildScene(): Promise<SceneHandle> {
     }));
     scene.add(tail);
 
+    // Bake the tail orientation once: trail = opposite of travel direction.
+    // This way the tail always streams behind the comet regardless of sun position.
+    const trailDir = new THREE.Vector3()
+      .subVectors(cc.end, cc.start)
+      .normalize()
+      .negate();
+    tail.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), trailDir);
+
     comets.push({ nucleus, coma, tail, start: cc.start, end: cc.end, t: cc.t0, speed: cc.speed });
   }
 
@@ -672,10 +680,8 @@ async function buildScene(): Promise<SceneHandle> {
     canvas.addEventListener("pointerup", onPointerUp);
     window.addEventListener("resize", onResize);
 
-    // Reusable vectors for comet animation (avoid per-frame allocations)
+    // Reusable vector for comet position lerp
     const _cPos = new THREE.Vector3();
-    const _away = new THREE.Vector3();
-    const _tailFwd = new THREE.Vector3(0, 1, 0);
 
     let prevTime = Date.now() * 0.001;
     running = true;
@@ -744,12 +750,7 @@ async function buildScene(): Promise<SceneHandle> {
           comet.coma.position.copy(_cPos);
           comet.tail.position.copy(_cPos);
 
-          // Orient tail away from sun (base at comet, tip pointing out)
-          if (dist > 0.1) {
-            _away.copy(_cPos).normalize();
-            comet.tail.quaternion.setFromUnitVectors(_tailFwd, _away);
-          }
-
+          // Tail orientation is baked at setup (trails behind motion) — no update needed here
           comet.coma.scale.set(6 * alpha, 6 * alpha, 1);
           (comet.tail.material as import("three").MeshBasicMaterial).opacity = 0.32 * alpha;
           (comet.nucleus.material as import("three").MeshStandardMaterial).emissiveIntensity = 5 * alpha;
