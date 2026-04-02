@@ -16,6 +16,8 @@ const PLANET_DATA = [
     size: 1.2,
     orbitRadius: 10,
     speed: 0.005,
+    inc: 0.18,   // inclination (radians)
+    rotY: 0.0,   // orbit plane rotation around Y
     kind: "work" as const,
     description: [
       "Gained hands-on IoT & cybersecurity experience",
@@ -33,6 +35,8 @@ const PLANET_DATA = [
     size: 1.6,
     orbitRadius: 16,
     speed: 0.003,
+    inc: 0.22,
+    rotY: 0.9,
     kind: "work" as const,
     description: [
       "Carbon footprint tracking app for Philippine orgs",
@@ -51,6 +55,8 @@ const PLANET_DATA = [
     size: 2.0,
     orbitRadius: 24,
     speed: 0.002,
+    inc: 0.12,
+    rotY: 1.8,
     kind: "work" as const,
     description: [
       "Led team of 4 developers through 2 major platform versions",
@@ -70,6 +76,8 @@ const PLANET_DATA = [
     size: 2.4,
     orbitRadius: 33,
     speed: 0.0015,
+    inc: 0.28,
+    rotY: 0.5,
     kind: "work" as const,
     description: [
       "Zendesk integration for Polyglot translation platform",
@@ -96,6 +104,8 @@ const EDUCATION_DATA = [
     size: 1.9,
     orbitRadius: 44,
     speed: 0.0011,
+    inc: 0.48,
+    rotY: 1.2,
     kind: "education" as const,
     description: [
       "Bachelor of Science in Computer Science",
@@ -116,6 +126,8 @@ const EDUCATION_DATA = [
     size: 1.2,
     orbitRadius: 52,
     speed: 0.0009,
+    inc: 0.38,
+    rotY: 2.8,
     kind: "education" as const,
     description: [
       "Science, Technology, Engineering and Mathematics",
@@ -138,6 +150,8 @@ const PROJECT_DATA = [
     size: 1.0,
     orbitRadius: 63,
     speed: 0.0008,
+    inc: 0.32,
+    rotY: 0.6,
     kind: "project" as const,
     github: "github.com/rekasa7000/kloudtrack",
     description: [
@@ -156,6 +170,8 @@ const PROJECT_DATA = [
     size: 0.85,
     orbitRadius: 69,
     speed: 0.00075,
+    inc: 0.58,
+    rotY: 2.2,
     kind: "project" as const,
     github: "github.com/rekasa7000/logcha",
     description: [
@@ -173,6 +189,8 @@ const PROJECT_DATA = [
     size: 0.85,
     orbitRadius: 75,
     speed: 0.0007,
+    inc: 0.44,
+    rotY: 1.4,
     kind: "project" as const,
     github: "github.com/rekasa7000/jobowl",
     description: [
@@ -191,6 +209,8 @@ const PROJECT_DATA = [
     size: 0.9,
     orbitRadius: 80,
     speed: 0.00065,
+    inc: 0.70,
+    rotY: 3.0,
     kind: "project" as const,
     github: "github.com/rekasa7000/hananai",
     description: [
@@ -209,6 +229,8 @@ const PROJECT_DATA = [
     size: 0.8,
     orbitRadius: 85,
     speed: 0.0006,
+    inc: 0.36,
+    rotY: 2.5,
     kind: "project" as const,
     github: "github.com/rekasa7000/databox",
     description: [
@@ -227,6 +249,8 @@ const PROJECT_DATA = [
     size: 0.8,
     orbitRadius: 90,
     speed: 0.00055,
+    inc: 0.55,
+    rotY: 0.2,
     kind: "project" as const,
     github: "github.com/rekasa7000/knowt",
     description: [
@@ -269,6 +293,21 @@ type SceneHandle = {
   destroy: () => void;
 };
 
+// ── Orbit position helper ─────────────────────────────────────────────────────
+// Computes 3D position for a body on an inclined orbit.
+// inc  = inclination (0 = flat XZ plane, π/2 = fully vertical)
+// rotY = longitude of ascending node (rotation of orbit plane around Y)
+function orbitPos(r: number, angle: number, inc: number, rotY: number) {
+  const bx = r * Math.cos(angle);
+  const by = r * Math.sin(angle) * Math.sin(inc);
+  const bz = r * Math.sin(angle) * Math.cos(inc);
+  return {
+    x: bx * Math.cos(rotY) + bz * Math.sin(rotY),
+    y: by,
+    z: -bx * Math.sin(rotY) + bz * Math.cos(rotY),
+  };
+}
+
 // ── Scene builder ─────────────────────────────────────────────────────────────
 
 async function buildScene(): Promise<SceneHandle> {
@@ -307,7 +346,7 @@ async function buildScene(): Promise<SceneHandle> {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.3;
 
-  // ── Sprite helper ──────────────────────────────────────────────────────
+  // ── Helpers ────────────────────────────────────────────────────────────
   function makeSprite(text: string, hexColor: string, fontSize = 22, scaleMult = 1) {
     const cv = document.createElement("canvas");
     cv.width = 320; cv.height = 80;
@@ -328,11 +367,17 @@ async function buildScene(): Promise<SceneHandle> {
     return sprite;
   }
 
-  function makeOrbitRing(radius: number, color: number, opacity: number) {
-    return new THREE.Mesh(
+  // Orbit ring with matching inclination/orientation to the orbit path.
+  // ring.rotation.x = π/2 - inc  →  ring lying flat at inc=0, more upright as inc grows
+  // ring.rotation.y = rotY        →  rotates the orbit plane around Y
+  function makeOrbitRing(radius: number, color: number, opacity: number, inc = 0, rotY = 0) {
+    const ring = new THREE.Mesh(
       new THREE.TorusGeometry(radius, 0.06, 8, 160),
       new THREE.MeshBasicMaterial({ color, transparent: true, opacity }),
     );
+    ring.rotation.x = Math.PI / 2 - inc;
+    ring.rotation.y = rotY;
+    return ring;
   }
 
   // ── Stars ──────────────────────────────────────────────────────────────
@@ -420,7 +465,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < PLANET_DATA.length; i++) {
     const p = PLANET_DATA[i];
     const hexStr = "#" + p.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(p.orbitRadius, 0x223344, 0.45));
+    scene.add(makeOrbitRing(p.orbitRadius, 0x223344, 0.45, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 32, 32),
       new THREE.MeshStandardMaterial({ color: p.color, emissive: p.emissive, emissiveIntensity: 0.4, roughness: 0.65, metalness: 0.1 }),
@@ -457,7 +502,7 @@ async function buildScene(): Promise<SceneHandle> {
     asteroids.push({ mesh, label, angle, radius, speed: 0.0007 + Math.random() * 0.001, y });
   }
 
-  // ── Education planets ─────────────────────────────────────────────────
+  // ── Education planets ──────────────────────────────────────────────────
   const eduMeshes: InstanceType<typeof THREE.Mesh>[] = [];
   const eduAngles = EDUCATION_DATA.map(() => Math.random() * Math.PI * 2);
   const eduLabels: InstanceType<typeof THREE.Sprite>[] = [];
@@ -465,7 +510,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < EDUCATION_DATA.length; i++) {
     const e = EDUCATION_DATA[i];
     const hexStr = "#" + e.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(e.orbitRadius, 0x443322, 0.35));
+    scene.add(makeOrbitRing(e.orbitRadius, 0x443322, 0.35, e.inc, e.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(e.size, 32, 32),
       new THREE.MeshStandardMaterial({ color: e.color, emissive: e.emissive, emissiveIntensity: 0.5, roughness: 0.55, metalness: 0.2 }),
@@ -474,7 +519,7 @@ async function buildScene(): Promise<SceneHandle> {
     eduMeshes.push(mesh);
     scene.add(mesh);
 
-    // Saturn-style ring for BPSU (Cum Laude)
+    // Saturn-style ring for BPSU (Cum Laude honor)
     if (e.id === "bpsu") {
       const ring = new THREE.Mesh(
         new THREE.TorusGeometry(e.size + 1.4, 0.28, 4, 80),
@@ -489,7 +534,7 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(label);
   }
 
-  // ── Project mini-planets ──────────────────────────────────────────────
+  // ── Project mini-planets ───────────────────────────────────────────────
   const projMeshes: InstanceType<typeof THREE.Mesh>[] = [];
   const projAngles = PROJECT_DATA.map((_, i) => (i / PROJECT_DATA.length) * Math.PI * 2);
   const projLabels: InstanceType<typeof THREE.Sprite>[] = [];
@@ -497,7 +542,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < PROJECT_DATA.length; i++) {
     const p = PROJECT_DATA[i];
     const hexStr = "#" + p.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(p.orbitRadius, 0x221133, 0.28));
+    scene.add(makeOrbitRing(p.orbitRadius, 0x221133, 0.28, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 28, 28),
       new THREE.MeshStandardMaterial({ color: p.color, emissive: p.emissive, emissiveIntensity: 0.55, roughness: 0.6, metalness: 0.15 }),
@@ -542,7 +587,7 @@ async function buildScene(): Promise<SceneHandle> {
       if (hits.length > 0) {
         const { bodyKind, bodyIndex } = (hits[0].object as InstanceType<typeof THREE.Mesh>).userData as { bodyKind: string; bodyIndex: number };
         let body: AnyBody | null = null;
-        if (bodyKind === "work")      body = PLANET_DATA[bodyIndex];
+        if (bodyKind === "work")           body = PLANET_DATA[bodyIndex];
         else if (bodyKind === "education") body = EDUCATION_DATA[bodyIndex];
         else if (bodyKind === "project")   body = PROJECT_DATA[bodyIndex];
         onSelect(body);
@@ -576,9 +621,7 @@ async function buildScene(): Promise<SceneHandle> {
       for (let i = 0; i < PLANET_DATA.length; i++) {
         const p = PLANET_DATA[i];
         planetAngles[i] += p.speed;
-        const x = Math.cos(planetAngles[i]) * p.orbitRadius;
-        const z = Math.sin(planetAngles[i]) * p.orbitRadius;
-        const y = Math.sin(planetAngles[i] * 0.5) * 0.8;
+        const { x, y, z } = orbitPos(p.orbitRadius, planetAngles[i], p.inc, p.rotY);
         planetMeshes[i].position.set(x, y, z);
         planetMeshes[i].rotation.y += 0.009;
         planetLabels[i].position.set(x, y + p.size + 1.6, z);
@@ -595,9 +638,7 @@ async function buildScene(): Promise<SceneHandle> {
       for (let i = 0; i < EDUCATION_DATA.length; i++) {
         const e = EDUCATION_DATA[i];
         eduAngles[i] += e.speed;
-        const x = Math.cos(eduAngles[i]) * e.orbitRadius;
-        const z = Math.sin(eduAngles[i]) * e.orbitRadius;
-        const y = Math.sin(eduAngles[i] * 0.4) * 1.2;
+        const { x, y, z } = orbitPos(e.orbitRadius, eduAngles[i], e.inc, e.rotY);
         eduMeshes[i].position.set(x, y, z);
         eduMeshes[i].rotation.y += 0.007;
         eduLabels[i].position.set(x, y + e.size + 1.8, z);
@@ -606,9 +647,7 @@ async function buildScene(): Promise<SceneHandle> {
       for (let i = 0; i < PROJECT_DATA.length; i++) {
         const p = PROJECT_DATA[i];
         projAngles[i] += p.speed;
-        const x = Math.cos(projAngles[i]) * p.orbitRadius;
-        const z = Math.sin(projAngles[i]) * p.orbitRadius;
-        const y = Math.sin(projAngles[i] * 0.6) * 1.5;
+        const { x, y, z } = orbitPos(p.orbitRadius, projAngles[i], p.inc, p.rotY);
         projMeshes[i].position.set(x, y, z);
         projMeshes[i].rotation.y += 0.011;
         projLabels[i].position.set(x, y + p.size + 1.5, z);
@@ -648,7 +687,6 @@ async function buildScene(): Promise<SceneHandle> {
 }
 
 // ── Window-level singleton ────────────────────────────────────────────────────
-// Survives both React StrictMode double-invocation AND HMR module re-evaluation.
 
 type GalaxyWin = Window & {
   __galaxyScene?: SceneHandle | null;
@@ -832,7 +870,6 @@ export function GalaxyMode() {
                 exit={{ opacity: 0, y: 14 }}
                 transition={{ duration: 0.25 }}
               >
-                {/* Header row */}
                 <div className="flex items-start justify-between mb-1">
                   <p className="text-[10px] tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>
                     {kindLabel}
@@ -845,7 +882,6 @@ export function GalaxyMode() {
                   </button>
                 </div>
 
-                {/* Work experience */}
                 {selected.kind === "work" && (
                   <>
                     <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
@@ -857,7 +893,6 @@ export function GalaxyMode() {
                   </>
                 )}
 
-                {/* Education */}
                 {selected.kind === "education" && (
                   <>
                     <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
@@ -872,7 +907,6 @@ export function GalaxyMode() {
                   </>
                 )}
 
-                {/* Project */}
                 {selected.kind === "project" && (
                   <>
                     <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
@@ -884,7 +918,6 @@ export function GalaxyMode() {
                   </>
                 )}
 
-                {/* Description bullets */}
                 <ul className="space-y-1 mt-3">
                   {selected.description.map((line, i) => (
                     <li key={i} className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
@@ -893,7 +926,6 @@ export function GalaxyMode() {
                   ))}
                 </ul>
 
-                {/* GitHub link for projects */}
                 {selected.kind === "project" && (
                   <p
                     className="text-[10px] mt-3 pt-3"
