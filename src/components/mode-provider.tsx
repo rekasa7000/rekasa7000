@@ -4,13 +4,15 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EasterEggEffects } from "@/components/easter-egg-effects";
 import { MatchaEffects } from "@/components/matcha-effects";
+import { StrawberryEffects } from "@/components/strawberry-effects";
 
 interface ModeContextValue {
   easterEgg: boolean;
   matchaMode: boolean;
+  strawberryMode: boolean;
 }
 
-const ModeContext = createContext<ModeContextValue>({ easterEgg: false, matchaMode: false });
+const ModeContext = createContext<ModeContextValue>({ easterEgg: false, matchaMode: false, strawberryMode: false });
 
 export function useModeContext() {
   return useContext(ModeContext);
@@ -29,6 +31,7 @@ const OVERLAY_LINES = [
 export function ModeProvider({ children }: { children: React.ReactNode }) {
   const [easterEgg, setEasterEgg] = useState(false);
   const [matchaMode, setMatchaMode] = useState(false);
+  const [strawberryMode, setStrawberryMode] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
   // Apply class directly to <html> so all routes inherit it
@@ -36,11 +39,13 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
     const html = document.documentElement;
     html.classList.toggle("dev-mode", easterEgg);
     html.classList.toggle("matcha-mode", matchaMode);
-  }, [easterEgg, matchaMode]);
+    html.classList.toggle("strawberry-mode", strawberryMode);
+  }, [easterEgg, matchaMode, strawberryMode]);
 
   useEffect(() => {
     const activateDev = () => {
       setMatchaMode(false);
+      setStrawberryMode(false);
       setEasterEgg(false);
       setShowOverlay(true);
       setTimeout(() => {
@@ -50,25 +55,34 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
     };
     const activateMatcha = () => {
       setEasterEgg(false);
+      setStrawberryMode(false);
       setMatchaMode(true);
+    };
+    const activateStrawberry = () => {
+      setEasterEgg(false);
+      setMatchaMode(false);
+      setStrawberryMode(true);
     };
     const exitMode = () => {
       setEasterEgg(false);
       setMatchaMode(false);
+      setStrawberryMode(false);
     };
 
     window.addEventListener("rekasa-easter-egg", activateDev);
     window.addEventListener("matcha-mode", activateMatcha);
+    window.addEventListener("strawberry-mode", activateStrawberry);
     window.addEventListener("exit-mode", exitMode);
     return () => {
       window.removeEventListener("rekasa-easter-egg", activateDev);
       window.removeEventListener("matcha-mode", activateMatcha);
+      window.removeEventListener("strawberry-mode", activateStrawberry);
       window.removeEventListener("exit-mode", exitMode);
     };
   }, []);
 
   return (
-    <ModeContext.Provider value={{ easterEgg, matchaMode }}>
+    <ModeContext.Provider value={{ easterEgg, matchaMode, strawberryMode }}>
       {children}
 
       {/* Dev mode: fullscreen overlay */}
@@ -118,6 +132,7 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
 
       {easterEgg && <EasterEggEffects />}
       {matchaMode && <MatchaEffects />}
+      {strawberryMode && <StrawberryEffects />}
     </ModeContext.Provider>
   );
 }

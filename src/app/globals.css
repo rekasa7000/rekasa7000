@@ -513,3 +513,55 @@ html.matcha-mode .jp-pattern-dots {
 .matcha-glow {
   animation: matcha-breathe 4s ease-in-out infinite;
 }
+
+/* ── Strawberry mode ── */
+
+html.dark.strawberry-mode {
+  --bg-primary: #150409;
+  --bg-secondary: rgba(21, 4, 9, 0.97);
+  --border-color: rgba(255, 80, 120, 0.28);
+  --text-primary: #ffd6e0;
+  --text-secondary: rgba(255, 80, 120, 0.55);
+  --demon-red: #ff5078;
+  --water-blue: #ff3d6b;
+}
+
+html:not(.dark).strawberry-mode {
+  --bg-primary: #fff5f7;
+  --bg-secondary: rgba(255, 240, 245, 0.97);
+  --border-color: rgba(220, 50, 90, 0.28);
+  --text-primary: #3a0010;
+  --text-secondary: rgba(200, 40, 80, 0.7);
+  --demon-red: #d42255;
+  --water-blue: #b81845;
+}
+
+html.strawberry-mode .neon-accent {
+  color: #ff5078;
+  text-shadow: 0 0 8px rgba(255, 80, 120, 0.7), 0 0 20px rgba(255, 80, 120, 0.3);
+}
+
+html:not(.dark).strawberry-mode .neon-accent {
+  color: #c41848;
+  text-shadow: 0 0 6px rgba(220, 50, 90, 0.4);
+}
+
+html.strawberry-mode .jp-pattern-dots {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255, 80, 120, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255, 80, 120, 0.3) 1px, transparent 1px);
+  opacity: 0.14;
+}
+
+@keyframes strawberry-pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 80, 120, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 28px rgba(255, 80, 120, 0.7), 0 0 55px rgba(255, 80, 120, 0.2);
+  }
+}
+
+.strawberry-glow {
+  animation: strawberry-pulse 3s ease-in-out infinite;
+}

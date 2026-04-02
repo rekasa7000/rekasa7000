@@ -121,6 +121,7 @@ const FILESYSTEM: FSDir = {
             "",
             "try:  rekasa7000",
             "      matcha",
+            "      strawberry",
             "      sudo hire regee",
           ],
         },
@@ -196,6 +197,7 @@ function processCommand(
         "modes:",
         "  rekasa7000        → ???",
         "  matcha            → zen mode",
+        "  strawberry        → sweet mode",
         "  exit              → leave current mode",
         "",
         "artifacts:",
@@ -293,6 +295,21 @@ function processCommand(
         "░  一期一会                   ░",
         "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
         "this moment, only once.",
+      ],
+    };
+  }
+
+  if (t === "strawberry") {
+    setTimeout(() => window.dispatchEvent(new CustomEvent("strawberry-mode")), 400);
+    return {
+      output: [
+        "🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓",
+        "🍓                            🍓",
+        "🍓   いちごモード              🍓",
+        "🍓   strawberry mode          🍓",
+        "🍓   あまい — so sweet        🍓",
+        "🍓                            🍓",
+        "🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓",
       ],
     };
   }
