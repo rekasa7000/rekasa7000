@@ -694,6 +694,17 @@ export function GalaxyMode() {
     };
   }, []);
 
+  // Lock body scroll while galaxy is open so no scrollbar appears
+  useEffect(() => {
+    const html = document.documentElement;
+    if (visible) {
+      html.style.overflow = "hidden";
+    } else {
+      html.style.overflow = "";
+    }
+    return () => { html.style.overflow = ""; };
+  }, [visible]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setVisible(false); };
     window.addEventListener("keydown", onKey);
@@ -754,7 +765,7 @@ export function GalaxyMode() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-500"
+          className="fixed inset-0 z-500 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
