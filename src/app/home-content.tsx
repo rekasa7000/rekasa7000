@@ -150,43 +150,45 @@ const skills = [
   { category: "Design", items: ["Figma", "Canva"] },
 ];
 
-const skillIcons = [
-  "nextjs",
-  "react",
-  "vue",
-  "nuxtjs",
-  "angular",
-  "svelte",
-  "ts",
-  "js",
-  "python",
-  "go",
-  "php",
-  "rust",
-  "nodejs",
-  "express",
-  "flask",
-  "fastapi",
-  "postgresql",
-  "mongodb",
-  "mysql",
-  "firebase",
-  "supabase",
-  "cs",
-  "cpp",
-  "java",
-  "aws",
-  "vercel",
-  "heroku",
-  "docker",
-  "tailwind",
-  "unity",
-  "git",
-  "github",
-  "postman",
-  "vscode",
-  "figma",
+const SKILL_ICONS: Array<{ id: string; label: string; category: string }> = [
+  { id: "nextjs",      label: "Next.js",     category: "frontend"  },
+  { id: "react",       label: "React",        category: "frontend"  },
+  { id: "vue",         label: "Vue.js",       category: "frontend"  },
+  { id: "nuxtjs",      label: "Nuxt.js",      category: "frontend"  },
+  { id: "angular",     label: "Angular",      category: "frontend"  },
+  { id: "svelte",      label: "Svelte",       category: "frontend"  },
+  { id: "tailwind",    label: "Tailwind",     category: "frontend"  },
+  { id: "ts",          label: "TypeScript",   category: "language"  },
+  { id: "js",          label: "JavaScript",   category: "language"  },
+  { id: "python",      label: "Python",       category: "language"  },
+  { id: "go",          label: "Go",           category: "language"  },
+  { id: "php",         label: "PHP",          category: "language"  },
+  { id: "rust",        label: "Rust",         category: "language"  },
+  { id: "cs",          label: "C#",           category: "language"  },
+  { id: "cpp",         label: "C++",          category: "language"  },
+  { id: "java",        label: "Java",         category: "language"  },
+  { id: "nodejs",      label: "Node.js",      category: "backend"   },
+  { id: "express",     label: "Express",      category: "backend"   },
+  { id: "flask",       label: "Flask",        category: "backend"   },
+  { id: "fastapi",     label: "FastAPI",      category: "backend"   },
+  { id: "postgresql",  label: "PostgreSQL",   category: "database"  },
+  { id: "mongodb",     label: "MongoDB",      category: "database"  },
+  { id: "mysql",       label: "MySQL",        category: "database"  },
+  { id: "firebase",    label: "Firebase",     category: "database"  },
+  { id: "supabase",    label: "Supabase",     category: "database"  },
+  { id: "aws",         label: "AWS",          category: "cloud"     },
+  { id: "vercel",      label: "Vercel",       category: "cloud"     },
+  { id: "heroku",      label: "Heroku",       category: "cloud"     },
+  { id: "docker",      label: "Docker",       category: "cloud"     },
+  { id: "git",         label: "Git",          category: "tool"      },
+  { id: "github",      label: "GitHub",       category: "tool"      },
+  { id: "postman",     label: "Postman",      category: "tool"      },
+  { id: "vscode",      label: "VS Code",      category: "tool"      },
+  { id: "figma",       label: "Figma",        category: "tool"      },
+  { id: "unity",       label: "Unity",        category: "tool"      },
 ];
+
+const TICKER_TEXT = "Full-Stack Developer · Software Engineer · Cloud Architecture · IoT Systems · AWS · TypeScript · React · Go · Open Source · Cum Laude";
 
 
 export function HomeContent() {
@@ -276,6 +278,14 @@ export function HomeContent() {
           </motion.div>
         </section>
 
+        {/* Role marquee ticker */}
+        <div className="overflow-hidden border-b" style={{ borderColor: "var(--border-color)" }}>
+          <div className="marquee-inner py-2 gap-0">
+            <span className="text-xs uppercase tracking-widest whitespace-nowrap px-8" style={{ color: "var(--text-secondary)" }}>{TICKER_TEXT} ·&nbsp;</span>
+            <span className="text-xs uppercase tracking-widest whitespace-nowrap px-8" style={{ color: "var(--text-secondary)" }}>{TICKER_TEXT} ·&nbsp;</span>
+          </div>
+        </div>
+
         {/* Experience Section */}
         <section className="py-20 border-b" id="experience" style={{ borderColor: "var(--border-color)" }}>
           <FadeInSection>
@@ -298,18 +308,21 @@ export function HomeContent() {
             <h2 className="text-2xl font-bold mb-12">Skills & Technologies</h2>
           </FadeInSection>
 
-          {/* Tech Icons Grid */}
-          <StaggerContainer className="mb-16 flex flex-wrap gap-4">
-            {skillIcons.map((icon) => (
-              <StaggerItem key={icon}>
-                <img
-                  src={`https://skillicons.dev/icons?i=${icon}`}
-                  alt={icon}
-                  className="w-8 h-8 grayscale hover:grayscale-0 transition-all duration-300"
-                />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          {/* Tech Icons Grid — expandable pill style (hover to reveal name) */}
+          <FadeInSection>
+            <div className="mb-16 flex flex-wrap gap-3">
+              {SKILL_ICONS.map((s) => (
+                <div key={s.id} className={`tech-icon ${s.category}`}>
+                  <img
+                    src={`https://skillicons.dev/icons?i=${s.id}`}
+                    alt={s.label}
+                    className="w-8 h-8"
+                  />
+                  <span className="tech-tooltip">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </FadeInSection>
 
           {/* Skills Categories — table layout */}
           <StaggerContainer className="divide-y" style={{ borderColor: "var(--border-color)" }}>

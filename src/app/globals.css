@@ -565,3 +565,19 @@ html.strawberry-mode .jp-pattern-dots {
 .strawberry-glow {
   animation: strawberry-pulse 3s ease-in-out infinite;
 }
+
+/* ── Role marquee ticker ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-inner {
+  display: inline-flex;
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-inner { animation: none; }
+}
