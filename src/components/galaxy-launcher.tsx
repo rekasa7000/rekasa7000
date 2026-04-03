@@ -50,14 +50,14 @@ export function GalaxyLauncher() {
     <>
       {/* HUD launcher widget */}
       <div
-        className="fixed top-4 left-4 z-100 select-none flex flex-col gap-1.5 px-3 py-2.5 rounded"
+        className="fixed top-4 left-4 z-100 select-none flex flex-col gap-1.5 px-3 py-2.5 rounded bg-black/5 dark:bg-transparent"
         style={{ backdropFilter: "blur(8px)" }}
       >
         {/* Track row */}
         <div className="relative flex items-center" style={{ width: THRESHOLD + 16, height: 18 }}>
           <div
-            className="absolute left-4 border-t border-dashed"
-            style={{ width: THRESHOLD, borderColor: "rgba(255,255,255,0.18)" }}
+            className="absolute left-4 border-t-2 border-dashed border-gray-500/60 dark:border-blue-400/35"
+            style={{ width: THRESHOLD }}
           />
           <motion.div
             className="absolute left-4 h-0.5 rounded-full pointer-events-none"
@@ -96,8 +96,8 @@ export function GalaxyLauncher() {
         {/* Hint label */}
         <div className="relative text-[10px] font-mono" style={{ height: 14 }}>
           <motion.span
-            style={{ opacity: hintOpacity, color: "rgba(255,255,255,0.45)" }}
-            className="absolute whitespace-nowrap"
+            style={{ opacity: hintOpacity }}
+            className="absolute whitespace-nowrap text-gray-700 dark:text-blue-300/75"
           >
             drag → galaxy mode
           </motion.span>
