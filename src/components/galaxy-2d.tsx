@@ -44,18 +44,18 @@ const BODIES: SpaceBody[] = [
     name: "Kloudtech", title: "Software Engineer (+ Intern)",
     sub: "Kloudtech Corporation · Balanga City, Bataan",
     period: "Oct 2023 – Present",
-    color: "#4a90e2", radius: 55,
+    color: "#4a90e2", radius: 90,
     desc: "Led team of 4 devs across 2 major platform versions. KloudTrack IoT: MQTT/TLS, Socket.IO, AWS (IoT Core, S3, EC2), React 19, TanStack, Mapbox GL. 90%+ LRU cache, <100ms MQTT latency, 25+ weather stations.",
     satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 78,  speed: 0.42, offset: 0.0  },
-      { label: "React 19",   color: "#61dafb", orbitR: 92,  speed: 0.34, offset: 1.2  },
-      { label: "MQTT",       color: "#f97316", orbitR: 106, speed: 0.27, offset: 2.4  },
-      { label: "AWS",        color: "#ff9900", orbitR: 120, speed: 0.21, offset: 0.8  },
-      { label: "Docker",     color: "#2496ed", orbitR: 85,  speed: 0.38, offset: 3.6  },
-      { label: "Socket.IO",  color: "#25c2a0", orbitR: 99,  speed: 0.29, offset: 1.6  },
-      { label: "TanStack",   color: "#f59e0b", orbitR: 113, speed: 0.23, offset: 4.8  },
-      { label: "Tailwind",   color: "#06b6d4", orbitR: 70,  speed: 0.48, offset: 2.0  },
-      { label: "Mapbox GL",  color: "#4264fb", orbitR: 127, speed: 0.18, offset: 5.5  },
+      { label: "TypeScript", color: "#3b82f6", orbitR: 120, speed: 0.42, offset: 0.0  },
+      { label: "React 19",   color: "#61dafb", orbitR: 134, speed: 0.34, offset: 1.2  },
+      { label: "MQTT",       color: "#f97316", orbitR: 148, speed: 0.27, offset: 2.4  },
+      { label: "AWS",        color: "#ff9900", orbitR: 162, speed: 0.21, offset: 0.8  },
+      { label: "Docker",     color: "#2496ed", orbitR: 127, speed: 0.38, offset: 3.6  },
+      { label: "Socket.IO",  color: "#25c2a0", orbitR: 141, speed: 0.29, offset: 1.6  },
+      { label: "TanStack",   color: "#f59e0b", orbitR: 155, speed: 0.23, offset: 4.8  },
+      { label: "Tailwind",   color: "#06b6d4", orbitR: 113, speed: 0.48, offset: 2.0  },
+      { label: "Mapbox GL",  color: "#4264fb", orbitR: 176, speed: 0.18, offset: 5.5  },
     ],
   },
   {
@@ -63,16 +63,16 @@ const BODIES: SpaceBody[] = [
     name: "Concentrix", title: "Software Developer",
     sub: "Concentrix · Quezon City, Metro Manila",
     period: "Aug 2025 – Present",
-    color: "#e2a84a", radius: 48,
+    color: "#e2a84a", radius: 78,
     desc: "Zendesk connector for Polyglot translation platform — OAuth 2.0/Azure AD B2C, WebSocket/SignalR. TypeScript DDD migration, 18-state Shopee FSM. AWS Lambda for MediGuide insurance API. Python CLI: 10K+ tickets migrated, zero data loss.",
     satellites: [
-      { label: "TypeScript",  color: "#3b82f6", orbitR: 70,  speed: 0.46, offset: 0.0  },
-      { label: "OAuth 2.0",   color: "#ef4444", orbitR: 82,  speed: 0.38, offset: 1.1  },
-      { label: "Azure AD",    color: "#0078d4", orbitR: 94,  speed: 0.30, offset: 2.3  },
-      { label: "Python",      color: "#ffd43b", orbitR: 76,  speed: 0.42, offset: 3.5  },
-      { label: "AWS Lambda",  color: "#ff9900", orbitR: 88,  speed: 0.35, offset: 0.5  },
-      { label: "SignalR",     color: "#84cc16", orbitR: 100, speed: 0.26, offset: 4.7  },
-      { label: "Prisma ORM",  color: "#7c3aed", orbitR: 64,  speed: 0.52, offset: 1.9  },
+      { label: "TypeScript",  color: "#3b82f6", orbitR: 112, speed: 0.46, offset: 0.0  },
+      { label: "OAuth 2.0",   color: "#ef4444", orbitR: 124, speed: 0.38, offset: 1.1  },
+      { label: "Azure AD",    color: "#0078d4", orbitR: 136, speed: 0.30, offset: 2.3  },
+      { label: "Python",      color: "#ffd43b", orbitR: 118, speed: 0.42, offset: 3.5  },
+      { label: "AWS Lambda",  color: "#ff9900", orbitR: 130, speed: 0.35, offset: 0.5  },
+      { label: "SignalR",     color: "#84cc16", orbitR: 142, speed: 0.26, offset: 4.7  },
+      { label: "Prisma ORM",  color: "#7c3aed", orbitR: 108, speed: 0.52, offset: 1.9  },
     ],
   },
   {
@@ -80,16 +80,16 @@ const BODIES: SpaceBody[] = [
     name: "RevEarth", title: "Full-Stack Developer (Freelance)",
     sub: "RevEarth GHG Emissions · Balanga City, Bataan",
     period: "Aug 2025 – Dec 2025",
-    color: "#22c55e", radius: 42,
+    color: "#22c55e", radius: 70,
     desc: "Carbon footprint tracker for Philippine orgs. 21 API endpoints, 13 DB models. EPA/IPCC AR5/DOE 2024 emission factors. Better-Auth OAuth 2.0, automated PDF/Excel reporting, AWS Amplify deployment.",
     satellites: [
-      { label: "Next.js 15",   color: "#eeeeee", orbitR: 65,  speed: 0.48, offset: 0.0  },
-      { label: "React 19",     color: "#61dafb", orbitR: 76,  speed: 0.40, offset: 1.3  },
-      { label: "PostgreSQL",   color: "#4169e1", orbitR: 87,  speed: 0.32, offset: 2.6  },
-      { label: "TypeScript",   color: "#3b82f6", orbitR: 70,  speed: 0.44, offset: 0.7  },
-      { label: "Prisma ORM",   color: "#7c3aed", orbitR: 82,  speed: 0.36, offset: 3.8  },
-      { label: "Better-Auth",  color: "#ec4899", orbitR: 93,  speed: 0.28, offset: 5.1  },
-      { label: "AWS Amplify",  color: "#ff9900", orbitR: 58,  speed: 0.55, offset: 1.0  },
+      { label: "Next.js 15",   color: "#eeeeee", orbitR: 105, speed: 0.48, offset: 0.0  },
+      { label: "React 19",     color: "#61dafb", orbitR: 116, speed: 0.40, offset: 1.3  },
+      { label: "PostgreSQL",   color: "#4169e1", orbitR: 128, speed: 0.32, offset: 2.6  },
+      { label: "TypeScript",   color: "#3b82f6", orbitR: 110, speed: 0.44, offset: 0.7  },
+      { label: "Prisma ORM",   color: "#7c3aed", orbitR: 122, speed: 0.36, offset: 3.8  },
+      { label: "Better-Auth",  color: "#ec4899", orbitR: 134, speed: 0.28, offset: 5.1  },
+      { label: "AWS Amplify",  color: "#ff9900", orbitR: 100, speed: 0.55, offset: 1.0  },
     ],
   },
   // ── Education ──────────────────────────────────────────────────────────────
@@ -98,14 +98,14 @@ const BODIES: SpaceBody[] = [
     name: "BPSU", title: "BS Computer Science — Cum Laude",
     sub: "Bataan Peninsula State University",
     period: "2020 – Sep 2024 · GPA 3.63",
-    color: "#facc15", radius: 62, hasRing: true,
+    color: "#facc15", radius: 100, hasRing: true,
     desc: "Bachelor of Science in Computer Science, Major in Software Development. Graduated Cum Laude, Dean's List 2020–2024. Thesis: CultureConnect (social media with collaborative filtering).",
     satellites: [
-      { label: "Software Eng",   color: "#60a5fa", orbitR: 88,  speed: 0.30, offset: 0.0, size: 3.5 },
-      { label: "Algorithms",     color: "#f97316", orbitR: 100, speed: 0.25, offset: 1.5, size: 3.5 },
-      { label: "AI / ML",        color: "#a78bfa", orbitR: 112, speed: 0.20, offset: 3.0, size: 3.5 },
-      { label: "Networking",     color: "#34d399", orbitR: 78,  speed: 0.36, offset: 4.5, size: 3.5 },
-      { label: "OS & Systems",   color: "#fb923c", orbitR: 124, speed: 0.16, offset: 0.8, size: 3.5 },
+      { label: "Software Eng",   color: "#60a5fa", orbitR: 138, speed: 0.30, offset: 0.0, size: 3.5 },
+      { label: "Algorithms",     color: "#f97316", orbitR: 152, speed: 0.25, offset: 1.5, size: 3.5 },
+      { label: "AI / ML",        color: "#a78bfa", orbitR: 166, speed: 0.20, offset: 3.0, size: 3.5 },
+      { label: "Networking",     color: "#34d399", orbitR: 130, speed: 0.36, offset: 4.5, size: 3.5 },
+      { label: "OS & Systems",   color: "#fb923c", orbitR: 180, speed: 0.16, offset: 0.8, size: 3.5 },
     ],
   },
   // ── Projects ───────────────────────────────────────────────────────────────
@@ -113,72 +113,72 @@ const BODIES: SpaceBody[] = [
     worldX: 24000, worldY: -70, kind: "project",
     name: "CultureConnect", title: "Thesis — Social Media Platform",
     period: "2024",
-    color: "#a78bfa", radius: 34,
+    color: "#a78bfa", radius: 60,
     desc: "Led team developing social media platform with collaborative filtering algorithms for content recommendation.",
     satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 54, speed: 0.52, offset: 0.0,  size: 3 },
-      { label: "React",      color: "#61dafb", orbitR: 64, speed: 0.44, offset: 1.2,  size: 3 },
-      { label: "PostgreSQL", color: "#4169e1", orbitR: 58, speed: 0.48, offset: 2.4,  size: 3 },
-      { label: "Express",    color: "#aaaaaa", orbitR: 70, speed: 0.38, offset: 3.6,  size: 3 },
-      { label: "Node.js",    color: "#68a063", orbitR: 76, speed: 0.33, offset: 5.0,  size: 3 },
+      { label: "TypeScript", color: "#3b82f6", orbitR: 90,  speed: 0.52, offset: 0.0,  size: 3 },
+      { label: "React",      color: "#61dafb", orbitR: 102, speed: 0.44, offset: 1.2,  size: 3 },
+      { label: "PostgreSQL", color: "#4169e1", orbitR: 96,  speed: 0.48, offset: 2.4,  size: 3 },
+      { label: "Express",    color: "#aaaaaa", orbitR: 110, speed: 0.38, offset: 3.6,  size: 3 },
+      { label: "Node.js",    color: "#68a063", orbitR: 118, speed: 0.33, offset: 5.0,  size: 3 },
     ],
   },
   {
     worldX: 29500, worldY: 80, kind: "project",
     name: "Knowt", title: "Article Summarization App",
     period: "2023",
-    color: "#86efac", radius: 28,
+    color: "#86efac", radius: 50,
     desc: "Led team building article summarization web app with ML models and sentiment analysis.",
     satellites: [
-      { label: "Python",   color: "#ffd43b", orbitR: 46, speed: 0.55, offset: 0.0, size: 3 },
-      { label: "Flask",    color: "#aaaaaa", orbitR: 56, speed: 0.46, offset: 1.5, size: 3 },
-      { label: "Firebase", color: "#ffca28", orbitR: 50, speed: 0.50, offset: 3.0, size: 3 },
+      { label: "Python",   color: "#ffd43b", orbitR: 78,  speed: 0.55, offset: 0.0, size: 3 },
+      { label: "Flask",    color: "#aaaaaa", orbitR: 92,  speed: 0.46, offset: 1.5, size: 3 },
+      { label: "Firebase", color: "#ffca28", orbitR: 84,  speed: 0.50, offset: 3.0, size: 3 },
     ],
   },
   {
     worldX: 34500, worldY: -60, kind: "project",
     name: "Databox", title: "Desktop Time Management App",
     period: "2022",
-    color: "#c084fc", radius: 28,
+    color: "#c084fc", radius: 50,
     desc: "Led team creating desktop time management application with scheduler and progress tracker.",
     satellites: [
-      { label: "C#",    color: "#9b4993", orbitR: 46, speed: 0.54, offset: 0.0, size: 3 },
-      { label: ".NET",  color: "#512bd4", orbitR: 56, speed: 0.46, offset: 1.6, size: 3 },
-      { label: "MySQL", color: "#4479a1", orbitR: 50, speed: 0.50, offset: 3.2, size: 3 },
+      { label: "C#",    color: "#9b4993", orbitR: 78,  speed: 0.54, offset: 0.0, size: 3 },
+      { label: ".NET",  color: "#512bd4", orbitR: 92,  speed: 0.46, offset: 1.6, size: 3 },
+      { label: "MySQL", color: "#4479a1", orbitR: 84,  speed: 0.50, offset: 3.2, size: 3 },
     ],
   },
   {
     worldX: 38500, worldY: 75, kind: "project",
     name: "KloudTrack", title: "IoT Fleet / Weather Platform",
     period: "2024",
-    color: "#60a5fa", radius: 30,
+    color: "#60a5fa", radius: 52,
     desc: "Real-time weather & fleet tracking for DRRM offices. ESP32 firmware, MQTT, AWS IoT Core, multi-tenant SaaS.",
     satellites: [
-      { label: "React",     color: "#61dafb", orbitR: 50, speed: 0.52, offset: 0.0, size: 3 },
-      { label: "Node.js",   color: "#68a063", orbitR: 60, speed: 0.44, offset: 2.0, size: 3 },
-      { label: "AWS",       color: "#ff9900", orbitR: 54, speed: 0.48, offset: 4.0, size: 3 },
+      { label: "React",     color: "#61dafb", orbitR: 82,  speed: 0.52, offset: 0.0, size: 3 },
+      { label: "Node.js",   color: "#68a063", orbitR: 96,  speed: 0.44, offset: 2.0, size: 3 },
+      { label: "AWS",       color: "#ff9900", orbitR: 88,  speed: 0.48, offset: 4.0, size: 3 },
     ],
   },
   {
     worldX: 42000, worldY: -55, kind: "project",
     name: "Logcha", title: "Time Tracker for Interns",
     period: "2024",
-    color: "#34d399", radius: 24,
+    color: "#34d399", radius: 45,
     desc: "Simple and modern time tracking app for interns & OJTs. React, TypeScript, TanStack, Go, Fiber.",
     satellites: [
-      { label: "Go",     color: "#00acd7", orbitR: 42, speed: 0.56, offset: 0.0, size: 3 },
-      { label: "React",  color: "#61dafb", orbitR: 52, speed: 0.46, offset: 2.1, size: 3 },
+      { label: "Go",     color: "#00acd7", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
+      { label: "React",  color: "#61dafb", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
     ],
   },
   {
     worldX: 44800, worldY: 60, kind: "project",
     name: "HananAI", title: "AI Breakfast Companion",
     period: "2024",
-    color: "#fb923c", radius: 24,
+    color: "#fb923c", radius: 45,
     desc: "AI agent inspired by Hanan, Tagalog goddess of morning. Conversational breakfast companion with Python & Google Gemini.",
     satellites: [
-      { label: "Python", color: "#ffd43b", orbitR: 42, speed: 0.56, offset: 0.0, size: 3 },
-      { label: "Gemini", color: "#4285f4", orbitR: 52, speed: 0.46, offset: 2.1, size: 3 },
+      { label: "Python", color: "#ffd43b", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
+      { label: "Gemini", color: "#4285f4", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
     ],
   },
 ];
@@ -513,55 +513,150 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
 
     function drawShip(W: number, H: number, speed: number) {
       const cx = W / 2;
-      const cy = H / 2 + Math.sin(bobT) * 4; // gentle bob
+      const cy = H / 2 + Math.sin(bobT) * 4;
       const thrust = Math.min(1, speed / 80);
 
       ctx.save();
       ctx.translate(cx, cy);
-      // ship points right
+      // ship points right (positive-X)
 
-      // Engine glow
-      if (thrust > 0.05) {
-        const fLen = 14 + thrust * 20 + Math.random() * 8;
-        const fg = ctx.createLinearGradient(-14, 0, -14 - fLen, 0);
-        fg.addColorStop(0, `rgba(255,200,60,${0.9 * thrust})`);
-        fg.addColorStop(0.5, `rgba(255,90,20,${0.6 * thrust})`);
-        fg.addColorStop(1, "rgba(255,40,0,0)");
-        ctx.beginPath();
-        ctx.moveTo(-14, -5); ctx.lineTo(-14, 5); ctx.lineTo(-14 - fLen, 0);
-        ctx.closePath(); ctx.fillStyle = fg; ctx.fill();
+      // ── Dual engine exhausts (drawn first, behind everything) ─────────────
+      if (thrust > 0.04) {
+        for (const ey of [-11, 11]) {
+          const fLen = 20 + thrust * 38 + Math.random() * 14;
+          const fg = ctx.createLinearGradient(-28, ey, -28 - fLen, ey);
+          fg.addColorStop(0,   `rgba(255,220,80,${thrust})`);
+          fg.addColorStop(0.25, `rgba(255,120,20,${0.75 * thrust})`);
+          fg.addColorStop(0.6,  `rgba(255,40,0,${0.4 * thrust})`);
+          fg.addColorStop(1,   "rgba(255,20,0,0)");
+          ctx.beginPath();
+          ctx.moveTo(-28, ey - 4); ctx.lineTo(-28, ey + 4); ctx.lineTo(-28 - fLen, ey);
+          ctx.closePath(); ctx.fillStyle = fg; ctx.fill();
+        }
       }
 
-      // Hull glow
-      const hg = ctx.createRadialGradient(0, 0, 8, 0, 0, 26);
-      hg.addColorStop(0, "rgba(120,180,255,0.1)"); hg.addColorStop(1, "rgba(120,180,255,0)");
-      ctx.beginPath(); ctx.arc(0, 0, 26, 0, Math.PI * 2); ctx.fillStyle = hg; ctx.fill();
+      // ── Outer hull ambient glow ───────────────────────────────────────────
+      const hg = ctx.createRadialGradient(0, 0, 12, 0, 0, 50);
+      hg.addColorStop(0, "rgba(80,150,255,0.14)"); hg.addColorStop(1, "rgba(80,150,255,0)");
+      ctx.beginPath(); ctx.arc(0, 0, 50, 0, Math.PI * 2); ctx.fillStyle = hg; ctx.fill();
 
-      // Top fin
-      ctx.beginPath();
-      ctx.moveTo(-6, -6); ctx.lineTo(2, -6); ctx.lineTo(2, -16); ctx.closePath();
-      ctx.fillStyle = "#3a6fa0"; ctx.fill();
+      // ── Swept wings (behind fuselage) ─────────────────────────────────────
+      for (const [sy, gy1, gy2] of [[1, 9, 32], [-1, -9, -32]] as [number,number,number][]) {
+        ctx.beginPath();
+        ctx.moveTo(12, sy * 8);    // wing root front
+        ctx.lineTo(-20, sy * 9);   // wing root back
+        ctx.lineTo(-30, sy * 30);  // wingtip trailing
+        ctx.lineTo(-10, sy * 26);  // wingtip leading
+        ctx.lineTo(10, sy * 14);   // leading-edge sweep
+        ctx.closePath();
+        const wg = ctx.createLinearGradient(12, gy1, -30, gy2);
+        wg.addColorStop(0, "#2a608a"); wg.addColorStop(1, "#172840");
+        ctx.fillStyle = wg; ctx.fill();
+        ctx.strokeStyle = "#4a90d4"; ctx.lineWidth = 0.8; ctx.stroke();
 
-      // Bottom fin
-      ctx.beginPath();
-      ctx.moveTo(-6, 6); ctx.lineTo(2, 6); ctx.lineTo(2, 16); ctx.closePath();
-      ctx.fillStyle = "#3a6fa0"; ctx.fill();
+        // Wing accent stripe
+        ctx.beginPath(); ctx.moveTo(0, sy * 10); ctx.lineTo(-22, sy * 26);
+        ctx.strokeStyle = "rgba(100,180,255,0.2)"; ctx.lineWidth = 1; ctx.stroke();
 
-      // Body
+        // Engine nacelle
+        ctx.beginPath(); ctx.ellipse(-18, sy * 21, 11, 4, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "#1a3f6a"; ctx.fill();
+        ctx.strokeStyle = "#3a80d4"; ctx.lineWidth = 0.8; ctx.stroke();
+
+        // Nacelle intake ring
+        ctx.beginPath(); ctx.arc(-8, sy * 21, 3.5, 0, Math.PI * 2);
+        ctx.strokeStyle = "#5a9ad4"; ctx.lineWidth = 1; ctx.stroke();
+
+        // Nacelle nozzle ring
+        ctx.beginPath(); ctx.arc(-28, sy * 21, 3.5, 0, Math.PI * 2);
+        ctx.strokeStyle = "#5a9ad4"; ctx.lineWidth = 1; ctx.stroke();
+
+        // Nacelle thrust glow
+        if (thrust > 0.08) {
+          const ng = ctx.createRadialGradient(-28, sy * 21, 0, -28, sy * 21, 10);
+          ng.addColorStop(0, `rgba(255,160,40,${0.85 * thrust})`);
+          ng.addColorStop(1, "rgba(255,60,0,0)");
+          ctx.beginPath(); ctx.arc(-28, sy * 21, 10, 0, Math.PI * 2);
+          ctx.fillStyle = ng; ctx.fill();
+        }
+      }
+
+      // ── Main fuselage ─────────────────────────────────────────────────────
       ctx.beginPath();
-      ctx.moveTo(22, 0);       // nose
-      ctx.lineTo(-10, -10);    // top-left
-      ctx.lineTo(-14, -6);     // top engine
-      ctx.lineTo(-14,  6);     // bottom engine
-      ctx.lineTo(-10,  10);    // bottom-left
+      ctx.moveTo(42, 0);     // nose tip
+      ctx.lineTo(30, -8);    // upper shoulder
+      ctx.lineTo(8,  -10);   // upper body
+      ctx.lineTo(-16, -9);   // upper waist
+      ctx.lineTo(-26, -5);   // upper tail flare
+      ctx.lineTo(-30, 0);    // tail center
+      ctx.lineTo(-26, 5);    // lower tail flare
+      ctx.lineTo(-16, 9);    // lower waist
+      ctx.lineTo(8,   10);   // lower body
+      ctx.lineTo(30, 8);     // lower shoulder
       ctx.closePath();
-      ctx.fillStyle = "#c0d8f0"; ctx.fill();
-      ctx.strokeStyle = "#7ab4f5"; ctx.lineWidth = 1.5; ctx.stroke();
+      const fhullG = ctx.createLinearGradient(-30, -10, 42, 10);
+      fhullG.addColorStop(0,    "#172840");
+      fhullG.addColorStop(0.35, "#2a5a90");
+      fhullG.addColorStop(0.7,  "#bcd6f0");
+      fhullG.addColorStop(1,    "#e8f4ff");
+      ctx.fillStyle = fhullG; ctx.fill();
+      ctx.strokeStyle = "#7ab4f5"; ctx.lineWidth = 1.2; ctx.stroke();
 
-      // Cockpit
-      ctx.beginPath(); ctx.ellipse(8, 0, 6, 5, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(100,215,255,0.65)"; ctx.fill();
-      ctx.strokeStyle = "rgba(180,240,255,0.4)"; ctx.lineWidth = 1; ctx.stroke();
+      // ── Hull panel details ────────────────────────────────────────────────
+      ctx.strokeStyle = "rgba(80,140,210,0.28)"; ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.moveTo(-22, 0); ctx.lineTo(22, 0); ctx.stroke();   // center seam
+      ctx.beginPath(); ctx.moveTo(12, -6); ctx.lineTo(-12, -6); ctx.stroke(); // upper panel
+      ctx.beginPath(); ctx.moveTo(12, 6);  ctx.lineTo(-12, 6);  ctx.stroke(); // lower panel
+      ctx.beginPath(); ctx.moveTo(-14, -4); ctx.lineTo(-14, 4); ctx.stroke(); // vertical bulkhead
+
+      // ── Tail engine block ─────────────────────────────────────────────────
+      ctx.beginPath();
+      ctx.rect(-32, -6, 5, 12);
+      ctx.fillStyle = "#1a3050"; ctx.fill();
+      ctx.strokeStyle = "#3a70b0"; ctx.lineWidth = 0.8; ctx.stroke();
+      // Twin nozzle openings
+      for (const ny of [-11, 11]) {
+        ctx.beginPath(); ctx.arc(-30, ny, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#0a1828"; ctx.fill();
+        ctx.strokeStyle = "#4a80c0"; ctx.lineWidth = 1; ctx.stroke();
+      }
+
+      // ── Cockpit ───────────────────────────────────────────────────────────
+      // Frame
+      ctx.beginPath(); ctx.ellipse(22, 0, 13, 8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0,15,35,0.95)"; ctx.fill();
+      ctx.strokeStyle = "rgba(100,180,255,0.55)"; ctx.lineWidth = 1; ctx.stroke();
+      // Glass
+      ctx.beginPath(); ctx.ellipse(22, 0, 10, 6, 0, 0, Math.PI * 2);
+      const cg = ctx.createRadialGradient(18, -3, 1, 22, 0, 10);
+      cg.addColorStop(0,   "rgba(210,245,255,0.95)");
+      cg.addColorStop(0.4, "rgba(80,210,255,0.65)");
+      cg.addColorStop(1,   "rgba(0,80,180,0.25)");
+      ctx.fillStyle = cg; ctx.fill();
+      // Glare spot
+      ctx.beginPath(); ctx.ellipse(18, -3, 4.5, 2.5, -0.4, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.fill();
+
+      // ── Running / nav lights ──────────────────────────────────────────────
+      const blink = Math.sin(bobT * 3.2) > 0;
+      if (blink) {
+        // Port (left/bottom wing) — red
+        ctx.beginPath(); ctx.arc(-10, 26, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,50,50,0.95)"; ctx.fill();
+        const rlg = ctx.createRadialGradient(-10, 26, 0, -10, 26, 7);
+        rlg.addColorStop(0, "rgba(255,50,50,0.4)"); rlg.addColorStop(1, "rgba(255,0,0,0)");
+        ctx.beginPath(); ctx.arc(-10, 26, 7, 0, Math.PI * 2); ctx.fillStyle = rlg; ctx.fill();
+      } else {
+        // Starboard (top wing) — green
+        ctx.beginPath(); ctx.arc(-10, -26, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(50,255,100,0.95)"; ctx.fill();
+        const glg = ctx.createRadialGradient(-10, -26, 0, -10, -26, 7);
+        glg.addColorStop(0, "rgba(50,255,100,0.4)"); glg.addColorStop(1, "rgba(0,200,0,0)");
+        ctx.beginPath(); ctx.arc(-10, -26, 7, 0, Math.PI * 2); ctx.fillStyle = glg; ctx.fill();
+      }
+      // Nose beacon (always on)
+      ctx.beginPath(); ctx.arc(42, 0, 2, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(220,235,255,0.9)"; ctx.fill();
 
       ctx.restore();
     }
