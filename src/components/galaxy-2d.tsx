@@ -251,12 +251,14 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
 
-    let running  = true;
-    let rafId    = 0;
-    let cameraX  = 0;
-    let targetX  = 0;
-    let bobT     = 0;
-    let prevTime = performance.now();
+    let running     = true;
+    let rafId       = 0;
+    let cameraX     = 0;
+    let targetX     = 0;
+    let bobT        = 0;
+    let prevTime    = performance.now();
+    let shipFacing  = 1;   // 1 = right, -1 = left (target)
+    let shipScaleX  = 1;   // animated value, lerps toward shipFacing
 
     // ── Resize ─────────────────────────────────────────────────────────────
     const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -511,14 +513,15 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       }
     }
 
-    function drawShip(W: number, H: number, speed: number) {
+    function drawShip(W: number, H: number, speed: number, scaleX: number) {
       const cx = W / 2;
       const cy = H / 2 + Math.sin(bobT) * 4;
       const thrust = Math.min(1, speed / 80);
 
       ctx.save();
       ctx.translate(cx, cy);
-      // ship points right (positive-X)
+      ctx.scale(scaleX, 1);
+      // ship points right (positive-X); scaleX flips it when going left
 
       // ── Dual engine exhausts (drawn first, behind everything) ─────────────
       if (thrust > 0.04) {
@@ -689,7 +692,13 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       // Smooth camera
       const prevCamX = cameraX;
       cameraX += (targetX - cameraX) * Math.min(1, dt * 7);
-      const speed = Math.abs(cameraX - prevCamX) / dt;
+      const velocity = (cameraX - prevCamX) / dt;
+      const speed = Math.abs(velocity);
+
+      // Ship facing direction — only update when actually moving
+      if (speed > 8) shipFacing = velocity > 0 ? 1 : -1;
+      // Animate flip: lerp scaleX toward facing; passing through 0 gives a banking turn
+      shipScaleX += (shipFacing - shipScaleX) * Math.min(1, dt * 7);
 
       bobT += dt * 0.9;
 
@@ -707,7 +716,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       const t = now / 1000;
       for (const b of BODIES) drawBody(b, W, H, t);
 
-      drawShip(W, H, speed);
+      drawShip(W, H, speed, shipScaleX);
 
       // ── Progress ──
       const p = Math.min(1, cameraX / WORLD_END);
