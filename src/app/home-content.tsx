@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
 import { ScrollIndicator } from "@/components/scroll-indicator";
-import { CursorSpotlight } from "@/components/cursor-spotlight";
 import { TerminalHero } from "@/components/terminal-hero";
 import { FadeInSection, StaggerContainer, StaggerItem } from "@/components/motion-wrappers";
 import { AnimatedTimeline, type TimelineEntry } from "@/components/animated-timeline";
@@ -209,7 +208,6 @@ export function HomeContent() {
     >
       {/* Subtle Japanese pattern background */}
       <div className="fixed inset-0 jp-pattern-dots pointer-events-none z-0" />
-      <CursorSpotlight />
 
       <DarkModeToggle />
       <ScrollIndicator />

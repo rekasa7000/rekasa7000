@@ -8,6 +8,7 @@ import { VisitorScan } from "@/components/visitor-scan";
 import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import { GalaxyMode } from "@/components/galaxy-mode";
 import { GalaxyLauncher } from "@/components/galaxy-launcher";
+import { CursorSpotlight } from "@/components/cursor-spotlight";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -43,6 +44,7 @@ export default function RootLayout({
           <MultiplayerCursors />
           <GalaxyMode />
           <GalaxyLauncher />
+          <CursorSpotlight />
           <ModeProvider>
             <PageTransition>{children}</PageTransition>
           </ModeProvider>
