@@ -54,7 +54,7 @@ export function GalaxyLauncher() {
         style={{ backdropFilter: "blur(8px)" }}
       >
         {/* Track row */}
-        <div className="relative flex items-center" style={{ width: THRESHOLD + 16, height: 18 }}>
+        <div className="relative flex items-center" style={{ width: THRESHOLD + 16, height: 36 }}>
           <div
             className="absolute left-4 border-t-2 border-dashed border-gray-500/60 dark:border-blue-400/35"
             style={{ width: THRESHOLD }}
@@ -72,22 +72,46 @@ export function GalaxyLauncher() {
             className="cursor-grab active:cursor-grabbing"
             title="Drag right to enter galaxy mode"
           >
-            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-              <motion.div
-                className="w-5 h-5 rounded-full relative"
-                style={{
-                  background: "radial-gradient(circle at 36% 30%, #93c5fd, #3b82f6 45%, #1e3a8a 75%, #0c1a3d)",
-                  filter: planetGlow,
-                }}
-              >
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    width: "138%", height: "26%", top: "37%", left: "-19%",
-                    borderRadius: "50%", border: "1.5px solid rgba(147,197,253,0.4)",
-                    transform: "rotate(-18deg)",
-                  }}
-                />
+            <motion.div animate={{ y: [0, -2, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+              <motion.div style={{ filter: planetGlow }}>
+                <svg width="37" height="30" viewBox="-36 -33 82 66" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="lnch-hull" x1="-30" y1="-10" x2="42" y2="10" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#172840"/>
+                      <stop offset="35%"  stopColor="#2a5a90"/>
+                      <stop offset="70%"  stopColor="#bcd6f0"/>
+                      <stop offset="100%" stopColor="#e8f4ff"/>
+                    </linearGradient>
+                    <linearGradient id="lnch-wt" x1="12" y1="-9" x2="-30" y2="-32" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#2a608a"/>
+                      <stop offset="100%" stopColor="#172840"/>
+                    </linearGradient>
+                    <linearGradient id="lnch-wb" x1="12" y1="9" x2="-30" y2="32" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#2a608a"/>
+                      <stop offset="100%" stopColor="#172840"/>
+                    </linearGradient>
+                    <radialGradient id="lnch-ck" cx="18" cy="-3" r="10" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%"   stopColor="#d2f5ff"/>
+                      <stop offset="40%"  stopColor="#50d2ff" stopOpacity="0.65"/>
+                      <stop offset="100%" stopColor="#0050b4" stopOpacity="0.25"/>
+                    </radialGradient>
+                  </defs>
+                  {/* Top wing */}
+                  <polygon points="12,-8 -20,-9 -30,-30 -10,-26 10,-14" fill="url(#lnch-wt)" stroke="#4a90d4" strokeWidth="0.8"/>
+                  <ellipse cx="-18" cy="-21" rx="11" ry="4" fill="#1a3f6a" stroke="#3a80d4" strokeWidth="0.8"/>
+                  {/* Bottom wing */}
+                  <polygon points="12,8 -20,9 -30,30 -10,26 10,14" fill="url(#lnch-wb)" stroke="#4a90d4" strokeWidth="0.8"/>
+                  <ellipse cx="-18" cy="21" rx="11" ry="4" fill="#1a3f6a" stroke="#3a80d4" strokeWidth="0.8"/>
+                  {/* Fuselage */}
+                  <polygon points="42,0 30,-8 8,-10 -16,-9 -26,-5 -30,0 -26,5 -16,9 8,10 30,8" fill="url(#lnch-hull)" stroke="#7ab4f5" strokeWidth="1.2"/>
+                  {/* Engine block + nozzles */}
+                  <rect x="-32" y="-6" width="5" height="12" fill="#1a3050" stroke="#3a70b0" strokeWidth="0.8"/>
+                  <circle cx="-30" cy="-11" r="3.5" fill="#0a1828" stroke="#4a80c0" strokeWidth="1"/>
+                  <circle cx="-30" cy="11"  r="3.5" fill="#0a1828" stroke="#4a80c0" strokeWidth="1"/>
+                  {/* Cockpit */}
+                  <ellipse cx="22" cy="0" rx="13" ry="8" fill="#00090f" fillOpacity="0.95" stroke="#64b4ff" strokeOpacity="0.55" strokeWidth="1"/>
+                  <ellipse cx="22" cy="0" rx="10" ry="6" fill="url(#lnch-ck)"/>
+                </svg>
               </motion.div>
             </motion.div>
           </motion.div>
