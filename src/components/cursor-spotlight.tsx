@@ -118,7 +118,7 @@ export function CursorSpotlight() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-2"
+      className="fixed inset-0 pointer-events-none z-20"
     />
   );
 }
