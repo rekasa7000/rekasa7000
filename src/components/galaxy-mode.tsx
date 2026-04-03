@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Galaxy2D } from "./galaxy-2d";
 
 // ── Work Experience ───────────────────────────────────────────────────────────
 
@@ -823,10 +824,11 @@ async function getScene(): Promise<SceneHandle | null> {
 export function GalaxyMode() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [view, setView] = useState<"3d" | "2d">("3d");
   const [selected, setSelected] = useState<AnyBody | null>(null);
 
   useEffect(() => {
-    const show = () => { setVisible(true); setSelected(null); };
+    const show = () => { setVisible(true); setSelected(null); setView("3d"); };
     const hide = () => setVisible(false);
     window.addEventListener("galaxy-mode", show);
     window.addEventListener("exit-mode", hide);
@@ -890,9 +892,17 @@ export function GalaxyMode() {
     };
   }, [visible]);
 
+  // Pause/resume Three.js when switching between 3D and 2D views
   useEffect(() => {
-    return () => { /* singleton manages its own lifetime */ };
-  }, []);
+    if (!visible) return;
+    const s = gs().__galaxyScene;
+    if (!s) return;
+    if (view === "2d") {
+      s.stopAnimation();
+    } else {
+      if (containerRef.current) s.startAnimation(setSelected, containerRef.current);
+    }
+  }, [view, visible]);
 
   // ── Info card helpers ───────────────────────────────────────────────────
   const colorHex = selected ? selected.color.toString(16).padStart(6, "0") : "ffffff";
@@ -927,20 +937,45 @@ export function GalaxyMode() {
             </p>
           </motion.div>
 
-          {/* Exit button */}
-          <button
-            className="absolute top-4 right-4 z-10 text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
-            style={{
-              border: "1px solid rgba(255,255,255,0.15)",
-              color: "rgba(255,255,255,0.45)",
-              backgroundColor: "rgba(0,0,20,0.65)",
-              borderRadius: "4px",
-              opacity: 0.7,
-            }}
-            onClick={() => setVisible(false)}
-          >
-            [ESC] exit
-          </button>
+          {/* Top-right controls */}
+          <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <button
+              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
+              style={{
+                border: "1px solid rgba(255,255,255,0.15)",
+                color: "rgba(255,255,255,0.45)",
+                backgroundColor: "rgba(0,0,20,0.65)",
+                borderRadius: "4px",
+                opacity: 0.7,
+              }}
+              onClick={() => setView(v => v === "3d" ? "2d" : "3d")}
+            >
+              {view === "3d" ? "2D nav" : "3D explore"}
+            </button>
+            <button
+              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
+              style={{
+                border: "1px solid rgba(255,255,255,0.15)",
+                color: "rgba(255,255,255,0.45)",
+                backgroundColor: "rgba(0,0,20,0.65)",
+                borderRadius: "4px",
+                opacity: 0.7,
+              }}
+              onClick={() => setVisible(false)}
+            >
+              [ESC] exit
+            </button>
+          </div>
+
+          {/* 2D navigation overlay */}
+          {view === "2d" && (
+            <div className="absolute inset-0 z-10">
+              <Galaxy2D
+                onClose={() => setVisible(false)}
+                onSwitch3D={() => setView("3d")}
+              />
+            </div>
+          )}
 
           {/* Legend */}
           <motion.div
