@@ -177,10 +177,7 @@ const PROJECT_DATA = [
     rotY: 2.2,
     kind: "project" as const,
     github: "github.com/rekasa7000/logcha",
-    description: [
-      "Simple and modern time tracking for interns & OJTs",
-      "React · TypeScript · TanStack · Go · Fiber",
-    ],
+    description: ["Simple and modern time tracking for interns & OJTs", "React · TypeScript · TanStack · Go · Fiber"],
   },
   {
     id: "hananai",
@@ -192,7 +189,7 @@ const PROJECT_DATA = [
     size: 0.85,
     orbitRadius: 79,
     speed: 0.00065,
-    inc: 0.70,
+    inc: 0.7,
     rotY: 3.0,
     kind: "project" as const,
     github: "github.com/rekasa7000/hananai",
@@ -232,7 +229,7 @@ const PROJECT_DATA = [
     size: 0.8,
     orbitRadius: 90,
     speed: 0.00055,
-    inc: 0.50,
+    inc: 0.5,
     rotY: 1.6,
     kind: "project" as const,
     github: "github.com/rekasa7000/knowt",
@@ -267,29 +264,61 @@ const PROJECT_DATA = [
 // ── Skills asteroid belt ───────────────────────────────────────────────────────
 
 const SKILLS = [
-  "TypeScript", "JavaScript", "Python", "Go", "C#", "Rust", "PHP", "Java",
-  "React", "Next.js", "Vue.js", "Tailwind CSS", "Angular", "Svelte",
-  "Node.js", "NestJS", "FastAPI", "Flask", "Gin", "Express",
-  "PostgreSQL", "MongoDB", "MySQL", "Redis", "Prisma", "Firebase", "Supabase",
-  "AWS", "Docker", "GitHub Actions", "Vercel",
-  "Figma", "Git",
+  "TypeScript",
+  "JavaScript",
+  "Python",
+  "Go",
+  "C#",
+  "Rust",
+  "PHP",
+  "Java",
+  "React",
+  "Next.js",
+  "Vue.js",
+  "Tailwind CSS",
+  "Angular",
+  "Svelte",
+  "Node.js",
+  "NestJS",
+  "FastAPI",
+  "Flask",
+  "Gin",
+  "Express",
+  "PostgreSQL",
+  "MongoDB",
+  "MySQL",
+  "Redis",
+  "Prisma",
+  "Firebase",
+  "Supabase",
+  "AWS",
+  "Docker",
+  "GitHub Actions",
+  "Vercel",
+  "Figma",
+  "Git",
 ];
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type WorkBody    = typeof PLANET_DATA[0];
-type EduBody     = typeof EDUCATION_DATA[0];
-type ProjectBody = typeof PROJECT_DATA[0];
-type AnyBody     = WorkBody | EduBody | ProjectBody;
-type CamMode     = "cockpit" | "chase";
-type ViewMode    = "3d" | "ship" | "2d";
+type WorkBody = (typeof PLANET_DATA)[0];
+type EduBody = (typeof EDUCATION_DATA)[0];
+type ProjectBody = (typeof PROJECT_DATA)[0];
+type AnyBody = WorkBody | EduBody | ProjectBody;
+type CamMode = "cockpit" | "chase";
+type ViewMode = "3d" | "ship" | "2d";
 
 type SceneHandle = {
   canvas: HTMLCanvasElement;
   startAnimation: (
     onSelect: (b: AnyBody | null) => void,
     container: HTMLElement,
-    opts?: { mode?: "explore" | "ship"; onCamMode?: (m: CamMode) => void; onPointerLock?: (locked: boolean) => void }
+    opts?: {
+      mode?: "explore" | "ship";
+      onCamMode?: (m: CamMode) => void;
+      onPointerLock?: (locked: boolean) => void;
+      onShipUpdate?: (d: { speed: number; heading: number; throttle: number }) => void;
+    },
   ) => () => void;
   stopAnimation: () => void;
   setCamMode: (m: CamMode) => void;
@@ -314,9 +343,7 @@ function orbitPos(r: number, angle: number, inc: number, rotY: number) {
 
 async function buildScene(): Promise<SceneHandle> {
   const THREE = await import("three");
-  const { OrbitControls } = await import(
-    "three/examples/jsm/controls/OrbitControls.js"
-  );
+  const { OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js");
 
   // ── Renderer ───────────────────────────────────────────────────────────
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "default" });
@@ -351,7 +378,8 @@ async function buildScene(): Promise<SceneHandle> {
   // ── Helpers ────────────────────────────────────────────────────────────
   function makeSprite(text: string, hexColor: string, fontSize = 22, scaleMult = 1) {
     const cv = document.createElement("canvas");
-    cv.width = 320; cv.height = 80;
+    cv.width = 320;
+    cv.height = 80;
     const ctx = cv.getContext("2d")!;
     ctx.clearRect(0, 0, 320, 80);
     ctx.font = `bold ${fontSize}px monospace`;
@@ -362,9 +390,7 @@ async function buildScene(): Promise<SceneHandle> {
     ctx.shadowBlur = 10;
     ctx.fillText(text, 160, 40);
     const tex = new THREE.CanvasTexture(cv);
-    const sprite = new THREE.Sprite(
-      new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }),
-    );
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
     sprite.scale.set(5 * scaleMult, 1.25 * scaleMult, 1);
     return sprite;
   }
@@ -389,45 +415,75 @@ async function buildScene(): Promise<SceneHandle> {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3]     = (Math.random() - 0.5) * 1100;
+      pos[i * 3] = (Math.random() - 0.5) * 1100;
       pos[i * 3 + 1] = (Math.random() - 0.5) * 1100;
       pos[i * 3 + 2] = (Math.random() - 0.5) * 1100;
       const r = Math.random();
-      if (r < 0.15)     { col[i*3]=0.6; col[i*3+1]=0.7; col[i*3+2]=1;   }
-      else if (r < 0.3) { col[i*3]=1;   col[i*3+1]=0.9; col[i*3+2]=0.5; }
-      else              { col[i*3]=1;   col[i*3+1]=1;   col[i*3+2]=1;   }
+      if (r < 0.15) {
+        col[i * 3] = 0.6;
+        col[i * 3 + 1] = 0.7;
+        col[i * 3 + 2] = 1;
+      } else if (r < 0.3) {
+        col[i * 3] = 1;
+        col[i * 3 + 1] = 0.9;
+        col[i * 3 + 2] = 0.5;
+      } else {
+        col[i * 3] = 1;
+        col[i * 3 + 1] = 1;
+        col[i * 3 + 2] = 1;
+      }
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute("color",    new THREE.BufferAttribute(col, 3));
-    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({
-      size: 0.22, sizeAttenuation: true, vertexColors: true,
-      transparent: true, opacity: 0.85,
-    })));
+    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    scene.add(
+      new THREE.Points(
+        geo,
+        new THREE.PointsMaterial({
+          size: 0.22,
+          sizeAttenuation: true,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.85,
+        }),
+      ),
+    );
   }
 
   // ── Nebula clouds ──────────────────────────────────────────────────────
   const nebulaConfigs = [
-    { r: 30, g: 10, b: 80 }, { r: 10, g: 20, b: 60 },
-    { r: 50, g: 5,  b: 40 }, { r: 5,  g: 40, b: 30 },
-    { r: 20, g: 5,  b: 60 }, { r: 60, g: 10, b: 20 },
-    { r: 10, g: 30, b: 50 }, { r: 40, g: 15, b: 60 },
-    { r: 15, g: 50, b: 20 }, { r: 35, g: 8,  b: 55 },
+    { r: 30, g: 10, b: 80 },
+    { r: 10, g: 20, b: 60 },
+    { r: 50, g: 5, b: 40 },
+    { r: 5, g: 40, b: 30 },
+    { r: 20, g: 5, b: 60 },
+    { r: 60, g: 10, b: 20 },
+    { r: 10, g: 30, b: 50 },
+    { r: 40, g: 15, b: 60 },
+    { r: 15, g: 50, b: 20 },
+    { r: 35, g: 8, b: 55 },
   ];
   for (const nc of nebulaConfigs) {
-    const cv = document.createElement("canvas"); cv.width = 128; cv.height = 128;
+    const cv = document.createElement("canvas");
+    cv.width = 128;
+    cv.height = 128;
     const ctx = cv.getContext("2d")!;
     const grd = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
     grd.addColorStop(0, `rgba(${nc.r},${nc.g},${nc.b},0.3)`);
     grd.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = grd; ctx.fillRect(0, 0, 128, 128);
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: new THREE.CanvasTexture(cv), transparent: true,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, 128, 128);
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(cv),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
     const s = 100 + Math.random() * 130;
     sprite.scale.set(s, s, 1);
-    sprite.position.set((Math.random()-.5)*350, (Math.random()-.5)*130, (Math.random()-.5)*350);
+    sprite.position.set((Math.random() - 0.5) * 350, (Math.random() - 0.5) * 130, (Math.random() - 0.5) * 350);
     scene.add(sprite);
   }
 
@@ -442,17 +498,24 @@ async function buildScene(): Promise<SceneHandle> {
   );
   scene.add(sun);
 
-  const sgCv = document.createElement("canvas"); sgCv.width = 128; sgCv.height = 128;
+  const sgCv = document.createElement("canvas");
+  sgCv.width = 128;
+  sgCv.height = 128;
   const sgCtx = sgCv.getContext("2d")!;
-  const sgGrd = sgCtx.createRadialGradient(64,64,0,64,64,64);
+  const sgGrd = sgCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
   sgGrd.addColorStop(0, "rgba(255,200,50,0.7)");
   sgGrd.addColorStop(0.35, "rgba(255,140,20,0.3)");
   sgGrd.addColorStop(1, "rgba(255,60,0,0)");
-  sgCtx.fillStyle = sgGrd; sgCtx.fillRect(0,0,128,128);
-  const sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: new THREE.CanvasTexture(sgCv), transparent: true,
-    blending: THREE.AdditiveBlending, depthWrite: false,
-  }));
+  sgCtx.fillStyle = sgGrd;
+  sgCtx.fillRect(0, 0, 128, 128);
+  const sunGlow = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(sgCv),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  );
   sunGlow.scale.set(22, 22, 1);
   scene.add(sunGlow);
 
@@ -471,7 +534,13 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(makeOrbitRing(p.orbitRadius, 0x223344, 0.45, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 32, 32),
-      new THREE.MeshStandardMaterial({ color: p.color, emissive: p.emissive, emissiveIntensity: 0.4, roughness: 0.65, metalness: 0.1 }),
+      new THREE.MeshStandardMaterial({
+        color: p.color,
+        emissive: p.emissive,
+        emissiveIntensity: 0.4,
+        roughness: 0.65,
+        metalness: 0.1,
+      }),
     );
     mesh.userData = { bodyKind: "work", bodyIndex: i };
     planetMeshes.push(mesh);
@@ -485,7 +554,10 @@ async function buildScene(): Promise<SceneHandle> {
   type AsteroidDatum = {
     mesh: InstanceType<typeof THREE.Mesh>;
     label: InstanceType<typeof THREE.Sprite> | null;
-    angle: number; radius: number; speed: number; y: number;
+    angle: number;
+    radius: number;
+    speed: number;
+    y: number;
   };
   const asteroids: AsteroidDatum[] = [];
   const ASTEROID_COUNT = SKILLS.length * 4;
@@ -497,11 +569,14 @@ async function buildScene(): Promise<SceneHandle> {
       new THREE.DodecahedronGeometry(0.1 + Math.random() * 0.22, 0),
       new THREE.MeshStandardMaterial({ color: 0x6677aa, roughness: 0.9, metalness: 0.15 }),
     );
-    mesh.position.set(Math.cos(angle)*radius, y, Math.sin(angle)*radius);
-    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+    mesh.position.set(Math.cos(angle) * radius, y, Math.sin(angle) * radius);
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
     scene.add(mesh);
     let label: InstanceType<typeof THREE.Sprite> | null = null;
-    if (i < SKILLS.length) { label = makeSprite(SKILLS[i], "#7799cc", 16, 0.65); scene.add(label); }
+    if (i < SKILLS.length) {
+      label = makeSprite(SKILLS[i], "#7799cc", 16, 0.65);
+      scene.add(label);
+    }
     asteroids.push({ mesh, label, angle, radius, speed: 0.0007 + Math.random() * 0.001, y });
   }
 
@@ -516,7 +591,13 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(makeOrbitRing(e.orbitRadius, 0x443322, 0.35, e.inc, e.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(e.size, 32, 32),
-      new THREE.MeshStandardMaterial({ color: e.color, emissive: e.emissive, emissiveIntensity: 0.5, roughness: 0.55, metalness: 0.2 }),
+      new THREE.MeshStandardMaterial({
+        color: e.color,
+        emissive: e.emissive,
+        emissiveIntensity: 0.5,
+        roughness: 0.55,
+        metalness: 0.2,
+      }),
     );
     mesh.userData = { bodyKind: "education", bodyIndex: i };
     eduMeshes.push(mesh);
@@ -547,7 +628,13 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(makeOrbitRing(p.orbitRadius, 0x221133, 0.28, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 28, 28),
-      new THREE.MeshStandardMaterial({ color: p.color, emissive: p.emissive, emissiveIntensity: 0.55, roughness: 0.6, metalness: 0.15 }),
+      new THREE.MeshStandardMaterial({
+        color: p.color,
+        emissive: p.emissive,
+        emissiveIntensity: 0.55,
+        roughness: 0.6,
+        metalness: 0.15,
+      }),
     );
     mesh.userData = { bodyKind: "project", bodyIndex: i };
     projMeshes.push(mesh);
@@ -558,13 +645,18 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Comets ────────────────────────────────────────────────────────────
-  const comaCv = document.createElement("canvas"); comaCv.width = 64; comaCv.height = 64;
-  { const ctx = comaCv.getContext("2d")!;
+  const comaCv = document.createElement("canvas");
+  comaCv.width = 64;
+  comaCv.height = 64;
+  {
+    const ctx = comaCv.getContext("2d")!;
     const grd = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grd.addColorStop(0,   "rgba(220,240,255,1)");
+    grd.addColorStop(0, "rgba(220,240,255,1)");
     grd.addColorStop(0.3, "rgba(170,210,255,0.6)");
-    grd.addColorStop(1,   "rgba(100,150,255,0)");
-    ctx.fillStyle = grd; ctx.fillRect(0, 0, 64, 64); }
+    grd.addColorStop(1, "rgba(100,150,255,0)");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, 64, 64);
+  }
   const comaTex = new THREE.CanvasTexture(comaCv);
 
   type CometDatum = {
@@ -578,9 +670,9 @@ async function buildScene(): Promise<SceneHandle> {
   };
 
   const COMET_CONFIGS = [
-    { start: new THREE.Vector3(-185, 55, -75),  end: new THREE.Vector3(175, -45, 85),  speed: 1/18, t0: 0.02 },
-    { start: new THREE.Vector3(105, -75, -165), end: new THREE.Vector3(-95, 65, 145),  speed: 1/26, t0: 0.42 },
-    { start: new THREE.Vector3(-55, 95, 175),   end: new THREE.Vector3(75, -85, -135), speed: 1/15, t0: 0.71 },
+    { start: new THREE.Vector3(-185, 55, -75), end: new THREE.Vector3(175, -45, 85), speed: 1 / 18, t0: 0.02 },
+    { start: new THREE.Vector3(105, -75, -165), end: new THREE.Vector3(-95, 65, 145), speed: 1 / 26, t0: 0.42 },
+    { start: new THREE.Vector3(-55, 95, 175), end: new THREE.Vector3(75, -85, -135), speed: 1 / 15, t0: 0.71 },
   ];
 
   const comets: CometDatum[] = [];
@@ -593,23 +685,32 @@ async function buildScene(): Promise<SceneHandle> {
     );
     scene.add(nucleus);
 
-    const coma = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: comaTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
+    const coma = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: comaTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
     scene.add(coma);
 
     const tailGeo = new THREE.ConeGeometry(0.9, TAIL_H, 8, 1, true);
     tailGeo.translate(0, TAIL_H / 2, 0);
-    const tail = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({
-      color: 0xaaccff, transparent: true, opacity: 0.3,
-      side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending,
-    }));
+    const tail = new THREE.Mesh(
+      tailGeo,
+      new THREE.MeshBasicMaterial({
+        color: 0xaaccff,
+        transparent: true,
+        opacity: 0.3,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      }),
+    );
     scene.add(tail);
 
-    const trailDir = new THREE.Vector3()
-      .subVectors(cc.end, cc.start)
-      .normalize()
-      .negate();
+    const trailDir = new THREE.Vector3().subVectors(cc.end, cc.start).normalize().negate();
     tail.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), trailDir);
 
     comets.push({ nucleus, coma, tail, start: cc.start, end: cc.end, t: cc.t0, speed: cc.speed });
@@ -624,12 +725,15 @@ async function buildScene(): Promise<SceneHandle> {
   let camMode: CamMode = "cockpit";
   let onCamModeChange: ((m: CamMode) => void) | null = null;
 
-  const shipPos     = new THREE.Vector3(0, 8, 95);
-  const shipQuat    = new THREE.Quaternion();
-  const shipVel     = new THREE.Vector3();
-  const chaseCamPos = new THREE.Vector3(0, 18, 115);
-  // Face toward origin (ship's -Z points toward center)
-  shipQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+  const shipPos = new THREE.Vector3(0, 8, 95);
+  const shipQuat = new THREE.Quaternion();
+  const shipVel = new THREE.Vector3();
+  const chaseCamPos = new THREE.Vector3(0, 13, 111);
+  // Euler angles — yaw + pitch only (no roll ever accumulates)
+  let shipYaw   = 0;          // 0 = facing toward origin (-Z)
+  let shipPitch = 0;
+  const MAX_PITCH = Math.PI * 0.4; // ±72° pitch limit
+  shipQuat.setFromEuler(new THREE.Euler(0, 0, 0, "YXZ"));
 
   // ── Ship mesh ──────────────────────────────────────────────────────────
   const shipGroup = new THREE.Group();
@@ -637,9 +741,18 @@ async function buildScene(): Promise<SceneHandle> {
   // Fuselage — wider at tail, tapering toward nose
   const fusGeo = new THREE.CylinderGeometry(0.55, 1.6, 9, 8);
   fusGeo.rotateX(Math.PI / 2); // align along Z; nose = -Z, tail = +Z
-  shipGroup.add(new THREE.Mesh(fusGeo, new THREE.MeshStandardMaterial({
-    color: 0x2a5a90, emissive: 0x0a2030, emissiveIntensity: 0.3, metalness: 0.65, roughness: 0.35,
-  })));
+  shipGroup.add(
+    new THREE.Mesh(
+      fusGeo,
+      new THREE.MeshStandardMaterial({
+        color: 0x2a5a90,
+        emissive: 0x0a2030,
+        emissiveIntensity: 0.3,
+        metalness: 0.65,
+        roughness: 0.35,
+      }),
+    ),
+  );
 
   // Wings (single span)
   const wingMesh = new THREE.Mesh(
@@ -653,19 +766,32 @@ async function buildScene(): Promise<SceneHandle> {
   for (const nx of [-5.5, 5.5]) {
     const nacGeo = new THREE.CylinderGeometry(0.28, 0.45, 2.8, 8);
     nacGeo.rotateX(Math.PI / 2);
-    const nac = new THREE.Mesh(nacGeo, new THREE.MeshStandardMaterial({
-      color: 0x1a3a60, metalness: 0.8, roughness: 0.25,
-    }));
+    const nac = new THREE.Mesh(
+      nacGeo,
+      new THREE.MeshStandardMaterial({
+        color: 0x1a3a60,
+        metalness: 0.8,
+        roughness: 0.25,
+      }),
+    );
     nac.position.set(nx, -0.15, 1.5);
     shipGroup.add(nac);
   }
 
   // Cockpit bubble (at nose, raised)
   const cockpitGeo = new THREE.SphereGeometry(1.15, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.65);
-  const cockpitMesh = new THREE.Mesh(cockpitGeo, new THREE.MeshStandardMaterial({
-    color: 0x7ab4f5, transparent: true, opacity: 0.72,
-    emissive: 0x1a4a80, emissiveIntensity: 0.9, metalness: 0.05, roughness: 0.04,
-  }));
+  const cockpitMesh = new THREE.Mesh(
+    cockpitGeo,
+    new THREE.MeshStandardMaterial({
+      color: 0x7ab4f5,
+      transparent: true,
+      opacity: 0.72,
+      emissive: 0x1a4a80,
+      emissiveIntensity: 0.9,
+      metalness: 0.05,
+      roughness: 0.04,
+    }),
+  );
   cockpitMesh.position.set(0, 0.65, -3);
   cockpitMesh.rotation.x = -0.15;
   shipGroup.add(cockpitMesh);
@@ -673,9 +799,14 @@ async function buildScene(): Promise<SceneHandle> {
   // Nose cone
   const noseConeGeo = new THREE.ConeGeometry(0.55, 2.2, 8);
   noseConeGeo.rotateX(-Math.PI / 2); // tip points in -Z
-  const noseCone = new THREE.Mesh(noseConeGeo, new THREE.MeshStandardMaterial({
-    color: 0x4a90e2, metalness: 0.85, roughness: 0.18,
-  }));
+  const noseCone = new THREE.Mesh(
+    noseConeGeo,
+    new THREE.MeshStandardMaterial({
+      color: 0x4a90e2,
+      metalness: 0.85,
+      roughness: 0.18,
+    }),
+  );
   noseCone.position.z = -5.6;
   shipGroup.add(noseCone);
 
@@ -683,25 +814,39 @@ async function buildScene(): Promise<SceneHandle> {
   for (const nx of [-1.1, 1.1]) {
     const nozzleGeo = new THREE.CylinderGeometry(0.42, 0.58, 1.8, 8);
     nozzleGeo.rotateX(Math.PI / 2);
-    const nozzle = new THREE.Mesh(nozzleGeo, new THREE.MeshStandardMaterial({
-      color: 0x080f1a, metalness: 0.95, roughness: 0.15,
-    }));
+    const nozzle = new THREE.Mesh(
+      nozzleGeo,
+      new THREE.MeshStandardMaterial({
+        color: 0x080f1a,
+        metalness: 0.95,
+        roughness: 0.15,
+      }),
+    );
     nozzle.position.set(nx, -0.2, 4.9);
     shipGroup.add(nozzle);
   }
 
   // Engine glow (scales with thrust)
-  const engCv = document.createElement("canvas"); engCv.width = 64; engCv.height = 64;
-  { const ctx = engCv.getContext("2d")!;
+  const engCv = document.createElement("canvas");
+  engCv.width = 64;
+  engCv.height = 64;
+  {
+    const ctx = engCv.getContext("2d")!;
     const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
     g.addColorStop(0, "rgba(255,200,100,1)");
     g.addColorStop(0.35, "rgba(255,110,20,0.65)");
     g.addColorStop(1, "rgba(255,40,0,0)");
-    ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64); }
-  const engineGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: new THREE.CanvasTexture(engCv), transparent: true,
-    blending: THREE.AdditiveBlending, depthWrite: false,
-  }));
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
+  }
+  const engineGlow = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(engCv),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  );
   engineGlow.position.z = 6.2; // behind the tail
   engineGlow.scale.set(0, 0, 1);
   shipGroup.add(engineGlow);
@@ -715,26 +860,30 @@ async function buildScene(): Promise<SceneHandle> {
   let inputCleanup: (() => void) | null = null;
 
   // ── Animation state ────────────────────────────────────────────────────
-  let rafId   = 0;
+  let rafId = 0;
   let running = false;
 
   // Reusable vectors (avoid GC in hot loop)
-  const _fwd      = new THREE.Vector3();
-  const _up       = new THREE.Vector3();
-  const _rt       = new THREE.Vector3();
-  const _rotQ     = new THREE.Quaternion();
+  const _fwd = new THREE.Vector3();
+  const _up = new THREE.Vector3();
   const _chaseTgt = new THREE.Vector3();
-  const _lookAt   = new THREE.Vector3();
+  const _lookAt = new THREE.Vector3();
   const _cometPos = new THREE.Vector3();
 
   function startAnimation(
     onSelect: (b: AnyBody | null) => void,
     container: HTMLElement,
-    opts?: { mode?: "explore" | "ship"; onCamMode?: (m: CamMode) => void; onPointerLock?: (locked: boolean) => void },
+    opts?: {
+      mode?: "explore" | "ship";
+      onCamMode?: (m: CamMode) => void;
+      onPointerLock?: (locked: boolean) => void;
+      onShipUpdate?: (d: { speed: number; heading: number; throttle: number }) => void;
+    },
   ): () => void {
     const mode = opts?.mode ?? "explore";
     onCamModeChange = opts?.onCamMode ?? null;
-    const onPointerLockCb = opts?.onPointerLock ?? null;
+    const onPointerLockCb   = opts?.onPointerLock   ?? null;
+    const onShipUpdateCb    = opts?.onShipUpdate     ?? null;
 
     // ── Clean up any previous session ──────────────────────────────────
     running = false;
@@ -744,7 +893,8 @@ async function buildScene(): Promise<SceneHandle> {
 
     // ── Resize ──────────────────────────────────────────────────────────
     const resize = () => {
-      const w = container.clientWidth, h = container.clientHeight;
+      const w = container.clientWidth,
+        h = container.clientHeight;
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -772,10 +922,13 @@ async function buildScene(): Promise<SceneHandle> {
     let pointerDownAt = { x: 0, y: 0 };
     let pointerLocked = false;
 
-    const onPointerDown = (e: PointerEvent) => { pointerDownAt = { x: e.clientX, y: e.clientY }; };
-    const onPointerUp   = (e: PointerEvent) => {
+    const onPointerDown = (e: PointerEvent) => {
+      pointerDownAt = { x: e.clientX, y: e.clientY };
+    };
+    const onPointerUp = (e: PointerEvent) => {
       if (mode === "ship" && pointerLocked) return; // mouse captured — no selection
-      const dx = e.clientX - pointerDownAt.x, dy = e.clientY - pointerDownAt.y;
+      const dx = e.clientX - pointerDownAt.x,
+        dy = e.clientY - pointerDownAt.y;
       if (dx * dx + dy * dy > 25) return;
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -783,11 +936,14 @@ async function buildScene(): Promise<SceneHandle> {
       raycaster.setFromCamera(mouse, camera);
       const hits = raycaster.intersectObjects(clickableMeshes);
       if (hits.length > 0) {
-        const { bodyKind, bodyIndex } = (hits[0].object as InstanceType<typeof THREE.Mesh>).userData as { bodyKind: string; bodyIndex: number };
+        const { bodyKind, bodyIndex } = (hits[0].object as InstanceType<typeof THREE.Mesh>).userData as {
+          bodyKind: string;
+          bodyIndex: number;
+        };
         let body: AnyBody | null = null;
-        if (bodyKind === "work")           body = PLANET_DATA[bodyIndex];
+        if (bodyKind === "work") body = PLANET_DATA[bodyIndex];
         else if (bodyKind === "education") body = EDUCATION_DATA[bodyIndex];
-        else if (bodyKind === "project")   body = PROJECT_DATA[bodyIndex];
+        else if (bodyKind === "project") body = PROJECT_DATA[bodyIndex];
         onSelect(body);
         if (mode === "explore") controls.autoRotate = false;
       } else {
@@ -799,7 +955,8 @@ async function buildScene(): Promise<SceneHandle> {
 
     // ── Ship input (only in ship mode) ───────────────────────────────────
     const keys: Record<string, boolean> = {};
-    let accMouseX = 0, accMouseY = 0;
+    let accMouseX = 0,
+      accMouseY = 0;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (mode !== "ship") return;
@@ -810,8 +967,10 @@ async function buildScene(): Promise<SceneHandle> {
         onCamModeChange?.(camMode);
       }
     };
-    const onKeyUp      = (e: KeyboardEvent) => { keys[e.key.toLowerCase()] = false; };
-    const onMouseMove  = (e: MouseEvent) => {
+    const onKeyUp = (e: KeyboardEvent) => {
+      keys[e.key.toLowerCase()] = false;
+    };
+    const onMouseMove = (e: MouseEvent) => {
       if (mode === "ship" && pointerLocked) {
         accMouseX += e.movementX;
         accMouseY += e.movementY;
@@ -823,63 +982,63 @@ async function buildScene(): Promise<SceneHandle> {
     };
 
     canvas.addEventListener("pointerdown", onPointerDown);
-    canvas.addEventListener("pointerup",   onPointerUp);
-    window.addEventListener("resize",      resize);
-    document.addEventListener("keydown",           onKeyDown);
-    document.addEventListener("keyup",             onKeyUp);
-    document.addEventListener("mousemove",         onMouseMove);
+    canvas.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("resize", resize);
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("pointerlockchange", onLockChange);
 
     inputCleanup = () => {
       canvas.removeEventListener("pointerdown", onPointerDown);
-      canvas.removeEventListener("pointerup",   onPointerUp);
-      window.removeEventListener("resize",      resize);
-      document.removeEventListener("keydown",           onKeyDown);
-      document.removeEventListener("keyup",             onKeyUp);
-      document.removeEventListener("mousemove",         onMouseMove);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+      document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("pointerlockchange", onLockChange);
       if (document.pointerLockElement === canvas) document.exitPointerLock();
     };
 
-    let prevTime = Date.now() * 0.001;
+    let prevTime   = Date.now() * 0.001;
+    let frameCount = 0;
     running = true;
 
     const tick = () => {
       if (!running) return;
       rafId = requestAnimationFrame(tick);
       const now = Date.now() * 0.001;
-      const dt  = Math.min(now - prevTime, 0.05);
-      prevTime  = now;
+      const dt = Math.min(now - prevTime, 0.05);
+      prevTime = now;
 
       // ── Ship physics ────────────────────────────────────────────────
       if (mode === "ship") {
-        const THRUST   = 55;
+        const THRUST = 55;
         const YAW_RATE = 1.3;
-        const SENS     = 0.0018;
-        const MAX_SPD  = 100;
+        const SENS = 0.0018;
+        const MAX_SPD = 100;
 
+        // Yaw (A/D) + mouse — no roll ever
+        if (keys["a"]) shipYaw += YAW_RATE * dt;
+        if (keys["d"]) shipYaw -= YAW_RATE * dt;
+
+        if (pointerLocked && (accMouseX !== 0 || accMouseY !== 0)) {
+          shipYaw   -= accMouseX * SENS;
+          shipPitch -= accMouseY * SENS;
+          shipPitch  = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, shipPitch));
+          accMouseX  = 0;
+          accMouseY  = 0;
+        }
+
+        // Reconstruct quaternion each frame — guarantees zero roll
+        shipQuat.setFromEuler(new THREE.Euler(shipPitch, shipYaw, 0, "YXZ"));
         _fwd.set(0, 0, -1).applyQuaternion(shipQuat);
         _up.set(0, 1, 0).applyQuaternion(shipQuat);
 
         if (keys["w"]) shipVel.addScaledVector(_fwd, THRUST * dt);
         if (keys["s"]) shipVel.addScaledVector(_fwd, -THRUST * 0.35 * dt);
-        if (keys["a"]) {
-          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0),  YAW_RATE * dt);
-          shipQuat.premultiply(_rotQ);
-        }
-        if (keys["d"]) {
-          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -YAW_RATE * dt);
-          shipQuat.premultiply(_rotQ);
-        }
-
-        if (pointerLocked && (accMouseX !== 0 || accMouseY !== 0)) {
-          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -accMouseX * SENS);
-          shipQuat.premultiply(_rotQ);
-          _rt.set(1, 0, 0).applyQuaternion(shipQuat);
-          _rotQ.setFromAxisAngle(_rt, -accMouseY * SENS);
-          shipQuat.multiply(_rotQ);
-          accMouseX = 0; accMouseY = 0;
-        }
+        if (keys["q"]) shipVel.addScaledVector(_up,  THRUST * 0.4 * dt);
+        if (keys["e"]) shipVel.addScaledVector(_up, -THRUST * 0.4 * dt);
 
         const spd = shipVel.length();
         if (spd > MAX_SPD) shipVel.multiplyScalar(MAX_SPD / spd);
@@ -894,21 +1053,22 @@ async function buildScene(): Promise<SceneHandle> {
         const gs = thrust > 0.05 ? (2.5 + thrust * 9) * (0.85 + Math.random() * 0.3) : 0;
         engineGlow.scale.set(gs, gs, 1);
 
+        // Emit ship telemetry to React HUD (~30 fps)
+        frameCount++;
+        if (frameCount % 2 === 0 && onShipUpdateCb) {
+          const headingDeg = (((Math.atan2(_fwd.x, -_fwd.z) * 180) / Math.PI) + 360) % 360;
+          onShipUpdateCb({ speed: Math.round(spd), heading: Math.round(headingDeg), throttle: thrust });
+        }
+
         // ── Camera (ship mode) ─────────────────────────────────────────
-        _fwd.set(0, 0, -1).applyQuaternion(shipQuat);
-        _up.set(0, 1, 0).applyQuaternion(shipQuat);
 
         if (camMode === "cockpit") {
-          camera.position.copy(shipPos)
-            .addScaledVector(_fwd, 3.5)
-            .addScaledVector(_up, 0.65);
+          camera.position.copy(shipPos).addScaledVector(_fwd, 3.5).addScaledVector(_up, 0.65);
           camera.quaternion.copy(shipQuat);
           shipGroup.visible = false;
         } else {
           // Chase cam — smooth lerp behind and above ship
-          _chaseTgt.copy(shipPos)
-            .addScaledVector(_fwd, -16)
-            .addScaledVector(_up, 5);
+          _chaseTgt.copy(shipPos).addScaledVector(_fwd, -16).addScaledVector(_up, 5);
           chaseCamPos.lerp(_chaseTgt, Math.min(1, dt * 5));
           camera.position.copy(chaseCamPos);
           _lookAt.copy(shipPos).addScaledVector(_fwd, 4);
@@ -935,9 +1095,11 @@ async function buildScene(): Promise<SceneHandle> {
       // ── Asteroids ────────────────────────────────────────────────────
       for (const a of asteroids) {
         a.angle += a.speed;
-        const ax = Math.cos(a.angle) * a.radius, az = Math.sin(a.angle) * a.radius;
+        const ax = Math.cos(a.angle) * a.radius,
+          az = Math.sin(a.angle) * a.radius;
         a.mesh.position.set(ax, a.y, az);
-        a.mesh.rotation.x += 0.018; a.mesh.rotation.y += 0.013;
+        a.mesh.rotation.x += 0.018;
+        a.mesh.rotation.y += 0.013;
         if (a.label) a.label.position.set(ax, a.y + 0.9, az);
       }
 
@@ -965,12 +1127,12 @@ async function buildScene(): Promise<SceneHandle> {
       for (const comet of comets) {
         comet.t = (comet.t + comet.speed * dt) % 1;
         _cometPos.lerpVectors(comet.start, comet.end, comet.t);
-        const dist  = _cometPos.length();
+        const dist = _cometPos.length();
         const alpha = 1 - Math.min(1, Math.max(0, (dist - 45) / 65));
-        const vis   = alpha > 0.01;
+        const vis = alpha > 0.01;
         comet.nucleus.visible = vis;
-        comet.coma.visible    = vis;
-        comet.tail.visible    = vis;
+        comet.coma.visible = vis;
+        comet.tail.visible = vis;
         if (vis) {
           comet.nucleus.position.copy(_cometPos);
           comet.coma.position.copy(_cometPos);
@@ -1054,24 +1216,29 @@ async function getScene(): Promise<SceneHandle | null> {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function GalaxyMode() {
-  const containerRef  = useRef<HTMLDivElement>(null);
-  const [visible, setVisible]       = useState(false);
-  const [view, setView]             = useState<ViewMode>("3d");
-  const [selected, setSelected]     = useState<AnyBody | null>(null);
-  const [camMode3D, setCamMode3D]   = useState<CamMode>("cockpit");
-  const [ptrLocked, setPtrLocked]   = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [view, setView] = useState<ViewMode>("3d");
+  const [selected, setSelected] = useState<AnyBody | null>(null);
+  const [camMode3D, setCamMode3D] = useState<CamMode>("cockpit");
+  const [ptrLocked, setPtrLocked] = useState(false);
+  const [shipStats, setShipStats] = useState({ speed: 0, heading: 0, throttle: 0 });
 
   // Store cleanup from startAnimation so switching views properly tears down
   const stopRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    const show = () => { setVisible(true); setSelected(null); setView("3d"); };
+    const show = () => {
+      setVisible(true);
+      setSelected(null);
+      setView("3d");
+    };
     const hide = () => setVisible(false);
     window.addEventListener("galaxy-mode", show);
-    window.addEventListener("exit-mode",   hide);
+    window.addEventListener("exit-mode", hide);
     return () => {
       window.removeEventListener("galaxy-mode", show);
-      window.removeEventListener("exit-mode",   hide);
+      window.removeEventListener("exit-mode", hide);
     };
   }, []);
 
@@ -1079,8 +1246,10 @@ export function GalaxyMode() {
   useEffect(() => {
     const html = document.documentElement;
     if (visible) html.style.overflow = "hidden";
-    else         html.style.overflow = "";
-    return () => { html.style.overflow = ""; };
+    else html.style.overflow = "";
+    return () => {
+      html.style.overflow = "";
+    };
   }, [visible]);
 
   // ESC: release pointer lock first, then exit galaxy on second press
@@ -1107,7 +1276,9 @@ export function GalaxyMode() {
       const s = await getScene();
       if (stopped) return;
       if (!s && gs().__galaxyBuilding) {
-        retryId = setTimeout(() => { if (!stopped) activate().catch(console.error); }, 400);
+        retryId = setTimeout(() => {
+          if (!stopped) activate().catch(console.error);
+        }, 400);
         return;
       }
       if (gs().__galaxyFailed) return;
@@ -1129,7 +1300,7 @@ export function GalaxyMode() {
         setSelected,
         container,
         view === "ship"
-          ? { mode: "ship", onCamMode: setCamMode3D, onPointerLock: setPtrLocked }
+          ? { mode: "ship", onCamMode: setCamMode3D, onPointerLock: setPtrLocked, onShipUpdate: setShipStats }
           : { mode: "explore" },
       );
     };
@@ -1147,7 +1318,7 @@ export function GalaxyMode() {
         if (containerRef.current) scene.detach(containerRef.current);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, view]);
 
   // ── Info card helpers ─────────────────────────────────────────────────────
@@ -1155,19 +1326,23 @@ export function GalaxyMode() {
   const colorStr = `#${colorHex}`;
 
   const kindLabel =
-    selected?.kind === "work"      ? "◉ WORK EXPERIENCE" :
-    selected?.kind === "education" ? "◯ EDUCATION"       :
-    selected?.kind === "project"   ? "◆ PROJECT"         : "";
+    selected?.kind === "work"
+      ? "◉ WORK EXPERIENCE"
+      : selected?.kind === "education"
+        ? "◯ EDUCATION"
+        : selected?.kind === "project"
+          ? "◆ PROJECT"
+          : "";
 
   // ── View label for hint ───────────────────────────────────────────────────
   const hintText =
     view === "ship"
       ? camMode3D === "cockpit"
-        ? "◈ COCKPIT · WASD to fly · mouse to steer · V to switch view ◈"
-        : "◈ CHASE CAM · WASD to fly · click to steer · V to switch view ◈"
+        ? "◈ COCKPIT · W/S thrust · A/D yaw · Q/E up-down · click to capture mouse · V for chase view ◈"
+        : "◈ CHASE CAM · W/S thrust · A/D yaw · click to capture mouse · V for cockpit ◈"
       : view === "2d"
-      ? "◈ 2D NAV · scroll or arrow keys to fly ◈"
-      : "◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈";
+        ? "◈ 2D NAV · scroll or arrow keys to fly ◈"
+        : "◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈";
 
   return (
     <AnimatePresence>
@@ -1222,7 +1397,7 @@ export function GalaxyMode() {
               }}
               onClick={() => setView("ship")}
             >
-              🚀 ship nav
+              ship nav
             </button>
 
             {/* 2D Nav */}
@@ -1268,7 +1443,10 @@ export function GalaxyMode() {
                     backgroundColor: "rgba(0,0,20,0.55)",
                     borderRadius: "4px",
                   }}
-                  onClick={() => { gs().__galaxyScene?.setCamMode("cockpit"); setCamMode3D("cockpit"); }}
+                  onClick={() => {
+                    gs().__galaxyScene?.setCamMode("cockpit");
+                    setCamMode3D("cockpit");
+                  }}
                 >
                   cockpit
                 </button>
@@ -1280,64 +1458,171 @@ export function GalaxyMode() {
                     backgroundColor: "rgba(0,0,20,0.55)",
                     borderRadius: "4px",
                   }}
-                  onClick={() => { gs().__galaxyScene?.setCamMode("chase"); setCamMode3D("chase"); }}
+                  onClick={() => {
+                    gs().__galaxyScene?.setCamMode("chase");
+                    setCamMode3D("chase");
+                  }}
                 >
                   chase cam
                 </button>
               </div>
 
-              {/* Cockpit overlay — crosshair + frame + prompt */}
+              {/* ── Full cockpit interior overlay ── */}
               {camMode3D === "cockpit" && (
-                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                  {/* Subtle frame */}
+                <div className="absolute inset-0 pointer-events-none">
+
+                  {/* ── Canopy structural frame (SVG) ── */}
+                  <svg
+                    className="absolute inset-0 w-full h-full"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 100 100"
+                    style={{ opacity: 0.55 }}
+                  >
+                    {/* Left A-pillar: bottom-left → upper-center-left */}
+                    <line x1="0" y1="100" x2="46" y2="10" stroke="rgba(80,130,200,0.5)" strokeWidth="0.55" />
+                    {/* Right A-pillar */}
+                    <line x1="100" y1="100" x2="54" y2="10" stroke="rgba(80,130,200,0.5)" strokeWidth="0.55" />
+                    {/* Canopy bow (horizontal bar across top) */}
+                    <line x1="46" y1="10" x2="54" y2="10" stroke="rgba(80,130,200,0.4)" strokeWidth="0.4" />
+                    {/* Center spine */}
+                    <line x1="50" y1="0" x2="50" y2="10" stroke="rgba(80,130,200,0.25)" strokeWidth="0.35" />
+                    {/* Mid-frame cross braces */}
+                    <line x1="0" y1="55" x2="12" y2="52" stroke="rgba(60,110,180,0.3)" strokeWidth="0.35" />
+                    <line x1="100" y1="55" x2="88" y2="52" stroke="rgba(60,110,180,0.3)" strokeWidth="0.35" />
+                    {/* Bottom side rails */}
+                    <line x1="0" y1="82" x2="18" y2="80" stroke="rgba(60,110,180,0.25)" strokeWidth="0.3" />
+                    <line x1="100" y1="82" x2="82" y2="80" stroke="rgba(60,110,180,0.25)" strokeWidth="0.3" />
+                    {/* Subtle edge glow lines */}
+                    <line x1="0" y1="0" x2="0" y2="100" stroke="rgba(40,80,160,0.2)" strokeWidth="1.2" />
+                    <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(40,80,160,0.2)" strokeWidth="1.2" />
+                  </svg>
+
+                  {/* ── Edge vignette (cockpit walls) ── */}
                   <div style={{
-                    position: "absolute", inset: "24px",
-                    border: "1px solid rgba(100,160,255,0.07)",
-                    borderRadius: "8px",
-                    boxShadow: "inset 0 0 120px rgba(20,50,120,0.08)",
+                    position: "absolute", inset: 0,
+                    background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 55%, rgba(4,10,28,0.72) 100%)",
                   }} />
-                  {/* Corner brackets */}
-                  {[
-                    { top: 28, left: 28 },
-                    { top: 28, right: 28 },
-                    { bottom: 28, left: 28 },
-                    { bottom: 28, right: 28 },
-                  ].map((pos, i) => (
-                    <div key={i} style={{
-                      position: "absolute", ...pos,
-                      width: 18, height: 18,
-                      borderTop:    (pos.top    != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
-                      borderBottom: (pos.bottom != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
-                      borderLeft:   (pos.left   != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
-                      borderRight:  (pos.right  != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
-                    }} />
-                  ))}
-                  {/* Crosshair */}
-                  <div style={{ position: "relative", width: 24, height: 24 }}>
-                    <div style={{
-                      position: "absolute", top: "50%", left: 0, right: 0,
-                      height: 1, backgroundColor: "rgba(100,200,255,0.45)",
-                      transform: "translateY(-50%)",
-                    }} />
-                    <div style={{
-                      position: "absolute", left: "50%", top: 0, bottom: 0,
-                      width: 1, backgroundColor: "rgba(100,200,255,0.45)",
-                      transform: "translateX(-50%)",
-                    }} />
-                    <div style={{
-                      position: "absolute", top: "50%", left: "50%",
-                      width: 6, height: 6,
-                      border: "1px solid rgba(100,200,255,0.5)",
-                      borderRadius: "50%",
-                      transform: "translate(-50%, -50%)",
-                    }} />
+                  {/* Side wall darkening */}
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(to right, rgba(4,10,28,0.55) 0%, transparent 18%, transparent 82%, rgba(4,10,28,0.55) 100%)",
+                  }} />
+
+                  {/* ── Crosshair ── */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div style={{ position: "relative", width: 28, height: 28 }}>
+                      <div style={{ position:"absolute", top:"50%", left:0, right:0, height:1, background:"rgba(100,200,255,0.5)", transform:"translateY(-50%)" }} />
+                      <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:1, background:"rgba(100,200,255,0.5)", transform:"translateX(-50%)" }} />
+                      <div style={{ position:"absolute", top:"50%", left:"50%", width:7, height:7, border:"1px solid rgba(100,200,255,0.6)", borderRadius:"50%", transform:"translate(-50%,-50%)" }} />
+                    </div>
                   </div>
-                  {/* Take control prompt (when pointer not locked) */}
-                  {!ptrLocked && (
-                    <p className="absolute bottom-16 font-mono text-xs tracking-widest" style={{ color: "rgba(100,180,255,0.4)" }}>
-                      click canvas to take control
-                    </p>
-                  )}
+
+                  {/* ── Speed & heading floating HUD ── */}
+                  <div style={{ position:"absolute", top:80, left:32, fontFamily:"monospace", fontSize:11, color:"rgba(120,210,255,0.7)", lineHeight:1.7 }}>
+                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9, letterSpacing:"0.18em" }}>VELOCITY</div>
+                    <div style={{ fontSize:22, fontWeight:"bold", color:"rgba(140,220,255,0.9)", letterSpacing:"0.05em" }}>
+                      {String(shipStats.speed).padStart(3,"0")}
+                    </div>
+                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9 }}>u/s</div>
+                  </div>
+                  <div style={{ position:"absolute", top:80, right:32, fontFamily:"monospace", fontSize:11, color:"rgba(120,210,255,0.7)", lineHeight:1.7, textAlign:"right" }}>
+                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9, letterSpacing:"0.18em" }}>HEADING</div>
+                    <div style={{ fontSize:22, fontWeight:"bold", color:"rgba(140,220,255,0.9)", letterSpacing:"0.05em" }}>
+                      {String(Math.round(shipStats.heading)).padStart(3,"0")}°
+                    </div>
+                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9 }}>MAG</div>
+                  </div>
+
+                  {/* ── Bottom instrument console ── */}
+                  <div style={{
+                    position:"absolute", bottom:0, left:0, right:0,
+                    background:"linear-gradient(to top, rgba(3,8,22,0.97) 55%, rgba(3,8,22,0.7) 80%, transparent 100%)",
+                    paddingBottom:12, paddingTop:32,
+                  }}>
+                    {/* Top edge accent line */}
+                    <div style={{ position:"absolute", top:32, left:"8%", right:"8%", height:1, background:"linear-gradient(to right, transparent, rgba(60,120,220,0.35), transparent)" }} />
+
+                    <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"center", gap:0, paddingLeft:24, paddingRight:24 }}>
+
+                      {/* LEFT PANEL — throttle + engine */}
+                      <div style={{ flex:1, maxWidth:200, fontFamily:"monospace", color:"rgba(100,180,255,0.8)" }}>
+                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>THROTTLE</div>
+                        {/* Throttle bar */}
+                        <div style={{ height:6, background:"rgba(20,40,80,0.8)", borderRadius:3, marginBottom:4, overflow:"hidden", border:"1px solid rgba(40,80,160,0.3)" }}>
+                          <div style={{ height:"100%", width:`${shipStats.throttle * 100}%`, background:"linear-gradient(to right, rgba(60,120,220,0.8), rgba(100,200,255,0.9))", borderRadius:3, transition:"width 0.1s" }} />
+                        </div>
+                        <div style={{ fontSize:10, color:"rgba(100,180,255,0.55)" }}>{Math.round(shipStats.throttle * 100)}%</div>
+                        <div style={{ marginTop:10, display:"flex", gap:6 }}>
+                          {["ENG-L","ENG-R"].map(l => (
+                            <div key={l} style={{ fontSize:8, letterSpacing:"0.12em", color: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.7)" : "rgba(80,100,140,0.5)", display:"flex", alignItems:"center", gap:4 }}>
+                              <div style={{ width:5, height:5, borderRadius:"50%", background: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.8)" : "rgba(60,80,120,0.5)" }} />
+                              {l}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CENTER PANEL — compass + speed */}
+                      <div style={{ flex:"0 0 220px", fontFamily:"monospace", textAlign:"center", paddingBottom:4 }}>
+                        {/* Compass arc */}
+                        <div style={{ position:"relative", height:48, overflow:"hidden", marginBottom:6 }}>
+                          <svg width="220" height="48" style={{ overflow:"visible" }}>
+                            {/* Arc base */}
+                            <path d="M 10 48 A 100 100 0 0 1 210 48" fill="none" stroke="rgba(40,80,160,0.3)" strokeWidth="1" />
+                            {/* Tick marks every 30° */}
+                            {[0,30,60,90,120,150,180].map(deg => {
+                              const a = ((deg - shipStats.heading + 180) * Math.PI) / 180;
+                              const cx2 = 110 + 100 * Math.cos(Math.PI - a);
+                              const cy2 = 48 - 100 * Math.sin(Math.PI - a);
+                              const isMain = deg % 90 === 0;
+                              return cy2 > 0 && cy2 < 52 ? (
+                                <line key={deg} x1={cx2} y1={cy2} x2={cx2} y2={cy2 + (isMain ? 8 : 5)}
+                                  stroke={isMain ? "rgba(100,180,255,0.6)" : "rgba(60,120,180,0.35)"} strokeWidth={isMain ? 1.5 : 0.8} />
+                              ) : null;
+                            })}
+                            {/* Center heading pointer */}
+                            <line x1="110" y1="30" x2="110" y2="48" stroke="rgba(140,220,255,0.9)" strokeWidth="2" />
+                            <polygon points="110,24 106,32 114,32" fill="rgba(140,220,255,0.8)" />
+                          </svg>
+                        </div>
+                        <div style={{ fontSize:18, fontWeight:"bold", color:"rgba(160,230,255,0.95)", letterSpacing:"0.08em" }}>
+                          {String(Math.round(shipStats.heading)).padStart(3,"0")}°
+                        </div>
+                        <div style={{ fontSize:8, letterSpacing:"0.25em", color:"rgba(80,140,200,0.45)", marginTop:2 }}>COMPASS</div>
+                      </div>
+
+                      {/* RIGHT PANEL — system status */}
+                      <div style={{ flex:1, maxWidth:200, fontFamily:"monospace", color:"rgba(100,180,255,0.8)", textAlign:"right" }}>
+                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>SYSTEMS</div>
+                        {[
+                          { label:"HULL",  ok: true },
+                          { label:"DRIVE", ok: true },
+                          { label:"NAV",   ok: true },
+                          { label:"COMMS", ok: true },
+                        ].map(s => (
+                          <div key={s.label} style={{ display:"flex", alignItems:"center", justifyContent:"flex-end", gap:6, marginBottom:4 }}>
+                            <span style={{ fontSize:9, letterSpacing:"0.12em", color:"rgba(80,130,180,0.6)" }}>{s.label}</span>
+                            <div style={{ width:6, height:6, borderRadius:"50%", background:"rgba(60,220,120,0.8)", boxShadow:"0 0 6px rgba(60,220,120,0.5)" }} />
+                          </div>
+                        ))}
+                        <div style={{ marginTop:6, fontSize:8, letterSpacing:"0.15em", color:"rgba(60,200,100,0.55)" }}>ALL NOMINAL</div>
+                      </div>
+                    </div>
+
+                    {/* Bottom status bar */}
+                    <div style={{ marginTop:10, paddingLeft:24, paddingRight:24, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
+                        POS {Math.round(shipStats.heading)}° · {shipStats.speed > 0 ? "THRUST" : "DRIFT"}
+                      </div>
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
+                        {!ptrLocked ? "[ CLICK TO TAKE CONTROL ]" : "[ MOUSE LOCKED · ESC TO RELEASE ]"}
+                      </div>
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
+                        W/S THRUST · A/D YAW · Q/E VERT · V CAM
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               )}
             </>
@@ -1346,10 +1631,7 @@ export function GalaxyMode() {
           {/* 2D navigation overlay */}
           {view === "2d" && (
             <div className="absolute inset-0 z-10">
-              <Galaxy2D
-                onClose={() => setVisible(false)}
-                onSwitch3D={() => setView("3d")}
-              />
+              <Galaxy2D onClose={() => setVisible(false)} onSwitch3D={() => setView("3d")} />
             </div>
           )}
 
