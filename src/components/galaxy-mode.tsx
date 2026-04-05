@@ -17,8 +17,8 @@ const PLANET_DATA = [
     size: 1.2,
     orbitRadius: 10,
     speed: 0.005,
-    inc: 0.18,   // inclination (radians)
-    rotY: 0.0,   // orbit plane rotation around Y
+    inc: 0.18,
+    rotY: 0.0,
     kind: "work" as const,
     description: [
       "Software Engineering Intern | Oct 2023 – Jun 2024",
@@ -267,39 +267,38 @@ const PROJECT_DATA = [
 // ── Skills asteroid belt ───────────────────────────────────────────────────────
 
 const SKILLS = [
-  // Languages
   "TypeScript", "JavaScript", "Python", "Go", "C#", "Rust", "PHP", "Java",
-  // Frontend
   "React", "Next.js", "Vue.js", "Tailwind CSS", "Angular", "Svelte",
-  // Backend
   "Node.js", "NestJS", "FastAPI", "Flask", "Gin", "Express",
-  // Database
   "PostgreSQL", "MongoDB", "MySQL", "Redis", "Prisma", "Firebase", "Supabase",
-  // Cloud & DevOps
   "AWS", "Docker", "GitHub Actions", "Vercel",
-  // Tools
   "Figma", "Git",
 ];
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type WorkBody     = typeof PLANET_DATA[0];
-type EduBody      = typeof EDUCATION_DATA[0];
-type ProjectBody  = typeof PROJECT_DATA[0];
-type AnyBody      = WorkBody | EduBody | ProjectBody;
+type WorkBody    = typeof PLANET_DATA[0];
+type EduBody     = typeof EDUCATION_DATA[0];
+type ProjectBody = typeof PROJECT_DATA[0];
+type AnyBody     = WorkBody | EduBody | ProjectBody;
+type CamMode     = "cockpit" | "chase";
+type ViewMode    = "3d" | "ship" | "2d";
 
 type SceneHandle = {
   canvas: HTMLCanvasElement;
-  startAnimation: (onSelect: (b: AnyBody | null) => void, container: HTMLElement) => void;
+  startAnimation: (
+    onSelect: (b: AnyBody | null) => void,
+    container: HTMLElement,
+    opts?: { mode?: "explore" | "ship"; onCamMode?: (m: CamMode) => void; onPointerLock?: (locked: boolean) => void }
+  ) => () => void;
   stopAnimation: () => void;
+  setCamMode: (m: CamMode) => void;
   detach: (container: HTMLElement) => void;
   destroy: () => void;
 };
 
 // ── Orbit position helper ─────────────────────────────────────────────────────
-// Computes 3D position for a body on an inclined orbit.
-// inc  = inclination (0 = flat XZ plane, π/2 = fully vertical)
-// rotY = longitude of ascending node (rotation of orbit plane around Y)
+
 function orbitPos(r: number, angle: number, inc: number, rotY: number) {
   const bx = r * Math.cos(angle);
   const by = r * Math.sin(angle) * Math.sin(inc);
@@ -340,7 +339,7 @@ async function buildScene(): Promise<SceneHandle> {
   const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1200);
   camera.position.set(0, 50, 110);
 
-  // ── Controls ───────────────────────────────────────────────────────────
+  // ── Controls (for explore mode) ────────────────────────────────────────
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.06;
@@ -370,18 +369,11 @@ async function buildScene(): Promise<SceneHandle> {
     return sprite;
   }
 
-  // Orbit ring whose plane exactly matches the orbitPos() formula.
-  // The orbit plane normal is derived analytically from inc and rotY,
-  // then the ring is aligned using a quaternion — no Euler angle order issues.
   function makeOrbitRing(radius: number, color: number, opacity: number, inc = 0, rotY = 0) {
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(radius, 0.06, 8, 160),
       new THREE.MeshBasicMaterial({ color, transparent: true, opacity }),
     );
-    // orbitPos() basis: start in XZ plane, rotate around X by inc, then around Y by rotY.
-    // The resulting orbit plane normal is:  n = (sin(inc)*sin(rotY), -cos(inc), sin(inc)*cos(rotY))
-    // Three.js TorusGeometry lies in the XY plane with local normal (0, 0, 1).
-    // Align local Z → orbit normal so the ring lies in the orbit plane.
     const orbitNormal = new THREE.Vector3(
       Math.sin(inc) * Math.sin(rotY),
       -Math.cos(inc),
@@ -530,7 +522,6 @@ async function buildScene(): Promise<SceneHandle> {
     eduMeshes.push(mesh);
     scene.add(mesh);
 
-    // Saturn-style ring for BPSU (Cum Laude honor)
     if (e.id === "bpsu") {
       const ring = new THREE.Mesh(
         new THREE.TorusGeometry(e.size + 1.4, 0.28, 4, 80),
@@ -567,7 +558,6 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Comets ────────────────────────────────────────────────────────────
-  // Shared coma glow texture
   const comaCv = document.createElement("canvas"); comaCv.width = 64; comaCv.height = 64;
   { const ctx = comaCv.getContext("2d")!;
     const grd = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
@@ -584,11 +574,9 @@ async function buildScene(): Promise<SceneHandle> {
     start: InstanceType<typeof THREE.Vector3>;
     end: InstanceType<typeof THREE.Vector3>;
     t: number;
-    speed: number; // loops per second
+    speed: number;
   };
 
-  // Each comet flies a straight line through the system; paths chosen so they
-  // pass within ~5-30 units of the sun for a dramatic close approach.
   const COMET_CONFIGS = [
     { start: new THREE.Vector3(-185, 55, -75),  end: new THREE.Vector3(175, -45, 85),  speed: 1/18, t0: 0.02 },
     { start: new THREE.Vector3(105, -75, -165), end: new THREE.Vector3(-95, 65, 145),  speed: 1/26, t0: 0.42 },
@@ -596,7 +584,7 @@ async function buildScene(): Promise<SceneHandle> {
   ];
 
   const comets: CometDatum[] = [];
-  const TAIL_H = 22; // cone height (units)
+  const TAIL_H = 22;
 
   for (const cc of COMET_CONFIGS) {
     const nucleus = new THREE.Mesh(
@@ -610,17 +598,14 @@ async function buildScene(): Promise<SceneHandle> {
     }));
     scene.add(coma);
 
-    // Cone: base at local origin, tip extends in +Y → will be oriented away from sun.
     const tailGeo = new THREE.ConeGeometry(0.9, TAIL_H, 8, 1, true);
-    tailGeo.translate(0, TAIL_H / 2, 0); // shift so base sits at origin
+    tailGeo.translate(0, TAIL_H / 2, 0);
     const tail = new THREE.Mesh(tailGeo, new THREE.MeshBasicMaterial({
       color: 0xaaccff, transparent: true, opacity: 0.3,
       side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending,
     }));
     scene.add(tail);
 
-    // Bake the tail orientation once: trail = opposite of travel direction.
-    // This way the tail always streams behind the comet regardless of sun position.
     const trailDir = new THREE.Vector3()
       .subVectors(cc.end, cc.start)
       .normalize()
@@ -635,25 +620,163 @@ async function buildScene(): Promise<SceneHandle> {
   const mouse = new THREE.Vector2();
   const clickableMeshes = [...planetMeshes, ...eduMeshes, ...projMeshes];
 
+  // ── Ship state ─────────────────────────────────────────────────────────
+  let camMode: CamMode = "cockpit";
+  let onCamModeChange: ((m: CamMode) => void) | null = null;
+
+  const shipPos     = new THREE.Vector3(0, 8, 95);
+  const shipQuat    = new THREE.Quaternion();
+  const shipVel     = new THREE.Vector3();
+  const chaseCamPos = new THREE.Vector3(0, 18, 115);
+  // Face toward origin (ship's -Z points toward center)
+  shipQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+
+  // ── Ship mesh ──────────────────────────────────────────────────────────
+  const shipGroup = new THREE.Group();
+
+  // Fuselage — wider at tail, tapering toward nose
+  const fusGeo = new THREE.CylinderGeometry(0.55, 1.6, 9, 8);
+  fusGeo.rotateX(Math.PI / 2); // align along Z; nose = -Z, tail = +Z
+  shipGroup.add(new THREE.Mesh(fusGeo, new THREE.MeshStandardMaterial({
+    color: 0x2a5a90, emissive: 0x0a2030, emissiveIntensity: 0.3, metalness: 0.65, roughness: 0.35,
+  })));
+
+  // Wings (single span)
+  const wingMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(14, 0.12, 4),
+    new THREE.MeshStandardMaterial({ color: 0x172840, metalness: 0.7, roughness: 0.3 }),
+  );
+  wingMesh.position.z = 1.8;
+  shipGroup.add(wingMesh);
+
+  // Wing nacelles (small engine pods at tips)
+  for (const nx of [-5.5, 5.5]) {
+    const nacGeo = new THREE.CylinderGeometry(0.28, 0.45, 2.8, 8);
+    nacGeo.rotateX(Math.PI / 2);
+    const nac = new THREE.Mesh(nacGeo, new THREE.MeshStandardMaterial({
+      color: 0x1a3a60, metalness: 0.8, roughness: 0.25,
+    }));
+    nac.position.set(nx, -0.15, 1.5);
+    shipGroup.add(nac);
+  }
+
+  // Cockpit bubble (at nose, raised)
+  const cockpitGeo = new THREE.SphereGeometry(1.15, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.65);
+  const cockpitMesh = new THREE.Mesh(cockpitGeo, new THREE.MeshStandardMaterial({
+    color: 0x7ab4f5, transparent: true, opacity: 0.72,
+    emissive: 0x1a4a80, emissiveIntensity: 0.9, metalness: 0.05, roughness: 0.04,
+  }));
+  cockpitMesh.position.set(0, 0.65, -3);
+  cockpitMesh.rotation.x = -0.15;
+  shipGroup.add(cockpitMesh);
+
+  // Nose cone
+  const noseConeGeo = new THREE.ConeGeometry(0.55, 2.2, 8);
+  noseConeGeo.rotateX(-Math.PI / 2); // tip points in -Z
+  const noseCone = new THREE.Mesh(noseConeGeo, new THREE.MeshStandardMaterial({
+    color: 0x4a90e2, metalness: 0.85, roughness: 0.18,
+  }));
+  noseCone.position.z = -5.6;
+  shipGroup.add(noseCone);
+
+  // Twin engine nozzles at tail
+  for (const nx of [-1.1, 1.1]) {
+    const nozzleGeo = new THREE.CylinderGeometry(0.42, 0.58, 1.8, 8);
+    nozzleGeo.rotateX(Math.PI / 2);
+    const nozzle = new THREE.Mesh(nozzleGeo, new THREE.MeshStandardMaterial({
+      color: 0x080f1a, metalness: 0.95, roughness: 0.15,
+    }));
+    nozzle.position.set(nx, -0.2, 4.9);
+    shipGroup.add(nozzle);
+  }
+
+  // Engine glow (scales with thrust)
+  const engCv = document.createElement("canvas"); engCv.width = 64; engCv.height = 64;
+  { const ctx = engCv.getContext("2d")!;
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, "rgba(255,200,100,1)");
+    g.addColorStop(0.35, "rgba(255,110,20,0.65)");
+    g.addColorStop(1, "rgba(255,40,0,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64); }
+  const engineGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: new THREE.CanvasTexture(engCv), transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  }));
+  engineGlow.position.z = 6.2; // behind the tail
+  engineGlow.scale.set(0, 0, 1);
+  shipGroup.add(engineGlow);
+
+  shipGroup.visible = false; // hidden until ship mode activates
+  scene.add(shipGroup);
+  shipGroup.position.copy(shipPos);
+  shipGroup.quaternion.copy(shipQuat);
+
+  // ── Input cleanup tracker ──────────────────────────────────────────────
+  let inputCleanup: (() => void) | null = null;
+
   // ── Animation state ────────────────────────────────────────────────────
-  let rafId = 0;
+  let rafId   = 0;
   let running = false;
+
+  // Reusable vectors (avoid GC in hot loop)
+  const _fwd      = new THREE.Vector3();
+  const _up       = new THREE.Vector3();
+  const _rt       = new THREE.Vector3();
+  const _rotQ     = new THREE.Quaternion();
+  const _chaseTgt = new THREE.Vector3();
+  const _lookAt   = new THREE.Vector3();
+  const _cometPos = new THREE.Vector3();
 
   function startAnimation(
     onSelect: (b: AnyBody | null) => void,
     container: HTMLElement,
-  ) {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    opts?: { mode?: "explore" | "ship"; onCamMode?: (m: CamMode) => void; onPointerLock?: (locked: boolean) => void },
+  ): () => void {
+    const mode = opts?.mode ?? "explore";
+    onCamModeChange = opts?.onCamMode ?? null;
+    const onPointerLockCb = opts?.onPointerLock ?? null;
 
+    // ── Clean up any previous session ──────────────────────────────────
+    running = false;
+    cancelAnimationFrame(rafId);
+    inputCleanup?.();
+    inputCleanup = null;
+
+    // ── Resize ──────────────────────────────────────────────────────────
+    const resize = () => {
+      const w = container.clientWidth, h = container.clientHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    };
+    resize();
+
+    // ── Mode-specific setup ──────────────────────────────────────────────
+    if (mode === "explore") {
+      controls.enabled = true;
+      camera.fov = 60;
+      camera.updateProjectionMatrix();
+      // Reset to orbit view if camera has drifted
+      if (camera.position.length() < 5) {
+        camera.position.set(0, 50, 110);
+      }
+      shipGroup.visible = false;
+    } else {
+      // Ship mode
+      controls.enabled = false;
+      camera.fov = 80; // wider FOV for cockpit feel
+      camera.updateProjectionMatrix();
+    }
+
+    // ── Pointer + planet selection ───────────────────────────────────────
     let pointerDownAt = { x: 0, y: 0 };
+    let pointerLocked = false;
+
     const onPointerDown = (e: PointerEvent) => { pointerDownAt = { x: e.clientX, y: e.clientY }; };
-    const onPointerUp = (e: PointerEvent) => {
+    const onPointerUp   = (e: PointerEvent) => {
+      if (mode === "ship" && pointerLocked) return; // mouse captured — no selection
       const dx = e.clientX - pointerDownAt.x, dy = e.clientY - pointerDownAt.y;
-      if (dx*dx + dy*dy > 25) return;
+      if (dx * dx + dy * dy > 25) return;
       const rect = canvas.getBoundingClientRect();
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -666,39 +789,140 @@ async function buildScene(): Promise<SceneHandle> {
         else if (bodyKind === "education") body = EDUCATION_DATA[bodyIndex];
         else if (bodyKind === "project")   body = PROJECT_DATA[bodyIndex];
         onSelect(body);
-        controls.autoRotate = false;
+        if (mode === "explore") controls.autoRotate = false;
       } else {
         onSelect(null);
-        controls.autoRotate = true;
+        if (mode === "explore") controls.autoRotate = true;
+        if (mode === "ship" && !pointerLocked) canvas.requestPointerLock();
       }
     };
-    const onResize = () => {
-      const w = container.clientWidth, h = container.clientHeight;
-      renderer.setSize(w, h);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+
+    // ── Ship input (only in ship mode) ───────────────────────────────────
+    const keys: Record<string, boolean> = {};
+    let accMouseX = 0, accMouseY = 0;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (mode !== "ship") return;
+      const k = e.key.toLowerCase();
+      keys[k] = true;
+      if (k === "v") {
+        camMode = camMode === "cockpit" ? "chase" : "cockpit";
+        onCamModeChange?.(camMode);
+      }
+    };
+    const onKeyUp      = (e: KeyboardEvent) => { keys[e.key.toLowerCase()] = false; };
+    const onMouseMove  = (e: MouseEvent) => {
+      if (mode === "ship" && pointerLocked) {
+        accMouseX += e.movementX;
+        accMouseY += e.movementY;
+      }
+    };
+    const onLockChange = () => {
+      pointerLocked = document.pointerLockElement === canvas;
+      onPointerLockCb?.(pointerLocked);
     };
 
     canvas.addEventListener("pointerdown", onPointerDown);
-    canvas.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("resize", onResize);
+    canvas.addEventListener("pointerup",   onPointerUp);
+    window.addEventListener("resize",      resize);
+    document.addEventListener("keydown",           onKeyDown);
+    document.addEventListener("keyup",             onKeyUp);
+    document.addEventListener("mousemove",         onMouseMove);
+    document.addEventListener("pointerlockchange", onLockChange);
 
-    // Reusable vector for comet position lerp
-    const _cPos = new THREE.Vector3();
+    inputCleanup = () => {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointerup",   onPointerUp);
+      window.removeEventListener("resize",      resize);
+      document.removeEventListener("keydown",           onKeyDown);
+      document.removeEventListener("keyup",             onKeyUp);
+      document.removeEventListener("mousemove",         onMouseMove);
+      document.removeEventListener("pointerlockchange", onLockChange);
+      if (document.pointerLockElement === canvas) document.exitPointerLock();
+    };
 
     let prevTime = Date.now() * 0.001;
     running = true;
+
     const tick = () => {
       if (!running) return;
       rafId = requestAnimationFrame(tick);
       const now = Date.now() * 0.001;
-      const dt = Math.min(now - prevTime, 0.1); // cap to avoid large jumps
-      prevTime = now;
+      const dt  = Math.min(now - prevTime, 0.05);
+      prevTime  = now;
 
+      // ── Ship physics ────────────────────────────────────────────────
+      if (mode === "ship") {
+        const THRUST   = 55;
+        const YAW_RATE = 1.3;
+        const SENS     = 0.0018;
+        const MAX_SPD  = 100;
+
+        _fwd.set(0, 0, -1).applyQuaternion(shipQuat);
+        _up.set(0, 1, 0).applyQuaternion(shipQuat);
+
+        if (keys["w"]) shipVel.addScaledVector(_fwd, THRUST * dt);
+        if (keys["s"]) shipVel.addScaledVector(_fwd, -THRUST * 0.35 * dt);
+        if (keys["a"]) {
+          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0),  YAW_RATE * dt);
+          shipQuat.premultiply(_rotQ);
+        }
+        if (keys["d"]) {
+          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -YAW_RATE * dt);
+          shipQuat.premultiply(_rotQ);
+        }
+
+        if (pointerLocked && (accMouseX !== 0 || accMouseY !== 0)) {
+          _rotQ.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -accMouseX * SENS);
+          shipQuat.premultiply(_rotQ);
+          _rt.set(1, 0, 0).applyQuaternion(shipQuat);
+          _rotQ.setFromAxisAngle(_rt, -accMouseY * SENS);
+          shipQuat.multiply(_rotQ);
+          accMouseX = 0; accMouseY = 0;
+        }
+
+        const spd = shipVel.length();
+        if (spd > MAX_SPD) shipVel.multiplyScalar(MAX_SPD / spd);
+        shipVel.multiplyScalar(Math.pow(0.88, dt * 60));
+        shipPos.addScaledVector(shipVel, dt);
+
+        shipGroup.position.copy(shipPos);
+        shipGroup.quaternion.copy(shipQuat);
+
+        // Engine glow scales with speed
+        const thrust = Math.min(1, spd / 55);
+        const gs = thrust > 0.05 ? (2.5 + thrust * 9) * (0.85 + Math.random() * 0.3) : 0;
+        engineGlow.scale.set(gs, gs, 1);
+
+        // ── Camera (ship mode) ─────────────────────────────────────────
+        _fwd.set(0, 0, -1).applyQuaternion(shipQuat);
+        _up.set(0, 1, 0).applyQuaternion(shipQuat);
+
+        if (camMode === "cockpit") {
+          camera.position.copy(shipPos)
+            .addScaledVector(_fwd, 3.5)
+            .addScaledVector(_up, 0.65);
+          camera.quaternion.copy(shipQuat);
+          shipGroup.visible = false;
+        } else {
+          // Chase cam — smooth lerp behind and above ship
+          _chaseTgt.copy(shipPos)
+            .addScaledVector(_fwd, -16)
+            .addScaledVector(_up, 5);
+          chaseCamPos.lerp(_chaseTgt, Math.min(1, dt * 5));
+          camera.position.copy(chaseCamPos);
+          _lookAt.copy(shipPos).addScaledVector(_fwd, 4);
+          camera.lookAt(_lookAt);
+          shipGroup.visible = true;
+        }
+      }
+
+      // ── Sun ──────────────────────────────────────────────────────────
       sun.rotation.y += 0.004;
       const pulse = 1 + Math.sin(now * 1.8) * 0.06;
       sunGlow.scale.set(22 * pulse, 22 * pulse, 1);
 
+      // ── Planets ──────────────────────────────────────────────────────
       for (let i = 0; i < PLANET_DATA.length; i++) {
         const p = PLANET_DATA[i];
         planetAngles[i] += p.speed;
@@ -708,14 +932,16 @@ async function buildScene(): Promise<SceneHandle> {
         planetLabels[i].position.set(x, y + p.size + 1.6, z);
       }
 
+      // ── Asteroids ────────────────────────────────────────────────────
       for (const a of asteroids) {
         a.angle += a.speed;
-        const x = Math.cos(a.angle) * a.radius, z = Math.sin(a.angle) * a.radius;
-        a.mesh.position.set(x, a.y, z);
+        const ax = Math.cos(a.angle) * a.radius, az = Math.sin(a.angle) * a.radius;
+        a.mesh.position.set(ax, a.y, az);
         a.mesh.rotation.x += 0.018; a.mesh.rotation.y += 0.013;
-        if (a.label) a.label.position.set(x, a.y + 0.9, z);
+        if (a.label) a.label.position.set(ax, a.y + 0.9, az);
       }
 
+      // ── Education ────────────────────────────────────────────────────
       for (let i = 0; i < EDUCATION_DATA.length; i++) {
         const e = EDUCATION_DATA[i];
         eduAngles[i] += e.speed;
@@ -725,6 +951,7 @@ async function buildScene(): Promise<SceneHandle> {
         eduLabels[i].position.set(x, y + e.size + 1.8, z);
       }
 
+      // ── Projects ─────────────────────────────────────────────────────
       for (let i = 0; i < PROJECT_DATA.length; i++) {
         const p = PROJECT_DATA[i];
         projAngles[i] += p.speed;
@@ -734,33 +961,27 @@ async function buildScene(): Promise<SceneHandle> {
         projLabels[i].position.set(x, y + p.size + 1.5, z);
       }
 
-      // ── Comets ──
+      // ── Comets ───────────────────────────────────────────────────────
       for (const comet of comets) {
         comet.t = (comet.t + comet.speed * dt) % 1;
-        _cPos.lerpVectors(comet.start, comet.end, comet.t);
-
-        const dist = _cPos.length();
-        // Fully visible within 45 units, fades out to 110, invisible beyond
+        _cometPos.lerpVectors(comet.start, comet.end, comet.t);
+        const dist  = _cometPos.length();
         const alpha = 1 - Math.min(1, Math.max(0, (dist - 45) / 65));
-        const visible = alpha > 0.01;
-
-        comet.nucleus.visible = visible;
-        comet.coma.visible    = visible;
-        comet.tail.visible    = visible;
-
-        if (visible) {
-          comet.nucleus.position.copy(_cPos);
-          comet.coma.position.copy(_cPos);
-          comet.tail.position.copy(_cPos);
-
-          // Tail orientation is baked at setup (trails behind motion) — no update needed here
+        const vis   = alpha > 0.01;
+        comet.nucleus.visible = vis;
+        comet.coma.visible    = vis;
+        comet.tail.visible    = vis;
+        if (vis) {
+          comet.nucleus.position.copy(_cometPos);
+          comet.coma.position.copy(_cometPos);
+          comet.tail.position.copy(_cometPos);
           comet.coma.scale.set(6 * alpha, 6 * alpha, 1);
           (comet.tail.material as import("three").MeshBasicMaterial).opacity = 0.32 * alpha;
           (comet.nucleus.material as import("three").MeshStandardMaterial).emissiveIntensity = 5 * alpha;
         }
       }
 
-      controls.update();
+      if (mode === "explore") controls.update();
       renderer.render(scene, camera);
     };
     tick();
@@ -768,15 +989,24 @@ async function buildScene(): Promise<SceneHandle> {
     return () => {
       running = false;
       cancelAnimationFrame(rafId);
-      canvas.removeEventListener("pointerdown", onPointerDown);
-      canvas.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("resize", onResize);
+      inputCleanup?.();
+      inputCleanup = null;
+      // Restore defaults for next session
+      controls.enabled = true;
+      camera.fov = 60;
+      camera.updateProjectionMatrix();
+      shipGroup.visible = false;
     };
   }
 
   function stopAnimation() {
     running = false;
     cancelAnimationFrame(rafId);
+  }
+
+  function setCamMode(m: CamMode) {
+    camMode = m;
+    onCamModeChange?.(m);
   }
 
   function detach(container: HTMLElement) {
@@ -790,7 +1020,7 @@ async function buildScene(): Promise<SceneHandle> {
     renderer.dispose();
   }
 
-  return { canvas, startAnimation, stopAnimation, detach, destroy };
+  return { canvas, startAnimation, stopAnimation, setCamMode, detach, destroy };
 }
 
 // ── Window-level singleton ────────────────────────────────────────────────────
@@ -824,89 +1054,103 @@ async function getScene(): Promise<SceneHandle | null> {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function GalaxyMode() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [view, setView] = useState<"3d" | "2d">("3d");
-  const [selected, setSelected] = useState<AnyBody | null>(null);
+  const containerRef  = useRef<HTMLDivElement>(null);
+  const [visible, setVisible]       = useState(false);
+  const [view, setView]             = useState<ViewMode>("3d");
+  const [selected, setSelected]     = useState<AnyBody | null>(null);
+  const [camMode3D, setCamMode3D]   = useState<CamMode>("cockpit");
+  const [ptrLocked, setPtrLocked]   = useState(false);
+
+  // Store cleanup from startAnimation so switching views properly tears down
+  const stopRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     const show = () => { setVisible(true); setSelected(null); setView("3d"); };
     const hide = () => setVisible(false);
     window.addEventListener("galaxy-mode", show);
-    window.addEventListener("exit-mode", hide);
+    window.addEventListener("exit-mode",   hide);
     return () => {
       window.removeEventListener("galaxy-mode", show);
-      window.removeEventListener("exit-mode", hide);
+      window.removeEventListener("exit-mode",   hide);
     };
   }, []);
 
-  // Lock body scroll while galaxy is open so no scrollbar appears
+  // Lock body scroll while open
   useEffect(() => {
     const html = document.documentElement;
-    if (visible) {
-      html.style.overflow = "hidden";
-    } else {
-      html.style.overflow = "";
-    }
+    if (visible) html.style.overflow = "hidden";
+    else         html.style.overflow = "";
     return () => { html.style.overflow = ""; };
   }, [visible]);
 
+  // ESC: release pointer lock first, then exit galaxy on second press
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setVisible(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (document.pointerLockElement) return; // browser releases lock; stay in galaxy
+        setVisible(false);
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Combined effect: handles scene init, canvas attach, and view switching.
+  // Both visible and view are deps so switching view restarts correctly.
   useEffect(() => {
     if (!visible || !containerRef.current) return;
-
     const container = containerRef.current;
-    let stopListeners: (() => void) | null = null;
     let retryId: ReturnType<typeof setTimeout> | null = null;
+    let stopped = false;
 
     const activate = async () => {
-      let s = await getScene();
-
+      const s = await getScene();
+      if (stopped) return;
       if (!s && gs().__galaxyBuilding) {
-        retryId = setTimeout(() => { activate().catch(console.error); }, 400);
+        retryId = setTimeout(() => { if (!stopped) activate().catch(console.error); }, 400);
         return;
       }
       if (gs().__galaxyFailed) return;
+      const scene = gs().__galaxyScene;
+      if (!scene || !containerRef.current) return;
 
-      s = gs().__galaxyScene ?? null;
-      if (!s || !containerRef.current) return;
-
-      if (!container.contains(s.canvas)) {
-        s.canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;";
-        container.appendChild(s.canvas);
+      if (!container.contains(scene.canvas)) {
+        scene.canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;";
+        container.appendChild(scene.canvas);
       }
 
-      stopListeners = s.startAnimation(setSelected, container) ?? null;
+      if (view === "2d") {
+        scene.stopAnimation();
+        return;
+      }
+
+      stopRef.current?.();
+      stopRef.current = scene.startAnimation(
+        setSelected,
+        container,
+        view === "ship"
+          ? { mode: "ship", onCamMode: setCamMode3D, onPointerLock: setPtrLocked }
+          : { mode: "explore" },
+      );
     };
 
     activate().catch(console.error);
 
     return () => {
+      stopped = true;
       if (retryId) clearTimeout(retryId);
-      stopListeners?.();
-      gs().__galaxyScene?.stopAnimation();
-      if (containerRef.current) gs().__galaxyScene?.detach(containerRef.current);
+      stopRef.current?.();
+      stopRef.current = null;
+      const scene = gs().__galaxyScene;
+      if (scene) {
+        scene.stopAnimation();
+        if (containerRef.current) scene.detach(containerRef.current);
+      }
     };
-  }, [visible]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, view]);
 
-  // Pause/resume Three.js when switching between 3D and 2D views
-  useEffect(() => {
-    if (!visible) return;
-    const s = gs().__galaxyScene;
-    if (!s) return;
-    if (view === "2d") {
-      s.stopAnimation();
-    } else {
-      if (containerRef.current) s.startAnimation(setSelected, containerRef.current);
-    }
-  }, [view, visible]);
-
-  // ── Info card helpers ───────────────────────────────────────────────────
+  // ── Info card helpers ─────────────────────────────────────────────────────
   const colorHex = selected ? selected.color.toString(16).padStart(6, "0") : "ffffff";
   const colorStr = `#${colorHex}`;
 
@@ -914,6 +1158,16 @@ export function GalaxyMode() {
     selected?.kind === "work"      ? "◉ WORK EXPERIENCE" :
     selected?.kind === "education" ? "◯ EDUCATION"       :
     selected?.kind === "project"   ? "◆ PROJECT"         : "";
+
+  // ── View label for hint ───────────────────────────────────────────────────
+  const hintText =
+    view === "ship"
+      ? camMode3D === "cockpit"
+        ? "◈ COCKPIT · WASD to fly · mouse to steer · V to switch view ◈"
+        : "◈ CHASE CAM · WASD to fly · click to steer · V to switch view ◈"
+      : view === "2d"
+      ? "◈ 2D NAV · scroll or arrow keys to fly ◈"
+      : "◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈";
 
   return (
     <AnimatePresence>
@@ -935,25 +1189,57 @@ export function GalaxyMode() {
             transition={{ delay: 0.6 }}
           >
             <p className="text-xs font-mono tracking-[0.3em]" style={{ color: "rgba(255,255,255,0.25)" }}>
-              ◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈
+              {hintText}
             </p>
           </motion.div>
 
           {/* Top-right controls */}
-          <div className="absolute top-4 right-4 z-10 flex gap-2">
+          <div className="absolute top-4 right-4 z-10 flex gap-2 flex-wrap justify-end">
+            {/* 3D Explore */}
             <button
               className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
               style={{
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "rgba(255,255,255,0.45)",
+                border: `1px solid ${view === "3d" ? "rgba(100,180,255,0.5)" : "rgba(255,255,255,0.15)"}`,
+                color: view === "3d" ? "rgba(140,200,255,0.9)" : "rgba(255,255,255,0.45)",
                 backgroundColor: "rgba(0,0,20,0.65)",
                 borderRadius: "4px",
-                opacity: 0.7,
+                opacity: view === "3d" ? 1 : 0.7,
               }}
-              onClick={() => setView(v => v === "3d" ? "2d" : "3d")}
+              onClick={() => setView("3d")}
             >
-              {view === "3d" ? "2D nav" : "3D explore"}
+              3D explore
             </button>
+
+            {/* Ship Nav */}
+            <button
+              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
+              style={{
+                border: `1px solid ${view === "ship" ? "rgba(100,200,255,0.5)" : "rgba(255,255,255,0.15)"}`,
+                color: view === "ship" ? "rgba(140,220,255,0.9)" : "rgba(255,255,255,0.45)",
+                backgroundColor: "rgba(0,0,20,0.65)",
+                borderRadius: "4px",
+                opacity: view === "ship" ? 1 : 0.7,
+              }}
+              onClick={() => setView("ship")}
+            >
+              🚀 ship nav
+            </button>
+
+            {/* 2D Nav */}
+            <button
+              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
+              style={{
+                border: `1px solid ${view === "2d" ? "rgba(100,180,255,0.5)" : "rgba(255,255,255,0.15)"}`,
+                color: view === "2d" ? "rgba(140,200,255,0.9)" : "rgba(255,255,255,0.45)",
+                backgroundColor: "rgba(0,0,20,0.65)",
+                borderRadius: "4px",
+                opacity: view === "2d" ? 1 : 0.7,
+              }}
+              onClick={() => setView("2d")}
+            >
+              2D nav
+            </button>
+
             <button
               className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
               style={{
@@ -969,6 +1255,94 @@ export function GalaxyMode() {
             </button>
           </div>
 
+          {/* ── Ship mode HUD ─────────────────────────────────────────────── */}
+          {view === "ship" && (
+            <>
+              {/* Cockpit cam mode sub-toggle */}
+              <div className="absolute top-14 right-4 z-10 flex gap-2">
+                <button
+                  className="text-[10px] font-mono px-2 py-1 transition-opacity hover:opacity-100"
+                  style={{
+                    border: `1px solid ${camMode3D === "cockpit" ? "rgba(100,200,255,0.45)" : "rgba(255,255,255,0.1)"}`,
+                    color: camMode3D === "cockpit" ? "rgba(120,210,255,0.85)" : "rgba(255,255,255,0.3)",
+                    backgroundColor: "rgba(0,0,20,0.55)",
+                    borderRadius: "4px",
+                  }}
+                  onClick={() => { gs().__galaxyScene?.setCamMode("cockpit"); setCamMode3D("cockpit"); }}
+                >
+                  cockpit
+                </button>
+                <button
+                  className="text-[10px] font-mono px-2 py-1 transition-opacity hover:opacity-100"
+                  style={{
+                    border: `1px solid ${camMode3D === "chase" ? "rgba(100,200,255,0.45)" : "rgba(255,255,255,0.1)"}`,
+                    color: camMode3D === "chase" ? "rgba(120,210,255,0.85)" : "rgba(255,255,255,0.3)",
+                    backgroundColor: "rgba(0,0,20,0.55)",
+                    borderRadius: "4px",
+                  }}
+                  onClick={() => { gs().__galaxyScene?.setCamMode("chase"); setCamMode3D("chase"); }}
+                >
+                  chase cam
+                </button>
+              </div>
+
+              {/* Cockpit overlay — crosshair + frame + prompt */}
+              {camMode3D === "cockpit" && (
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  {/* Subtle frame */}
+                  <div style={{
+                    position: "absolute", inset: "24px",
+                    border: "1px solid rgba(100,160,255,0.07)",
+                    borderRadius: "8px",
+                    boxShadow: "inset 0 0 120px rgba(20,50,120,0.08)",
+                  }} />
+                  {/* Corner brackets */}
+                  {[
+                    { top: 28, left: 28 },
+                    { top: 28, right: 28 },
+                    { bottom: 28, left: 28 },
+                    { bottom: 28, right: 28 },
+                  ].map((pos, i) => (
+                    <div key={i} style={{
+                      position: "absolute", ...pos,
+                      width: 18, height: 18,
+                      borderTop:    (pos.top    != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
+                      borderBottom: (pos.bottom != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
+                      borderLeft:   (pos.left   != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
+                      borderRight:  (pos.right  != null) ? "1px solid rgba(100,180,255,0.22)" : undefined,
+                    }} />
+                  ))}
+                  {/* Crosshair */}
+                  <div style={{ position: "relative", width: 24, height: 24 }}>
+                    <div style={{
+                      position: "absolute", top: "50%", left: 0, right: 0,
+                      height: 1, backgroundColor: "rgba(100,200,255,0.45)",
+                      transform: "translateY(-50%)",
+                    }} />
+                    <div style={{
+                      position: "absolute", left: "50%", top: 0, bottom: 0,
+                      width: 1, backgroundColor: "rgba(100,200,255,0.45)",
+                      transform: "translateX(-50%)",
+                    }} />
+                    <div style={{
+                      position: "absolute", top: "50%", left: "50%",
+                      width: 6, height: 6,
+                      border: "1px solid rgba(100,200,255,0.5)",
+                      borderRadius: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }} />
+                  </div>
+                  {/* Take control prompt (when pointer not locked) */}
+                  {!ptrLocked && (
+                    <p className="absolute bottom-16 font-mono text-xs tracking-widest" style={{ color: "rgba(100,180,255,0.4)" }}>
+                      click canvas to take control
+                    </p>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
           {/* 2D navigation overlay */}
           {view === "2d" && (
             <div className="absolute inset-0 z-10">
@@ -979,19 +1353,21 @@ export function GalaxyMode() {
             </div>
           )}
 
-          {/* Legend */}
-          <motion.div
-            className="absolute bottom-5 left-5 text-xs font-mono space-y-1.5 pointer-events-none select-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-          >
-            <p style={{ color: "rgba(255,200,70,0.55)" }}>✦ sun — that&apos;s me</p>
-            <p style={{ color: "rgba(100,150,255,0.5)" }}>◉ inner planets — work experience</p>
-            <p style={{ color: "rgba(245,200,66,0.5)" }}>◉ gold ring — education</p>
-            <p style={{ color: "rgba(200,150,255,0.45)" }}>◆ outer ring — projects</p>
-            <p style={{ color: "rgba(100,120,180,0.4)" }}>◌ asteroid belt — skills &amp; languages</p>
-          </motion.div>
+          {/* Legend (hide during ship cockpit to reduce clutter) */}
+          {!(view === "ship" && camMode3D === "cockpit") && (
+            <motion.div
+              className="absolute bottom-5 left-5 text-xs font-mono space-y-1.5 pointer-events-none select-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <p style={{ color: "rgba(255,200,70,0.55)" }}>✦ sun — that&apos;s me</p>
+              <p style={{ color: "rgba(100,150,255,0.5)" }}>◉ inner planets — work experience</p>
+              <p style={{ color: "rgba(245,200,66,0.5)" }}>◉ gold ring — education</p>
+              <p style={{ color: "rgba(200,150,255,0.45)" }}>◆ outer ring — projects</p>
+              <p style={{ color: "rgba(100,120,180,0.4)" }}>◌ asteroid belt — skills &amp; languages</p>
+            </motion.div>
+          )}
 
           {/* Info card */}
           <AnimatePresence>
