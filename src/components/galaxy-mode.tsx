@@ -859,7 +859,7 @@ async function buildScene(): Promise<SceneHandle> {
   engineGlow.scale.set(0, 0, 1);
   shipGroup.add(engineGlow);
 
-  shipGroup.scale.setScalar(0.18); // ship is ~1.5 world-units long — tiny relative to planets
+  shipGroup.scale.setScalar(0.05); // ship is ~0.4 world-units long — dwarfed by planets
   shipGroup.visible = false; // hidden until ship mode activates
   scene.add(shipGroup);
   shipGroup.position.copy(shipPos);
@@ -1083,15 +1083,15 @@ async function buildScene(): Promise<SceneHandle> {
         // ── Camera (ship mode) ─────────────────────────────────────────
 
         if (camMode === "cockpit") {
-          camera.position.copy(shipPos).addScaledVector(_fwd, 0.8).addScaledVector(_up, 0.12);
+          camera.position.copy(shipPos).addScaledVector(_fwd, 0.02).addScaledVector(_up, 0.01);
           camera.quaternion.copy(shipQuat);
           shipGroup.visible = false;
         } else {
           // Chase cam — smooth lerp behind and above ship
-          _chaseTgt.copy(shipPos).addScaledVector(_fwd, -6).addScaledVector(_up, 2);
+          _chaseTgt.copy(shipPos).addScaledVector(_fwd, -2.5).addScaledVector(_up, 0.7);
           chaseCamPos.lerp(_chaseTgt, Math.min(1, dt * 5));
           camera.position.copy(chaseCamPos);
-          _lookAt.copy(shipPos).addScaledVector(_fwd, 4);
+          _lookAt.copy(shipPos).addScaledVector(_fwd, 1.5);
           camera.lookAt(_lookAt);
           shipGroup.visible = true;
         }
