@@ -1515,53 +1515,50 @@ export function GalaxyMode() {
                     background: "linear-gradient(to right, rgba(4,10,28,0.55) 0%, transparent 18%, transparent 82%, rgba(4,10,28,0.55) 100%)",
                   }} />
 
-                  {/* ── Crosshair ── */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div style={{ position: "relative", width: 28, height: 28 }}>
-                      <div style={{ position:"absolute", top:"50%", left:0, right:0, height:1, background:"rgba(100,200,255,0.5)", transform:"translateY(-50%)" }} />
-                      <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:1, background:"rgba(100,200,255,0.5)", transform:"translateX(-50%)" }} />
-                      <div style={{ position:"absolute", top:"50%", left:"50%", width:7, height:7, border:"1px solid rgba(100,200,255,0.6)", borderRadius:"50%", transform:"translate(-50%,-50%)" }} />
+                  {/* ── Crosshair + center telemetry ── */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div style={{ position: "relative", width: 32, height: 32 }}>
+                      <div style={{ position:"absolute", top:"50%", left:0, right:0, height:1, background:"rgba(100,200,255,0.45)", transform:"translateY(-50%)" }} />
+                      <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:1, background:"rgba(100,200,255,0.45)", transform:"translateX(-50%)" }} />
+                      <div style={{ position:"absolute", top:"50%", left:"50%", width:8, height:8, border:"1px solid rgba(100,200,255,0.55)", borderRadius:"50%", transform:"translate(-50%,-50%)" }} />
                     </div>
-                  </div>
-
-                  {/* ── Speed & heading floating HUD ── */}
-                  <div style={{ position:"absolute", top:80, left:32, fontFamily:"monospace", fontSize:11, color:"rgba(120,210,255,0.7)", lineHeight:1.7 }}>
-                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9, letterSpacing:"0.18em" }}>VELOCITY</div>
-                    <div style={{ fontSize:22, fontWeight:"bold", color:"rgba(140,220,255,0.9)", letterSpacing:"0.05em" }}>
-                      {String(shipStats.speed).padStart(3,"0")}
+                    {/* Speed + heading just below reticle */}
+                    <div style={{ marginTop:14, display:"flex", gap:20, fontFamily:"monospace", fontSize:10, color:"rgba(120,200,255,0.6)", letterSpacing:"0.08em" }}>
+                      <span>
+                        <span style={{ fontSize:8, opacity:0.5, marginRight:4 }}>VEL</span>
+                        <span style={{ color:"rgba(160,230,255,0.85)", fontWeight:"bold" }}>{String(shipStats.speed).padStart(3,"0")}</span>
+                        <span style={{ fontSize:8, opacity:0.45, marginLeft:2 }}>u/s</span>
+                      </span>
+                      <span style={{ opacity:0.3 }}>|</span>
+                      <span>
+                        <span style={{ fontSize:8, opacity:0.5, marginRight:4 }}>HDG</span>
+                        <span style={{ color:"rgba(160,230,255,0.85)", fontWeight:"bold" }}>{String(Math.round(shipStats.heading)).padStart(3,"0")}°</span>
+                      </span>
                     </div>
-                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9 }}>u/s</div>
-                  </div>
-                  <div style={{ position:"absolute", top:80, right:32, fontFamily:"monospace", fontSize:11, color:"rgba(120,210,255,0.7)", lineHeight:1.7, textAlign:"right" }}>
-                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9, letterSpacing:"0.18em" }}>HEADING</div>
-                    <div style={{ fontSize:22, fontWeight:"bold", color:"rgba(140,220,255,0.9)", letterSpacing:"0.05em" }}>
-                      {String(Math.round(shipStats.heading)).padStart(3,"0")}°
-                    </div>
-                    <div style={{ color:"rgba(100,180,255,0.4)", fontSize:9 }}>MAG</div>
                   </div>
 
                   {/* ── Bottom instrument console ── */}
                   <div style={{
                     position:"absolute", bottom:0, left:0, right:0,
-                    background:"linear-gradient(to top, rgba(3,8,22,0.97) 55%, rgba(3,8,22,0.7) 80%, transparent 100%)",
-                    paddingBottom:12, paddingTop:32,
+                    background:"linear-gradient(to top, rgba(3,8,22,0.97) 55%, rgba(3,8,22,0.7) 82%, transparent 100%)",
+                    paddingBottom:14, paddingTop:36,
                   }}>
-                    {/* Top edge accent line */}
-                    <div style={{ position:"absolute", top:32, left:"8%", right:"8%", height:1, background:"linear-gradient(to right, transparent, rgba(60,120,220,0.35), transparent)" }} />
+                    {/* Top accent line — inset from edges */}
+                    <div style={{ position:"absolute", top:36, left:"12%", right:"12%", height:1, background:"linear-gradient(to right, transparent, rgba(60,120,220,0.4), transparent)" }} />
 
-                    <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"center", gap:0, paddingLeft:24, paddingRight:24 }}>
+                    {/* Instrument row — 14% padding each side keeps panels away from vignette edges */}
+                    <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"center", gap:0, paddingLeft:"14%", paddingRight:"14%" }}>
 
                       {/* LEFT PANEL — throttle + engine */}
-                      <div style={{ flex:1, maxWidth:200, fontFamily:"monospace", color:"rgba(100,180,255,0.8)" }}>
+                      <div style={{ flex:1, fontFamily:"monospace", color:"rgba(100,180,255,0.8)" }}>
                         <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>THROTTLE</div>
-                        {/* Throttle bar */}
-                        <div style={{ height:6, background:"rgba(20,40,80,0.8)", borderRadius:3, marginBottom:4, overflow:"hidden", border:"1px solid rgba(40,80,160,0.3)" }}>
+                        <div style={{ height:5, background:"rgba(20,40,80,0.8)", borderRadius:3, marginBottom:4, overflow:"hidden", border:"1px solid rgba(40,80,160,0.3)" }}>
                           <div style={{ height:"100%", width:`${shipStats.throttle * 100}%`, background:"linear-gradient(to right, rgba(60,120,220,0.8), rgba(100,200,255,0.9))", borderRadius:3, transition:"width 0.1s" }} />
                         </div>
                         <div style={{ fontSize:10, color:"rgba(100,180,255,0.55)" }}>{Math.round(shipStats.throttle * 100)}%</div>
-                        <div style={{ marginTop:10, display:"flex", gap:6 }}>
+                        <div style={{ marginTop:8, display:"flex", gap:8 }}>
                           {["ENG-L","ENG-R"].map(l => (
-                            <div key={l} style={{ fontSize:8, letterSpacing:"0.12em", color: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.7)" : "rgba(80,100,140,0.5)", display:"flex", alignItems:"center", gap:4 }}>
+                            <div key={l} style={{ fontSize:8, letterSpacing:"0.1em", color: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.7)" : "rgba(80,100,140,0.5)", display:"flex", alignItems:"center", gap:4 }}>
                               <div style={{ width:5, height:5, borderRadius:"50%", background: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.8)" : "rgba(60,80,120,0.5)" }} />
                               {l}
                             </div>
@@ -1569,63 +1566,59 @@ export function GalaxyMode() {
                         </div>
                       </div>
 
-                      {/* CENTER PANEL — compass + speed */}
-                      <div style={{ flex:"0 0 220px", fontFamily:"monospace", textAlign:"center", paddingBottom:4 }}>
-                        {/* Compass arc */}
-                        <div style={{ position:"relative", height:48, overflow:"hidden", marginBottom:6 }}>
-                          <svg width="220" height="48" style={{ overflow:"visible" }}>
-                            {/* Arc base */}
-                            <path d="M 10 48 A 100 100 0 0 1 210 48" fill="none" stroke="rgba(40,80,160,0.3)" strokeWidth="1" />
-                            {/* Tick marks every 30° */}
+                      {/* CENTER PANEL — compass + heading readout */}
+                      <div style={{ flex:"0 0 200px", fontFamily:"monospace", textAlign:"center", paddingBottom:4 }}>
+                        <div style={{ position:"relative", height:44, overflow:"hidden", marginBottom:6 }}>
+                          <svg width="200" height="44" style={{ overflow:"visible" }}>
+                            <path d="M 10 44 A 90 90 0 0 1 190 44" fill="none" stroke="rgba(40,80,160,0.3)" strokeWidth="1" />
                             {[0,30,60,90,120,150,180].map(deg => {
                               const a = ((deg - shipStats.heading + 180) * Math.PI) / 180;
-                              const cx2 = 110 + 100 * Math.cos(Math.PI - a);
-                              const cy2 = 48 - 100 * Math.sin(Math.PI - a);
+                              const cx2 = 100 + 90 * Math.cos(Math.PI - a);
+                              const cy2 = 44 - 90 * Math.sin(Math.PI - a);
                               const isMain = deg % 90 === 0;
-                              return cy2 > 0 && cy2 < 52 ? (
+                              return cy2 > 0 && cy2 < 50 ? (
                                 <line key={deg} x1={cx2} y1={cy2} x2={cx2} y2={cy2 + (isMain ? 8 : 5)}
                                   stroke={isMain ? "rgba(100,180,255,0.6)" : "rgba(60,120,180,0.35)"} strokeWidth={isMain ? 1.5 : 0.8} />
                               ) : null;
                             })}
-                            {/* Center heading pointer */}
-                            <line x1="110" y1="30" x2="110" y2="48" stroke="rgba(140,220,255,0.9)" strokeWidth="2" />
-                            <polygon points="110,24 106,32 114,32" fill="rgba(140,220,255,0.8)" />
+                            <line x1="100" y1="28" x2="100" y2="44" stroke="rgba(140,220,255,0.9)" strokeWidth="2" />
+                            <polygon points="100,22 96,30 104,30" fill="rgba(140,220,255,0.8)" />
                           </svg>
                         </div>
                         <div style={{ fontSize:18, fontWeight:"bold", color:"rgba(160,230,255,0.95)", letterSpacing:"0.08em" }}>
                           {String(Math.round(shipStats.heading)).padStart(3,"0")}°
                         </div>
-                        <div style={{ fontSize:8, letterSpacing:"0.25em", color:"rgba(80,140,200,0.45)", marginTop:2 }}>COMPASS</div>
+                        <div style={{ fontSize:8, letterSpacing:"0.25em", color:"rgba(80,140,200,0.45)", marginTop:2 }}>HEADING</div>
                       </div>
 
                       {/* RIGHT PANEL — system status */}
-                      <div style={{ flex:1, maxWidth:200, fontFamily:"monospace", color:"rgba(100,180,255,0.8)", textAlign:"right" }}>
+                      <div style={{ flex:1, fontFamily:"monospace", color:"rgba(100,180,255,0.8)", display:"flex", flexDirection:"column", alignItems:"flex-end" }}>
                         <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>SYSTEMS</div>
                         {[
-                          { label:"HULL",  ok: true },
-                          { label:"DRIVE", ok: true },
-                          { label:"NAV",   ok: true },
-                          { label:"COMMS", ok: true },
+                          { label:"HULL" },
+                          { label:"DRIVE" },
+                          { label:"NAV" },
+                          { label:"COMMS" },
                         ].map(s => (
-                          <div key={s.label} style={{ display:"flex", alignItems:"center", justifyContent:"flex-end", gap:6, marginBottom:4 }}>
+                          <div key={s.label} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
                             <span style={{ fontSize:9, letterSpacing:"0.12em", color:"rgba(80,130,180,0.6)" }}>{s.label}</span>
                             <div style={{ width:6, height:6, borderRadius:"50%", background:"rgba(60,220,120,0.8)", boxShadow:"0 0 6px rgba(60,220,120,0.5)" }} />
                           </div>
                         ))}
-                        <div style={{ marginTop:6, fontSize:8, letterSpacing:"0.15em", color:"rgba(60,200,100,0.55)" }}>ALL NOMINAL</div>
+                        <div style={{ marginTop:4, fontSize:8, letterSpacing:"0.12em", color:"rgba(60,200,100,0.55)" }}>ALL NOMINAL</div>
                       </div>
                     </div>
 
-                    {/* Bottom status bar */}
-                    <div style={{ marginTop:10, paddingLeft:24, paddingRight:24, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
-                        POS {Math.round(shipStats.heading)}° · {shipStats.speed > 0 ? "THRUST" : "DRIFT"}
+                    {/* Bottom status bar — also padded 14% */}
+                    <div style={{ marginTop:10, paddingLeft:"14%", paddingRight:"14%", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                        {shipStats.speed > 0 ? "THRUST" : "DRIFT"}
                       </div>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
-                        {!ptrLocked ? "[ CLICK TO TAKE CONTROL ]" : "[ MOUSE LOCKED · ESC TO RELEASE ]"}
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                        {!ptrLocked ? "CLICK TO TAKE CONTROL" : "MOUSE LOCKED · ESC TO RELEASE"}
                       </div>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.15em" }}>
-                        W/S THRUST · A/D YAW · Q/E VERT · V CAM
+                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                        W/S · A/D · Q/E · V
                       </div>
                     </div>
                   </div>
