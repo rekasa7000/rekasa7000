@@ -738,91 +738,97 @@ async function buildScene(): Promise<SceneHandle> {
   // ── Ship mesh ──────────────────────────────────────────────────────────
   const shipGroup = new THREE.Group();
 
-  // Fuselage — wider at tail, tapering toward nose
-  const fusGeo = new THREE.CylinderGeometry(0.55, 1.6, 9, 8);
-  fusGeo.rotateX(Math.PI / 2); // align along Z; nose = -Z, tail = +Z
-  shipGroup.add(
-    new THREE.Mesh(
-      fusGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0x2a5a90,
-        emissive: 0x0a2030,
-        emissiveIntensity: 0.3,
-        metalness: 0.65,
-        roughness: 0.35,
-      }),
-    ),
-  );
+  // ── Ship mesh — extruded from the exact same 2D canvas-ship outline ────
+  // Coordinate mapping: 2D +X (forward) → 3D -Z; 2D ±Y (wingspan) → 3D ±X
+  // Shape is defined in local XY. After mesh.rotation.x = +PI/2:
+  //   local X → world X  (wingspan)
+  //   local Y → world Z  (negative = forward = -Z in world)
+  //   extrude (local +Z, depth) → world -Y  (downward)
+  // Center by setting position.y = depth / 2.
+  const SC = 0.12; // 2D pixel → 3D unit  (2D ship ≈74 px = 9 world units)
+  const bodyH = 1.4;
 
-  // Wings (single span)
-  const wingMesh = new THREE.Mesh(
-    new THREE.BoxGeometry(14, 0.12, 4),
-    new THREE.MeshStandardMaterial({ color: 0x172840, metalness: 0.7, roughness: 0.3 }),
-  );
-  wingMesh.position.z = 1.8;
-  shipGroup.add(wingMesh);
+  // Fuselage — identical polygon to the 2D hull
+  const fusShape = new THREE.Shape();
+  fusShape.moveTo(   0,       -42 * SC);  // nose tip
+  fusShape.lineTo(-8  * SC,  -30 * SC);   // port shoulder
+  fusShape.lineTo(-10 * SC,  - 8 * SC);   // port body (widest point)
+  fusShape.lineTo(- 9 * SC,   16 * SC);   // port waist
+  fusShape.lineTo(- 5 * SC,   26 * SC);   // port tail flare
+  fusShape.lineTo(   0,        30 * SC);  // tail center
+  fusShape.lineTo(  5 * SC,   26 * SC);   // stbd tail flare
+  fusShape.lineTo(  9 * SC,   16 * SC);   // stbd waist
+  fusShape.lineTo( 10 * SC,  - 8 * SC);   // stbd body
+  fusShape.lineTo(  8 * SC,  -30 * SC);   // stbd shoulder
+  fusShape.closePath();
 
-  // Wing nacelles (small engine pods at tips)
-  for (const nx of [-5.5, 5.5]) {
+  const fusMesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(fusShape, {
+      depth: bodyH,
+      bevelEnabled: true, bevelThickness: 0.12, bevelSize: 0.1, bevelSegments: 2,
+    }),
+    new THREE.MeshStandardMaterial({
+      color: 0x2a5a90, emissive: 0x0a2030, emissiveIntensity: 0.3, metalness: 0.7, roughness: 0.3,
+    }),
+  );
+  fusMesh.rotation.x = Math.PI / 2;
+  fusMesh.position.y = bodyH / 2;
+  shipGroup.add(fusMesh);
+
+  // Wings — same swept shape as the 2D canvas wing polygon
+  // 2D wing points for sy=+1 side (starboard): (12,8),(-20,9),(-30,30),(-10,26),(10,14)
+  // Mapped to shape local XY: localX=2D_y*SC, localY=-(2D_x)*SC
+  const wingMat = new THREE.MeshStandardMaterial({
+    color: 0x172840, metalness: 0.7, roughness: 0.3, side: THREE.DoubleSide,
+  });
+  for (const s of [1, -1]) {
+    const ws = new THREE.Shape();
+    ws.moveTo(s *  8 * SC,  -12 * SC);  // root-leading  (2D: 12,  8)
+    ws.lineTo(s *  9 * SC,   20 * SC);  // root-trailing (2D:-20,  9)
+    ws.lineTo(s * 30 * SC,   30 * SC);  // tip-trailing  (2D:-30, 30) — swept back
+    ws.lineTo(s * 26 * SC,   10 * SC);  // tip-leading   (2D:-10, 26)
+    ws.lineTo(s * 14 * SC,  -10 * SC);  // leading-edge  (2D: 10, 14)
+    ws.closePath();
+    const wingMesh = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(ws, { depth: 0.14, bevelEnabled: false }),
+      wingMat,
+    );
+    wingMesh.rotation.x = Math.PI / 2;
+    wingMesh.position.y = 0.1; // slightly above fuselage bottom so wings are visible
+    shipGroup.add(wingMesh);
+  }
+
+  // Wing nacelles — at 2D (x=-18, y=±21) → 3D (x=±2.52, z=2.16)
+  const nacMat = new THREE.MeshStandardMaterial({ color: 0x1a3a60, metalness: 0.8, roughness: 0.25 });
+  for (const s of [1, -1]) {
     const nacGeo = new THREE.CylinderGeometry(0.28, 0.45, 2.8, 8);
     nacGeo.rotateX(Math.PI / 2);
-    const nac = new THREE.Mesh(
-      nacGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0x1a3a60,
-        metalness: 0.8,
-        roughness: 0.25,
-      }),
-    );
-    nac.position.set(nx, -0.15, 1.5);
+    const nac = new THREE.Mesh(nacGeo, nacMat);
+    nac.position.set(s * 21 * SC, -0.3, 18 * SC); // under wing at ~70% span
     shipGroup.add(nac);
   }
 
-  // Cockpit bubble (at nose, raised)
-  const cockpitGeo = new THREE.SphereGeometry(1.15, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.65);
+  // Cockpit canopy — at 2D x=22 → 3D z=-2.64, raised on top
   const cockpitMesh = new THREE.Mesh(
-    cockpitGeo,
+    new THREE.SphereGeometry(0.9, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.6),
     new THREE.MeshStandardMaterial({
-      color: 0x7ab4f5,
-      transparent: true,
-      opacity: 0.72,
-      emissive: 0x1a4a80,
-      emissiveIntensity: 0.9,
-      metalness: 0.05,
-      roughness: 0.04,
+      color: 0x7ab4f5, transparent: true, opacity: 0.75,
+      emissive: 0x1a4a80, emissiveIntensity: 0.9, metalness: 0.05, roughness: 0.04,
     }),
   );
-  cockpitMesh.position.set(0, 0.65, -3);
-  cockpitMesh.rotation.x = -0.15;
+  cockpitMesh.position.set(0, bodyH / 2 + 0.45, -22 * SC);
+  cockpitMesh.rotation.x = -0.2;
   shipGroup.add(cockpitMesh);
 
-  // Nose cone
-  const noseConeGeo = new THREE.ConeGeometry(0.55, 2.2, 8);
-  noseConeGeo.rotateX(-Math.PI / 2); // tip points in -Z
-  const noseCone = new THREE.Mesh(
-    noseConeGeo,
-    new THREE.MeshStandardMaterial({
-      color: 0x4a90e2,
-      metalness: 0.85,
-      roughness: 0.18,
-    }),
-  );
-  noseCone.position.z = -5.6;
-  shipGroup.add(noseCone);
-
-  // Twin engine nozzles at tail
-  for (const nx of [-1.1, 1.1]) {
+  // Twin engine nozzles — at 2D (x=-30, y=±11) → 3D (x=±1.32, z=3.6+0.5)
+  for (const s of [1, -1]) {
     const nozzleGeo = new THREE.CylinderGeometry(0.42, 0.58, 1.8, 8);
     nozzleGeo.rotateX(Math.PI / 2);
     const nozzle = new THREE.Mesh(
       nozzleGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0x080f1a,
-        metalness: 0.95,
-        roughness: 0.15,
-      }),
+      new THREE.MeshStandardMaterial({ color: 0x080f1a, metalness: 0.95, roughness: 0.15 }),
     );
-    nozzle.position.set(nx, -0.2, 4.9);
+    nozzle.position.set(s * 11 * SC, -0.2, 30 * SC + 0.5);
     shipGroup.add(nozzle);
   }
 
@@ -847,7 +853,7 @@ async function buildScene(): Promise<SceneHandle> {
       depthWrite: false,
     }),
   );
-  engineGlow.position.z = 6.2; // behind the tail
+  engineGlow.position.z = 30 * SC + 1.6; // behind the tail nozzles
   engineGlow.scale.set(0, 0, 1);
   shipGroup.add(engineGlow);
 
