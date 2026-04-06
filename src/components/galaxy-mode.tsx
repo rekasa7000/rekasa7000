@@ -728,7 +728,7 @@ async function buildScene(): Promise<SceneHandle> {
   const shipPos = new THREE.Vector3(0, 8, 95);
   const shipQuat = new THREE.Quaternion();
   const shipVel = new THREE.Vector3();
-  const chaseCamPos = new THREE.Vector3(0, 13, 111);
+  const chaseCamPos = new THREE.Vector3(0, 10, 103);
   // Euler angles — yaw + pitch only (no roll ever accumulates)
   let shipYaw   = 0;          // 0 = facing toward origin (-Z)
   let shipPitch = 0;
@@ -857,6 +857,7 @@ async function buildScene(): Promise<SceneHandle> {
   engineGlow.scale.set(0, 0, 1);
   shipGroup.add(engineGlow);
 
+  shipGroup.scale.setScalar(0.18); // ship is ~1.5 world-units long — tiny relative to planets
   shipGroup.visible = false; // hidden until ship mode activates
   scene.add(shipGroup);
   shipGroup.position.copy(shipPos);
@@ -1069,12 +1070,12 @@ async function buildScene(): Promise<SceneHandle> {
         // ── Camera (ship mode) ─────────────────────────────────────────
 
         if (camMode === "cockpit") {
-          camera.position.copy(shipPos).addScaledVector(_fwd, 3.5).addScaledVector(_up, 0.65);
+          camera.position.copy(shipPos).addScaledVector(_fwd, 0.8).addScaledVector(_up, 0.12);
           camera.quaternion.copy(shipQuat);
           shipGroup.visible = false;
         } else {
           // Chase cam — smooth lerp behind and above ship
-          _chaseTgt.copy(shipPos).addScaledVector(_fwd, -16).addScaledVector(_up, 5);
+          _chaseTgt.copy(shipPos).addScaledVector(_fwd, -6).addScaledVector(_up, 2);
           chaseCamPos.lerp(_chaseTgt, Math.min(1, dt * 5));
           camera.position.copy(chaseCamPos);
           _lookAt.copy(shipPos).addScaledVector(_fwd, 4);
