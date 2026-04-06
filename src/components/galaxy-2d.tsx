@@ -443,11 +443,11 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         const my = sy + Math.sin(angle) * sat.orbitR;
         const sz = sat.size ?? 4;
 
-        // Orbit ring (very faint)
-        ctx.globalAlpha = fadeIn * 0.07;
+        // Orbit ring
+        ctx.globalAlpha = fadeIn * 0.22;
         ctx.beginPath(); ctx.arc(sx, sy, sat.orbitR, 0, Math.PI * 2);
-        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1;
-        ctx.setLineDash([2, 6]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = "#8ab4d4"; ctx.lineWidth = 0.7;
+        ctx.setLineDash([3, 5]); ctx.stroke(); ctx.setLineDash([]);
 
         // Moon glow
         ctx.globalAlpha = fadeIn * 0.35;
@@ -619,26 +619,26 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         ctx.lineTo(10, sy * 14);   // leading-edge sweep
         ctx.closePath();
         const wg = ctx.createLinearGradient(12, gy1, -30, gy2);
-        wg.addColorStop(0, "#2a608a"); wg.addColorStop(1, "#172840");
+        wg.addColorStop(0, "#1e4870"); wg.addColorStop(1, "#0e1e34");
         ctx.fillStyle = wg; ctx.fill();
-        ctx.strokeStyle = "#4a90d4"; ctx.lineWidth = 0.8; ctx.stroke();
+        ctx.strokeStyle = "#2a5a90"; ctx.lineWidth = 0.8; ctx.stroke();
 
         // Wing accent stripe
         ctx.beginPath(); ctx.moveTo(0, sy * 10); ctx.lineTo(-22, sy * 26);
-        ctx.strokeStyle = "rgba(100,180,255,0.2)"; ctx.lineWidth = 1; ctx.stroke();
+        ctx.strokeStyle = "rgba(42,90,144,0.35)"; ctx.lineWidth = 1; ctx.stroke();
 
         // Engine nacelle
         ctx.beginPath(); ctx.ellipse(-18, sy * 21, 11, 4, 0, 0, Math.PI * 2);
-        ctx.fillStyle = "#1a3f6a"; ctx.fill();
-        ctx.strokeStyle = "#3a80d4"; ctx.lineWidth = 0.8; ctx.stroke();
+        ctx.fillStyle = "#0e1e34"; ctx.fill();
+        ctx.strokeStyle = "#2a5a90"; ctx.lineWidth = 0.8; ctx.stroke();
 
         // Nacelle intake ring
         ctx.beginPath(); ctx.arc(-8, sy * 21, 3.5, 0, Math.PI * 2);
-        ctx.strokeStyle = "#5a9ad4"; ctx.lineWidth = 1; ctx.stroke();
+        ctx.strokeStyle = "#3a6aaa"; ctx.lineWidth = 1; ctx.stroke();
 
         // Nacelle nozzle ring
         ctx.beginPath(); ctx.arc(-28, sy * 21, 3.5, 0, Math.PI * 2);
-        ctx.strokeStyle = "#5a9ad4"; ctx.lineWidth = 1; ctx.stroke();
+        ctx.strokeStyle = "#3a6aaa"; ctx.lineWidth = 1; ctx.stroke();
 
         // Nacelle thrust glow
         if (thrust > 0.08) {
@@ -664,12 +664,12 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       ctx.lineTo(30, 8);     // lower shoulder
       ctx.closePath();
       const fhullG = ctx.createLinearGradient(-30, -10, 42, 10);
-      fhullG.addColorStop(0,    "#172840");
-      fhullG.addColorStop(0.35, "#2a5a90");
-      fhullG.addColorStop(0.7,  "#bcd6f0");
-      fhullG.addColorStop(1,    "#e8f4ff");
+      fhullG.addColorStop(0,    "#0a2030");
+      fhullG.addColorStop(0.3,  "#172840");
+      fhullG.addColorStop(0.65, "#2a5a90");
+      fhullG.addColorStop(1,    "#3a6aaa");
       ctx.fillStyle = fhullG; ctx.fill();
-      ctx.strokeStyle = "#7ab4f5"; ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.strokeStyle = "#3a6aaa"; ctx.lineWidth = 1.2; ctx.stroke();
 
       // ── Hull panel details ────────────────────────────────────────────────
       ctx.strokeStyle = "rgba(80,140,210,0.28)"; ctx.lineWidth = 0.6;
@@ -706,26 +706,9 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       ctx.beginPath(); ctx.ellipse(18, -3, 4.5, 2.5, -0.4, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.fill();
 
-      // ── Running / nav lights ──────────────────────────────────────────────
-      const blink = Math.sin(bobT * 3.2) > 0;
-      if (blink) {
-        // Port (left/bottom wing) — red
-        ctx.beginPath(); ctx.arc(-10, 26, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,50,50,0.95)"; ctx.fill();
-        const rlg = ctx.createRadialGradient(-10, 26, 0, -10, 26, 7);
-        rlg.addColorStop(0, "rgba(255,50,50,0.4)"); rlg.addColorStop(1, "rgba(255,0,0,0)");
-        ctx.beginPath(); ctx.arc(-10, 26, 7, 0, Math.PI * 2); ctx.fillStyle = rlg; ctx.fill();
-      } else {
-        // Starboard (top wing) — green
-        ctx.beginPath(); ctx.arc(-10, -26, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(50,255,100,0.95)"; ctx.fill();
-        const glg = ctx.createRadialGradient(-10, -26, 0, -10, -26, 7);
-        glg.addColorStop(0, "rgba(50,255,100,0.4)"); glg.addColorStop(1, "rgba(0,200,0,0)");
-        ctx.beginPath(); ctx.arc(-10, -26, 7, 0, Math.PI * 2); ctx.fillStyle = glg; ctx.fill();
-      }
-      // Nose beacon (always on)
+      // ── Nose beacon ───────────────────────────────────────────────────────
       ctx.beginPath(); ctx.arc(42, 0, 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(220,235,255,0.9)"; ctx.fill();
+      ctx.fillStyle = "rgba(180,210,255,0.8)"; ctx.fill();
 
       ctx.restore();
     }
