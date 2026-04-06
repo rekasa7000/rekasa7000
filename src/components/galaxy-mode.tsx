@@ -488,13 +488,16 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Lighting ───────────────────────────────────────────────────────────
-  scene.add(new THREE.AmbientLight(0x111133, 2.5));
-  scene.add(new THREE.PointLight(0xffcc44, 12, 500));
+  scene.add(new THREE.AmbientLight(0x223355, 4.5));
+  // decay=0 disables inverse-square falloff so all planets get equal sunlight
+  scene.add(new THREE.PointLight(0xffdd88, 6, 0, 0));
 
   // ── Sun ────────────────────────────────────────────────────────────────
+  const sunTex = new THREE.TextureLoader().load("/planets/2k_sun.jpg");
   const sun = new THREE.Mesh(
     new THREE.SphereGeometry(4, 32, 32),
-    new THREE.MeshStandardMaterial({ color: 0xffee44, emissive: 0xffaa00, emissiveIntensity: 2.2, roughness: 0.1 }),
+    // MeshBasicMaterial ignores scene lighting — shows texture as-is
+    new THREE.MeshBasicMaterial({ map: sunTex }),
   );
   scene.add(sun);
 
@@ -523,6 +526,20 @@ async function buildScene(): Promise<SceneHandle> {
   sunLabel.position.set(0, 7.5, 0);
   scene.add(sunLabel);
 
+  // ── Planet textures ────────────────────────────────────────────────────
+  const texLoader = new THREE.TextureLoader();
+  const PLANET_TEXTURES = [
+    "/planets/2k_mars.jpg",
+    "/planets/2k_venus_surface.jpg",
+    "/planets/2k_neptune.jpg",
+    "/planets/2k_uranus.jpg",
+    "/planets/2k_ceres_fictional.jpg",
+    "/planets/2k_haumea_fictional.jpg",
+    "/planets/2k_makemake_fictional.jpg",
+    "/planets/2k_eris_fictional.jpg",
+  ];
+  let texIdx = 0;
+
   // ── Work experience planets ────────────────────────────────────────────
   const planetMeshes: InstanceType<typeof THREE.Mesh>[] = [];
   const planetAngles = PLANET_DATA.map(() => Math.random() * Math.PI * 2);
@@ -535,11 +552,11 @@ async function buildScene(): Promise<SceneHandle> {
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 32, 32),
       new THREE.MeshStandardMaterial({
-        color: p.color,
+        map: texLoader.load(PLANET_TEXTURES[texIdx++ % PLANET_TEXTURES.length]),
         emissive: p.emissive,
-        emissiveIntensity: 0.4,
-        roughness: 0.65,
-        metalness: 0.1,
+        emissiveIntensity: 0.04,
+        roughness: 0.75,
+        metalness: 0.05,
       }),
     );
     mesh.userData = { bodyKind: "work", bodyIndex: i };
@@ -592,11 +609,11 @@ async function buildScene(): Promise<SceneHandle> {
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(e.size, 32, 32),
       new THREE.MeshStandardMaterial({
-        color: e.color,
+        map: texLoader.load(PLANET_TEXTURES[texIdx++ % PLANET_TEXTURES.length]),
         emissive: e.emissive,
-        emissiveIntensity: 0.5,
-        roughness: 0.55,
-        metalness: 0.2,
+        emissiveIntensity: 0.04,
+        roughness: 0.7,
+        metalness: 0.1,
       }),
     );
     mesh.userData = { bodyKind: "education", bodyIndex: i };
@@ -604,9 +621,25 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(mesh);
 
     if (e.id === "bpsu") {
+      const inner = e.size + 0.6;
+      const outer = e.size + 3.4;
+      const ringGeo = new THREE.RingGeometry(inner, outer, 128, 1);
+      // Remap UVs: u = 0 at inner edge, 1 at outer edge
+      const uvAttr = ringGeo.attributes.uv;
+      const posAttr = ringGeo.attributes.position;
+      const _rv = new THREE.Vector3();
+      for (let j = 0; j < posAttr.count; j++) {
+        _rv.fromBufferAttribute(posAttr, j);
+        uvAttr.setXY(j, (_rv.length() - inner) / (outer - inner), 0.5);
+      }
       const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(e.size + 1.4, 0.28, 4, 80),
-        new THREE.MeshBasicMaterial({ color: 0xf5c842, transparent: true, opacity: 0.55, side: THREE.DoubleSide }),
+        ringGeo,
+        new THREE.MeshBasicMaterial({
+          map: texLoader.load("/planets/2k_saturn_ring_alpha.png"),
+          transparent: true,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        }),
       );
       ring.rotation.x = Math.PI / 2.8;
       mesh.add(ring);
@@ -629,11 +662,11 @@ async function buildScene(): Promise<SceneHandle> {
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 28, 28),
       new THREE.MeshStandardMaterial({
-        color: p.color,
+        map: texLoader.load(PLANET_TEXTURES[texIdx++ % PLANET_TEXTURES.length]),
         emissive: p.emissive,
-        emissiveIntensity: 0.55,
-        roughness: 0.6,
-        metalness: 0.15,
+        emissiveIntensity: 0.04,
+        roughness: 0.75,
+        metalness: 0.05,
       }),
     );
     mesh.userData = { bodyKind: "project", bodyIndex: i };
