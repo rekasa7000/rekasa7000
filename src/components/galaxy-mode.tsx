@@ -730,9 +730,11 @@ async function buildScene(): Promise<SceneHandle> {
   const shipVel = new THREE.Vector3();
   const chaseCamPos = new THREE.Vector3(0, 10, 103);
   // Euler angles — yaw + pitch only (no roll ever accumulates)
-  let shipYaw   = 0;          // 0 = facing toward origin (-Z)
+  let shipYaw   = 0;
   let shipPitch = 0;
-  const MAX_PITCH = Math.PI * 0.4; // ±72° pitch limit
+  let shipRoll  = 0;
+  const MAX_PITCH = Math.PI * 0.45;
+  const MAX_ROLL  = Math.PI * 0.65; // ±117° max bank
   shipQuat.setFromEuler(new THREE.Euler(0, 0, 0, "YXZ"));
 
   // ── Ship mesh ──────────────────────────────────────────────────────────
@@ -1020,25 +1022,36 @@ async function buildScene(): Promise<SceneHandle> {
 
       // ── Ship physics ────────────────────────────────────────────────
       if (mode === "ship") {
-        const THRUST = 55;
-        const YAW_RATE = 1.3;
-        const SENS = 0.0018;
-        const MAX_SPD = 100;
+        const THRUST    = 55;
+        const ROLL_RATE = 1.6;
+        const SENS      = 0.0018;
+        const MAX_SPD   = 100;
 
-        // Yaw (A/D) + mouse — no roll ever
-        if (keys["a"]) shipYaw += YAW_RATE * dt;
-        if (keys["d"]) shipYaw -= YAW_RATE * dt;
+        // A/D → bank/roll like an aileron
+        if (keys["a"]) shipRoll += ROLL_RATE * dt;
+        if (keys["d"]) shipRoll -= ROLL_RATE * dt;
+        shipRoll = Math.max(-MAX_ROLL, Math.min(MAX_ROLL, shipRoll));
 
+        // Mouse X → roll (fine), Mouse Y → pitch
         if (pointerLocked && (accMouseX !== 0 || accMouseY !== 0)) {
-          shipYaw   -= accMouseX * SENS;
+          shipRoll  -= accMouseX * SENS * 1.2;
           shipPitch -= accMouseY * SENS;
+          shipRoll   = Math.max(-MAX_ROLL, Math.min(MAX_ROLL, shipRoll));
           shipPitch  = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, shipPitch));
           accMouseX  = 0;
           accMouseY  = 0;
         }
 
-        // Reconstruct quaternion each frame — guarantees zero roll
-        shipQuat.setFromEuler(new THREE.Euler(shipPitch, shipYaw, 0, "YXZ"));
+        // Auto-level: wings drift back to level when A/D not held
+        if (!keys["a"] && !keys["d"]) {
+          shipRoll *= Math.exp(-2.5 * dt);
+        }
+
+        // Coordinated turn: banking generates yaw (like a real aircraft)
+        shipYaw += Math.sin(shipRoll) * 0.9 * dt;
+
+        // Rebuild quaternion with roll included
+        shipQuat.setFromEuler(new THREE.Euler(shipPitch, shipYaw, shipRoll, "YXZ"));
         _fwd.set(0, 0, -1).applyQuaternion(shipQuat);
         _up.set(0, 1, 0).applyQuaternion(shipQuat);
 
@@ -1345,8 +1358,8 @@ export function GalaxyMode() {
   const hintText =
     view === "ship"
       ? camMode3D === "cockpit"
-        ? "◈ COCKPIT · W/S thrust · A/D yaw · Q/E up-down · click to capture mouse · V for chase view ◈"
-        : "◈ CHASE CAM · W/S thrust · A/D yaw · click to capture mouse · V for cockpit ◈"
+        ? "◈ COCKPIT · W/S thrust · A/D roll · Q/E up-down · mouse to steer · V for chase view ◈"
+        : "◈ CHASE CAM · W/S thrust · A/D roll · mouse to steer · V for cockpit ◈"
       : view === "2d"
         ? "◈ 2D NAV · scroll or arrow keys to fly ◈"
         : "◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈";
