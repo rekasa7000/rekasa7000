@@ -224,6 +224,21 @@ const ASTEROIDS = Array.from({ length: 130 }, (_, i) => {
   return { x, y, sz, skill, bright };
 });
 
+// Planet / sun texture sources (same assets as 3-D mode)
+const BODY_TEX_SRCS = [
+  "/planets/2k_neptune.jpg",           // Kloudtech
+  "/planets/2k_venus_surface.jpg",      // Concentrix
+  "/planets/2k_mars.jpg",               // RevEarth
+  "/planets/2k_uranus.jpg",             // BPSU
+  "/planets/2k_makemake_fictional.jpg", // CultureConnect
+  "/planets/2k_ceres_fictional.jpg",    // Knowt
+  "/planets/2k_eris_fictional.jpg",     // Databox
+  "/planets/2k_haumea_fictional.jpg",   // KloudTrack
+  "/planets/2k_mars.jpg",               // Logcha
+  "/planets/2k_neptune.jpg",            // HananAI
+];
+const SUN_TEX_SRC = "/planets/2k_sun.jpg";
+
 // Nebula clouds
 const NEBULAE = [
   { x:  1200, y: -120, r: 500, r2: 220, c: "rgba(60,20,100,0.18)"  },
@@ -259,6 +274,14 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
     let prevTime    = performance.now();
     let shipFacing  = 1;   // 1 = right, -1 = left (target)
     let shipScaleX  = 1;   // animated value, lerps toward shipFacing
+
+    // ── Texture preload ────────────────────────────────────────────────────
+    const textures = new Map<string, HTMLImageElement>();
+    for (const src of [...new Set([...BODY_TEX_SRCS, SUN_TEX_SRC])]) {
+      const img = new Image();
+      img.onload = () => textures.set(src, img);
+      img.src = src;
+    }
 
     // ── Resize ─────────────────────────────────────────────────────────────
     const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -346,7 +369,39 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       }
     }
 
-    function drawSun(W: number, H: number) {
+    // Draws an equirectangular texture inside a clipped circle with horizontal spin + limb darkening
+    function drawSphereTexture(sx: number, sy: number, radius: number, img: HTMLImageElement, spinAngle: number) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+      ctx.clip();
+
+      const texW = img.naturalWidth  || 1;
+      const texH = img.naturalHeight || 1;
+      const scale  = (radius * 2) / texH;
+      const drawW  = texW * scale;
+      const drawH  = radius * 2;
+      const offset = ((spinAngle % (Math.PI * 2)) / (Math.PI * 2)) * drawW;
+      const normOff = ((offset % drawW) + drawW) % drawW;
+
+      for (let x = sx - radius - normOff; x < sx + radius + drawW; x += drawW) {
+        ctx.drawImage(img, x, sy - radius, drawW, drawH);
+      }
+
+      // Limb darkening
+      const ld = ctx.createRadialGradient(sx, sy, radius * 0.45, sx, sy, radius);
+      ld.addColorStop(0,    "rgba(0,0,0,0)");
+      ld.addColorStop(0.72, "rgba(0,0,0,0.12)");
+      ld.addColorStop(1,    "rgba(0,0,0,0.72)");
+      ctx.beginPath();
+      ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = ld;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawSun(W: number, H: number, t: number) {
       const sx = W / 2 - cameraX;
       const sy = H / 2;
       if (sx < -250 || sx > W + 250) return;
@@ -357,11 +412,17 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         g.addColorStop(0, `rgba(255,210,80,${a})`); g.addColorStop(1, "rgba(255,100,0,0)");
         ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
       }
-      // Body
-      const sg = ctx.createRadialGradient(sx - 10, sy - 10, 3, sx, sy, 38);
-      sg.addColorStop(0, "#fffde6"); sg.addColorStop(0.35, "#ffe566");
-      sg.addColorStop(0.75, "#ff8c00"); sg.addColorStop(1, "rgba(255,50,0,0.4)");
-      ctx.beginPath(); ctx.arc(sx, sy, 38, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
+
+      // Body — texture if loaded, else gradient fallback
+      const sunImg = textures.get(SUN_TEX_SRC);
+      if (sunImg && sunImg.complete && sunImg.naturalWidth > 0) {
+        drawSphereTexture(sx, sy, 38, sunImg, t * 0.4);
+      } else {
+        const sg = ctx.createRadialGradient(sx - 10, sy - 10, 3, sx, sy, 38);
+        sg.addColorStop(0, "#fffde6"); sg.addColorStop(0.35, "#ffe566");
+        sg.addColorStop(0.75, "#ff8c00"); sg.addColorStop(1, "rgba(255,50,0,0.4)");
+        ctx.beginPath(); ctx.arc(sx, sy, 38, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
+      }
 
       // "Me" label
       if (sx > -100 && sx < W + 100) {
@@ -413,7 +474,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       }
     }
 
-    function drawBody(b: SpaceBody, W: number, H: number, t: number) {
+    function drawBody(b: SpaceBody, idx: number, W: number, H: number, t: number) {
       const sx = W / 2 + b.worldX - cameraX;
       const sy = H / 2 + b.worldY;
       if (sx < -b.radius - 100 || sx > W + b.radius + 100) return;
@@ -424,10 +485,15 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       ctx.beginPath(); ctx.arc(sx, sy, b.radius * 3.5, 0, Math.PI * 2);
       ctx.fillStyle = g; ctx.fill();
 
-      // Body
-      const bg = ctx.createRadialGradient(sx - b.radius * 0.3, sy - b.radius * 0.35, b.radius * 0.05, sx, sy, b.radius);
-      bg.addColorStop(0, b.color + "ff"); bg.addColorStop(0.55, b.color + "cc"); bg.addColorStop(1, b.color + "55");
-      ctx.beginPath(); ctx.arc(sx, sy, b.radius, 0, Math.PI * 2); ctx.fillStyle = bg; ctx.fill();
+      // Body — texture if loaded, else gradient fallback
+      const planetImg = textures.get(BODY_TEX_SRCS[idx] ?? "");
+      if (planetImg && planetImg.complete && planetImg.naturalWidth > 0) {
+        drawSphereTexture(sx, sy, b.radius, planetImg, t * (0.08 + idx * 0.004) + idx * 0.9);
+      } else {
+        const bg = ctx.createRadialGradient(sx - b.radius * 0.3, sy - b.radius * 0.35, b.radius * 0.05, sx, sy, b.radius);
+        bg.addColorStop(0, b.color + "ff"); bg.addColorStop(0.55, b.color + "cc"); bg.addColorStop(1, b.color + "55");
+        ctx.beginPath(); ctx.arc(sx, sy, b.radius, 0, Math.PI * 2); ctx.fillStyle = bg; ctx.fill();
+      }
 
       // Ring
       if (b.hasRing) {
@@ -711,10 +777,10 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       drawStars(W, H);
       drawAsteroidBelt(W, H);
       drawWaypoints(W, H);
-      drawSun(W, H);
-
       const t = now / 1000;
-      for (const b of BODIES) drawBody(b, W, H, t);
+      drawSun(W, H, t);
+
+      for (let i = 0; i < BODIES.length; i++) drawBody(BODIES[i], i, W, H, t);
 
       drawShip(W, H, speed, shipScaleX);
 
