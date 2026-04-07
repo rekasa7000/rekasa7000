@@ -3,301 +3,64 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Galaxy2D } from "./galaxy-2d";
+import { ENTRIES, SKILLS as CAREER_SKILLS } from "@/lib/career-data";
 
-// ── Work Experience ───────────────────────────────────────────────────────────
+// ── Planet / education / project data derived from career-data.ts ─────────────
 
-const PLANET_DATA = [
-  {
-    id: "kloudtech-intern",
-    name: "Kloudtech Corp",
-    role: "Software Engineering Intern",
-    period: "Oct 2023 – Jun 2024",
-    color: 0x8fbc5a,
-    emissive: 0x3a6010,
-    size: 1.2,
-    orbitRadius: 10,
-    speed: 0.005,
-    inc: 0.18,
-    rotY: 0.0,
-    kind: "work" as const,
-    description: [
-      "Software Engineering Intern | Oct 2023 – Jun 2024",
-      "IoT platform development and cybersecurity",
-      "Enhanced and maintained company web application",
-      "Gained hands-on embedded systems experience",
-    ],
-  },
-  {
-    id: "revearth",
-    name: "RevEarth",
-    role: "Full-Stack Developer (Freelance)",
-    period: "Aug 2025 – Dec 2025",
-    color: 0x4ae27a,
-    emissive: 0x1a7030,
-    size: 1.6,
-    orbitRadius: 16,
-    speed: 0.003,
-    inc: 0.22,
-    rotY: 0.9,
-    kind: "work" as const,
-    description: [
-      "Carbon footprint tracking app for Philippine orgs",
-      "Next.js 15 · React 19 · PostgreSQL · Prisma ORM",
-      "EPA / IPCC AR5 emission factor calculations",
-      "Automated PDF & Excel reporting with Recharts",
-    ],
-  },
-  {
-    id: "kloudtech-swe",
-    name: "Kloudtech Corp",
-    role: "Software Engineer",
-    period: "Jun 2024 – Present",
-    color: 0x4a90e2,
-    emissive: 0x183060,
-    size: 2.0,
-    orbitRadius: 24,
-    speed: 0.002,
-    inc: 0.12,
-    rotY: 1.8,
-    kind: "work" as const,
-    description: [
-      "Software Engineer | Jun 2024 – Present",
-      "Led team of 4 across 2 major platform versions",
-      "KloudTrack IoT v1→v2 on AWS (IoT Core, S3, EC2)",
-      "MQTT/TLS · Socket.IO · React 19 · TanStack · Mapbox GL",
-      "90%+ LRU cache hit rate · <100ms MQTT latency",
-      "25+ weather stations · multi-tenant SaaS · CI/CD",
-    ],
-  },
-  {
-    id: "concentrix",
-    name: "Concentrix",
-    role: "Software Developer",
-    period: "Aug 2025 – Present",
-    color: 0xe2a84a,
-    emissive: 0x704010,
-    size: 2.4,
-    orbitRadius: 33,
-    speed: 0.0015,
-    inc: 0.28,
-    rotY: 0.5,
-    kind: "work" as const,
-    description: [
-      "Software Developer | Aug 2025 – Present",
-      "Zendesk integration for Polyglot translation platform",
-      "OAuth 2.0 · Azure AD B2C · WebSocket · SignalR",
-      "TypeScript DDD migration · 18-state Shopee FSM",
-      "AWS Lambda for MediGuide insurance policy API",
-      "Python CLI: 10K+ tickets migrated, 80% time saved",
-    ],
-  },
-];
+const PLANET_DATA = ENTRIES.filter(e => e.kind === "work").map(e => ({
+  id: e.id,
+  name: e.shortName ?? e.name,
+  role: e.title,
+  period: e.period!,
+  color: e.color3d,
+  emissive: e.emissive,
+  size: e.size3d,
+  orbitRadius: e.orbitRadius,
+  speed: e.speed3d,
+  inc: e.inc,
+  rotY: e.rotY,
+  tex: e.tex,
+  kind: "work" as const,
+  description: e.shortDesc,
+}));
 
-// ── Education ─────────────────────────────────────────────────────────────────
+const EDUCATION_DATA = ENTRIES.filter(e => e.kind === "education").map(e => ({
+  id: e.id,
+  name: e.name,
+  short: e.shortName ?? e.name,
+  degree: e.title,
+  honor: "Cum Laude",
+  period: e.period!,
+  color: e.color3d,
+  emissive: e.emissive,
+  size: e.size3d,
+  orbitRadius: e.orbitRadius,
+  speed: e.speed3d,
+  inc: e.inc,
+  rotY: e.rotY,
+  tex: e.tex,
+  hasRing: e.hasRing,
+  kind: "education" as const,
+  description: e.shortDesc,
+}));
 
-const EDUCATION_DATA = [
-  {
-    id: "bpsu",
-    name: "Bataan Peninsula State University",
-    short: "BPSU",
-    degree: "BS Computer Science",
-    honor: "Cum Laude",
-    period: "2020 – 2024",
-    color: 0xf5c842,
-    emissive: 0x7a5800,
-    size: 1.9,
-    orbitRadius: 44,
-    speed: 0.0011,
-    inc: 0.48,
-    rotY: 1.2,
-    kind: "education" as const,
-    description: [
-      "BS Computer Science · Major in Software Development",
-      "Graduated Cum Laude · GPA 3.63 · Dean's List 2020–2024",
-      "Thesis: CultureConnect — social media with collaborative filtering",
-      "Coursework: Software Engineering, DSA, AI, OS, App Dev",
-    ],
-  },
-];
-
-// ── Projects ──────────────────────────────────────────────────────────────────
-
-const PROJECT_DATA = [
-  {
-    id: "cultureconnect",
-    name: "CultureConnect",
-    tagline: "Thesis — social media platform",
-    year: "2024",
-    color: 0xa78bfa,
-    emissive: 0x3a1080,
-    size: 1.1,
-    orbitRadius: 60,
-    speed: 0.00085,
-    inc: 0.42,
-    rotY: 0.3,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/cultureconnect",
-    description: [
-      "Social media platform with collaborative filtering",
-      "Led team of developers for thesis project",
-      "TypeScript · React · PostgreSQL · Express · Node.js",
-    ],
-  },
-  {
-    id: "kloudtrack",
-    name: "KloudTrack",
-    tagline: "IoT weather & fleet platform",
-    year: "2024",
-    color: 0x4fc3f7,
-    emissive: 0x0d4a70,
-    size: 1.0,
-    orbitRadius: 67,
-    speed: 0.00078,
-    inc: 0.32,
-    rotY: 0.6,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/kloudtrack",
-    description: [
-      "Real-time weather & fleet data from IoT stations",
-      "Web dashboard for DRRM government offices",
-      "React · TypeScript · Node.js · PostgreSQL · AWS",
-    ],
-  },
-  {
-    id: "logcha",
-    name: "Logcha",
-    tagline: "Time tracking for interns",
-    year: "2024",
-    color: 0x80cbc4,
-    emissive: 0x1a5a55,
-    size: 0.85,
-    orbitRadius: 73,
-    speed: 0.00072,
-    inc: 0.58,
-    rotY: 2.2,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/logcha",
-    description: ["Simple and modern time tracking for interns & OJTs", "React · TypeScript · TanStack · Go · Fiber"],
-  },
-  {
-    id: "hananai",
-    name: "HananAI",
-    tagline: "AI breakfast companion",
-    year: "2024",
-    color: 0xf48fb1,
-    emissive: 0x6a1040,
-    size: 0.85,
-    orbitRadius: 79,
-    speed: 0.00065,
-    inc: 0.7,
-    rotY: 3.0,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/hananai",
-    description: [
-      "AI agent inspired by Hanan, Tagalog goddess of morning",
-      "Conversational breakfast companion",
-      "Python · Google Gemini",
-    ],
-  },
-  {
-    id: "databox",
-    name: "Databox",
-    tagline: "Desktop time management app",
-    year: "2022",
-    color: 0xce93d8,
-    emissive: 0x4a0070,
-    size: 0.8,
-    orbitRadius: 85,
-    speed: 0.0006,
-    inc: 0.36,
-    rotY: 2.5,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/databox",
-    description: [
-      "Led team creating desktop time management app",
-      "Scheduler, progress tracker, background notifications",
-      "C# · .NET · MySQL",
-    ],
-  },
-  {
-    id: "knowt",
-    name: "Knowt",
-    tagline: "Article summarization with ML",
-    year: "2023",
-    color: 0xa5d6a7,
-    emissive: 0x1a5a20,
-    size: 0.8,
-    orbitRadius: 90,
-    speed: 0.00055,
-    inc: 0.5,
-    rotY: 1.6,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/knowt",
-    description: [
-      "Led team building article summarization web app",
-      "ML models and sentiment analysis",
-      "Python · Flask · Firebase",
-    ],
-  },
-  {
-    id: "jobowl",
-    name: "Jobowl",
-    tagline: "Desktop job application tracker",
-    year: "2024",
-    color: 0xef9a9a,
-    emissive: 0x6a1010,
-    size: 0.75,
-    orbitRadius: 95,
-    speed: 0.0005,
-    inc: 0.44,
-    rotY: 1.4,
-    kind: "project" as const,
-    github: "github.com/rekasa7000/jobowl",
-    description: [
-      "Desktop job tracker with intuitive GNOME GUI",
-      "Track applications, manage statuses & search",
-      "Rust · GTK4",
-    ],
-  },
-];
-
-// ── Skills asteroid belt ───────────────────────────────────────────────────────
-
-const SKILLS = [
-  "TypeScript",
-  "JavaScript",
-  "Python",
-  "Go",
-  "C#",
-  "Rust",
-  "PHP",
-  "Java",
-  "React",
-  "Next.js",
-  "Vue.js",
-  "Tailwind CSS",
-  "Angular",
-  "Svelte",
-  "Node.js",
-  "NestJS",
-  "FastAPI",
-  "Flask",
-  "Gin",
-  "Express",
-  "PostgreSQL",
-  "MongoDB",
-  "MySQL",
-  "Redis",
-  "Prisma",
-  "Firebase",
-  "Supabase",
-  "AWS",
-  "Docker",
-  "GitHub Actions",
-  "Vercel",
-  "Figma",
-  "Git",
-];
+const PROJECT_DATA = ENTRIES.filter(e => e.kind === "project").map(e => ({
+  id: e.id,
+  name: e.name,
+  tagline: e.title,
+  year: e.period,
+  color: e.color3d,
+  emissive: e.emissive,
+  size: e.size3d,
+  orbitRadius: e.orbitRadius,
+  speed: e.speed3d,
+  inc: e.inc,
+  rotY: e.rotY,
+  tex: e.tex,
+  kind: "project" as const,
+  github: e.github,
+  description: e.shortDesc,
+}));
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -577,7 +340,7 @@ async function buildScene(): Promise<SceneHandle> {
     y: number;
   };
   const asteroids: AsteroidDatum[] = [];
-  const ASTEROID_COUNT = SKILLS.length * 4;
+  const ASTEROID_COUNT = CAREER_SKILLS.length * 4;
   for (let i = 0; i < ASTEROID_COUNT; i++) {
     const angle = (i / ASTEROID_COUNT) * Math.PI * 2 + Math.random() * 0.5;
     const radius = 19.5 + (Math.random() - 0.5) * 5;
@@ -590,8 +353,8 @@ async function buildScene(): Promise<SceneHandle> {
     mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
     scene.add(mesh);
     let label: InstanceType<typeof THREE.Sprite> | null = null;
-    if (i < SKILLS.length) {
-      label = makeSprite(SKILLS[i], "#7799cc", 16, 0.65);
+    if (i < CAREER_SKILLS.length) {
+      label = makeSprite(CAREER_SKILLS[i], "#7799cc", 16, 0.65);
       scene.add(label);
     }
     asteroids.push({ mesh, label, angle, radius, speed: 0.0007 + Math.random() * 0.001, y });

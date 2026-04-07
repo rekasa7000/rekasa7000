@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ENTRIES, SKILLS as CAREER_SKILLS } from "@/lib/career-data";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -28,6 +29,7 @@ type SpaceBody = {
   color: string;
   radius: number;
   hasRing?: boolean;
+  tex: string;
   satellites?: Satellite[];
 };
 
@@ -37,175 +39,39 @@ type Waypoint = { x: number; text: string };
 
 const WORLD_END = 47000;
 
-const BODIES: SpaceBody[] = [
-  // ── Work ──────────────────────────────────────────────────────────────────
-  {
-    worldX: 3500, worldY: -80, kind: "work",
-    name: "Kloudtech", title: "Software Engineer (+ Intern)",
-    sub: "Kloudtech Corporation · Balanga City, Bataan",
-    period: "Oct 2023 – Present",
-    color: "#4a90e2", radius: 90,
-    desc: "Led team of 4 devs across 2 major platform versions. KloudTrack IoT: MQTT/TLS, Socket.IO, AWS (IoT Core, S3, EC2), React 19, TanStack, Mapbox GL. 90%+ LRU cache, <100ms MQTT latency, 25+ weather stations.",
-    satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 120, speed: 0.42, offset: 0.0  },
-      { label: "React 19",   color: "#61dafb", orbitR: 134, speed: 0.34, offset: 1.2  },
-      { label: "MQTT",       color: "#f97316", orbitR: 148, speed: 0.27, offset: 2.4  },
-      { label: "AWS",        color: "#ff9900", orbitR: 162, speed: 0.21, offset: 0.8  },
-      { label: "Docker",     color: "#2496ed", orbitR: 127, speed: 0.38, offset: 3.6  },
-      { label: "Socket.IO",  color: "#25c2a0", orbitR: 141, speed: 0.29, offset: 1.6  },
-      { label: "TanStack",   color: "#f59e0b", orbitR: 155, speed: 0.23, offset: 4.8  },
-      { label: "Tailwind",   color: "#06b6d4", orbitR: 113, speed: 0.48, offset: 2.0  },
-      { label: "Mapbox GL",  color: "#4264fb", orbitR: 176, speed: 0.18, offset: 5.5  },
-    ],
-  },
-  {
-    worldX: 8000, worldY: 70, kind: "work",
-    name: "Concentrix", title: "Software Developer",
-    sub: "Concentrix · Quezon City, Metro Manila",
-    period: "Aug 2025 – Present",
-    color: "#e2a84a", radius: 78,
-    desc: "Zendesk connector for Polyglot translation platform — OAuth 2.0/Azure AD B2C, WebSocket/SignalR. TypeScript DDD migration, 18-state Shopee FSM. AWS Lambda for MediGuide insurance API. Python CLI: 10K+ tickets migrated, zero data loss.",
-    satellites: [
-      { label: "TypeScript",  color: "#3b82f6", orbitR: 112, speed: 0.46, offset: 0.0  },
-      { label: "OAuth 2.0",   color: "#ef4444", orbitR: 124, speed: 0.38, offset: 1.1  },
-      { label: "Azure AD",    color: "#0078d4", orbitR: 136, speed: 0.30, offset: 2.3  },
-      { label: "Python",      color: "#ffd43b", orbitR: 118, speed: 0.42, offset: 3.5  },
-      { label: "AWS Lambda",  color: "#ff9900", orbitR: 130, speed: 0.35, offset: 0.5  },
-      { label: "SignalR",     color: "#84cc16", orbitR: 142, speed: 0.26, offset: 4.7  },
-      { label: "Prisma ORM",  color: "#7c3aed", orbitR: 108, speed: 0.52, offset: 1.9  },
-    ],
-  },
-  {
-    worldX: 12500, worldY: -55, kind: "work",
-    name: "RevEarth", title: "Full-Stack Developer (Freelance)",
-    sub: "RevEarth GHG Emissions · Balanga City, Bataan",
-    period: "Aug 2025 – Dec 2025",
-    color: "#22c55e", radius: 70,
-    desc: "Carbon footprint tracker for Philippine orgs. 21 API endpoints, 13 DB models. EPA/IPCC AR5/DOE 2024 emission factors. Better-Auth OAuth 2.0, automated PDF/Excel reporting, AWS Amplify deployment.",
-    satellites: [
-      { label: "Next.js 15",   color: "#eeeeee", orbitR: 105, speed: 0.48, offset: 0.0  },
-      { label: "React 19",     color: "#61dafb", orbitR: 116, speed: 0.40, offset: 1.3  },
-      { label: "PostgreSQL",   color: "#4169e1", orbitR: 128, speed: 0.32, offset: 2.6  },
-      { label: "TypeScript",   color: "#3b82f6", orbitR: 110, speed: 0.44, offset: 0.7  },
-      { label: "Prisma ORM",   color: "#7c3aed", orbitR: 122, speed: 0.36, offset: 3.8  },
-      { label: "Better-Auth",  color: "#ec4899", orbitR: 134, speed: 0.28, offset: 5.1  },
-      { label: "AWS Amplify",  color: "#ff9900", orbitR: 100, speed: 0.55, offset: 1.0  },
-    ],
-  },
-  // ── Education ──────────────────────────────────────────────────────────────
-  {
-    worldX: 19000, worldY: 45, kind: "education",
-    name: "BPSU", title: "BS Computer Science — Cum Laude",
-    sub: "Bataan Peninsula State University",
-    period: "2020 – Sep 2024 · GPA 3.63",
-    color: "#facc15", radius: 100, hasRing: true,
-    desc: "Bachelor of Science in Computer Science, Major in Software Development. Graduated Cum Laude, Dean's List 2020–2024. Thesis: CultureConnect (social media with collaborative filtering).",
-    satellites: [
-      { label: "Software Eng",   color: "#60a5fa", orbitR: 138, speed: 0.30, offset: 0.0, size: 3.5 },
-      { label: "Algorithms",     color: "#f97316", orbitR: 152, speed: 0.25, offset: 1.5, size: 3.5 },
-      { label: "AI / ML",        color: "#a78bfa", orbitR: 166, speed: 0.20, offset: 3.0, size: 3.5 },
-      { label: "Networking",     color: "#34d399", orbitR: 130, speed: 0.36, offset: 4.5, size: 3.5 },
-      { label: "OS & Systems",   color: "#fb923c", orbitR: 180, speed: 0.16, offset: 0.8, size: 3.5 },
-    ],
-  },
-  // ── Projects ───────────────────────────────────────────────────────────────
-  {
-    worldX: 24000, worldY: -70, kind: "project",
-    name: "CultureConnect", title: "Thesis — Social Media Platform",
-    period: "2024",
-    color: "#a78bfa", radius: 60,
-    desc: "Led team developing social media platform with collaborative filtering algorithms for content recommendation.",
-    satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 90,  speed: 0.52, offset: 0.0,  size: 3 },
-      { label: "React",      color: "#61dafb", orbitR: 102, speed: 0.44, offset: 1.2,  size: 3 },
-      { label: "PostgreSQL", color: "#4169e1", orbitR: 96,  speed: 0.48, offset: 2.4,  size: 3 },
-      { label: "Express",    color: "#aaaaaa", orbitR: 110, speed: 0.38, offset: 3.6,  size: 3 },
-      { label: "Node.js",    color: "#68a063", orbitR: 118, speed: 0.33, offset: 5.0,  size: 3 },
-    ],
-  },
-  {
-    worldX: 29500, worldY: 80, kind: "project",
-    name: "Knowt", title: "Article Summarization App",
-    period: "2023",
-    color: "#86efac", radius: 50,
-    desc: "Led team building article summarization web app with ML models and sentiment analysis.",
-    satellites: [
-      { label: "Python",   color: "#ffd43b", orbitR: 78,  speed: 0.55, offset: 0.0, size: 3 },
-      { label: "Flask",    color: "#aaaaaa", orbitR: 92,  speed: 0.46, offset: 1.5, size: 3 },
-      { label: "Firebase", color: "#ffca28", orbitR: 84,  speed: 0.50, offset: 3.0, size: 3 },
-    ],
-  },
-  {
-    worldX: 34500, worldY: -60, kind: "project",
-    name: "Databox", title: "Desktop Time Management App",
-    period: "2022",
-    color: "#c084fc", radius: 50,
-    desc: "Led team creating desktop time management application with scheduler and progress tracker.",
-    satellites: [
-      { label: "C#",    color: "#9b4993", orbitR: 78,  speed: 0.54, offset: 0.0, size: 3 },
-      { label: ".NET",  color: "#512bd4", orbitR: 92,  speed: 0.46, offset: 1.6, size: 3 },
-      { label: "MySQL", color: "#4479a1", orbitR: 84,  speed: 0.50, offset: 3.2, size: 3 },
-    ],
-  },
-  {
-    worldX: 38500, worldY: 75, kind: "project",
-    name: "KloudTrack", title: "IoT Fleet / Weather Platform",
-    period: "2024",
-    color: "#60a5fa", radius: 52,
-    desc: "Real-time weather & fleet tracking for DRRM offices. ESP32 firmware, MQTT, AWS IoT Core, multi-tenant SaaS.",
-    satellites: [
-      { label: "React",     color: "#61dafb", orbitR: 82,  speed: 0.52, offset: 0.0, size: 3 },
-      { label: "Node.js",   color: "#68a063", orbitR: 96,  speed: 0.44, offset: 2.0, size: 3 },
-      { label: "AWS",       color: "#ff9900", orbitR: 88,  speed: 0.48, offset: 4.0, size: 3 },
-    ],
-  },
-  {
-    worldX: 42000, worldY: -55, kind: "project",
-    name: "Logcha", title: "Time Tracker for Interns",
-    period: "2024",
-    color: "#34d399", radius: 45,
-    desc: "Simple and modern time tracking app for interns & OJTs. React, TypeScript, TanStack, Go, Fiber.",
-    satellites: [
-      { label: "Go",     color: "#00acd7", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
-      { label: "React",  color: "#61dafb", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
-    ],
-  },
-  {
-    worldX: 44800, worldY: 60, kind: "project",
-    name: "HananAI", title: "AI Breakfast Companion",
-    period: "2024",
-    color: "#fb923c", radius: 45,
-    desc: "AI agent inspired by Hanan, Tagalog goddess of morning. Conversational breakfast companion with Python & Google Gemini.",
-    satellites: [
-      { label: "Python", color: "#ffd43b", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
-      { label: "Gemini", color: "#4285f4", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
-    ],
-  },
-];
+// Derive planets from the single source of truth in career-data.ts
+const BODIES: SpaceBody[] = ENTRIES.map(e => ({
+  worldX:    e.worldX,
+  worldY:    e.worldY,
+  kind:      e.kind as BodyKind,
+  name:      e.shortName ?? e.name,
+  title:     e.title,
+  sub:       e.sub,
+  period:    e.period,
+  desc:      e.shortDesc.join(" · "),
+  color:     e.color,
+  radius:    e.radius,
+  hasRing:   e.hasRing,
+  tex:       e.tex,
+  satellites: e.satellites,
+}));
+
+const SUN_TEX_SRC = "/planets/2k_sun.jpg";
 
 const WAYPOINTS: Waypoint[] = [
   { x: 900,   text: "scroll down to fly through my career →" },
-  { x: 2000,  text: "software engineer · full-stack · systems" },
-  { x: 5800,  text: "building production systems since 2023." },
-  { x: 10200, text: "still out here in the black…" },
+  { x: 2500,  text: "software engineer · full-stack · systems" },
+  { x: 5500,  text: "building production systems since 2023." },
+  { x: 8500,  text: "still out here in the black…" },
   { x: 15000, text: "— asteroid belt — skills & languages —" },
   { x: 17200, text: "education sector ahead." },
   { x: 21500, text: "graduated cum laude, 2024." },
-  { x: 26500, text: "academic projects start here." },
-  { x: 31500, text: "still building things." },
-  { x: 35500, text: "not stopping yet…" },
+  { x: 25500, text: "academic projects start here." },
+  { x: 30000, text: "still building things." },
+  { x: 35000, text: "not stopping yet…" },
   { x: 39500, text: "personal projects out here." },
-  { x: 43000, text: "almost at the edge of known space." },
+  { x: 43500, text: "almost at the edge of known space." },
   { x: 46200, text: "— end of known universe —" },
-];
-
-// Skills asteroid belt  (worldX 15500–17000)
-const SKILLS = [
-  "TypeScript", "JavaScript", "Python", "Go", "C#", "Java", "PHP", "SQL",
-  "React", "Next.js", "Vue", "Nuxt", "Node.js", "Express", ".NET", "Flask", "Fiber",
-  "PostgreSQL", "MySQL", "MongoDB", "Redis", "Prisma",
-  "Docker", "AWS", "GitHub Actions", "Supabase", "Firebase",
-  "MQTT", "WebSocket", "OAuth 2.0", "Tailwind CSS", "Three.js",
 ];
 
 const BELT_START = 15500;
@@ -219,25 +85,10 @@ const ASTEROIDS = Array.from({ length: 130 }, (_, i) => {
   const x = BELT_START + (s % (BELT_END - BELT_START));
   s = lcg(s); const y = (s % 320) - 160;
   s = lcg(s); const sz = 1.5 + (s % 30) / 10;
-  s = lcg(s); const skill = i < SKILLS.length ? SKILLS[i % SKILLS.length] : null;
+  s = lcg(s); const skill = i < CAREER_SKILLS.length ? CAREER_SKILLS[i % CAREER_SKILLS.length] : null;
   s = lcg(s); const bright = 0.4 + (s % 50) / 100;
   return { x, y, sz, skill, bright };
 });
-
-// Planet / sun texture sources (same assets as 3-D mode)
-const BODY_TEX_SRCS = [
-  "/planets/2k_neptune.jpg",           // Kloudtech
-  "/planets/2k_venus_surface.jpg",      // Concentrix
-  "/planets/2k_mars.jpg",               // RevEarth
-  "/planets/2k_uranus.jpg",             // BPSU
-  "/planets/2k_makemake_fictional.jpg", // CultureConnect
-  "/planets/2k_ceres_fictional.jpg",    // Knowt
-  "/planets/2k_eris_fictional.jpg",     // Databox
-  "/planets/2k_haumea_fictional.jpg",   // KloudTrack
-  "/planets/2k_mars.jpg",               // Logcha
-  "/planets/2k_neptune.jpg",            // HananAI
-];
-const SUN_TEX_SRC = "/planets/2k_sun.jpg";
 
 // Nebula clouds
 const NEBULAE = [
@@ -277,7 +128,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
 
     // ── Texture preload ────────────────────────────────────────────────────
     const textures = new Map<string, HTMLImageElement>();
-    for (const src of [...new Set([...BODY_TEX_SRCS, SUN_TEX_SRC])]) {
+    for (const src of [...new Set([...ENTRIES.map(e => e.tex), SUN_TEX_SRC])]) {
       const img = new Image();
       img.onload = () => textures.set(src, img);
       img.src = src;
@@ -486,7 +337,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       ctx.fillStyle = g; ctx.fill();
 
       // Body — texture if loaded, else gradient fallback
-      const planetImg = textures.get(BODY_TEX_SRCS[idx] ?? "");
+      const planetImg = textures.get(b.tex);
       if (planetImg && planetImg.complete && planetImg.naturalWidth > 0) {
         drawSphereTexture(sx, sy, b.radius, planetImg, t * (0.08 + idx * 0.004) + idx * 0.9);
       } else {
@@ -499,12 +350,10 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       if (b.hasRing) {
         ctx.save(); ctx.translate(sx, sy); ctx.scale(1, 0.26);
         ctx.beginPath(); ctx.arc(0, 0, b.radius * 1.9, 0, Math.PI * 2);
-        ctx.restore();
         ctx.strokeStyle = b.color + "70"; ctx.lineWidth = 3; ctx.stroke();
-        ctx.save(); ctx.translate(sx, sy); ctx.scale(1, 0.26);
         ctx.beginPath(); ctx.arc(0, 0, b.radius * 1.5, 0, Math.PI * 2);
-        ctx.restore();
         ctx.strokeStyle = b.color + "40"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.restore();
       }
 
       // Label — fade in as it approaches screen center
