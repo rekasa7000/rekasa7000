@@ -252,14 +252,16 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       ctx.restore();
     }
 
+    const SUN_R = 85;   // prominent star, dwarfs ships
+
     function drawSun(W: number, H: number, t: number) {
       const sx = W / 2 - cameraX;
       const sy = H / 2;
-      if (sx < -250 || sx > W + 250) return;
+      if (sx < -(SUN_R + 400) || sx > W + SUN_R + 400) return;
 
-      // Corona layers
-      for (const [r, a] of [[180, 0.03], [110, 0.08], [70, 0.18]] as [number,number][]) {
-        const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
+      // Corona layers — large soft halos
+      for (const [r, a] of [[420, 0.025], [260, 0.055], [160, 0.10], [110, 0.20]] as [number,number][]) {
+        const g = ctx.createRadialGradient(sx, sy, SUN_R * 0.4, sx, sy, r);
         g.addColorStop(0, `rgba(255,210,80,${a})`); g.addColorStop(1, "rgba(255,100,0,0)");
         ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
       }
@@ -267,19 +269,19 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       // Body — texture if loaded, else gradient fallback
       const sunImg = textures.get(SUN_TEX_SRC);
       if (sunImg && sunImg.complete && sunImg.naturalWidth > 0) {
-        drawSphereTexture(sx, sy, 38, sunImg, t * 0.4);
+        drawSphereTexture(sx, sy, SUN_R, sunImg, t * 0.4);
       } else {
-        const sg = ctx.createRadialGradient(sx - 10, sy - 10, 3, sx, sy, 38);
+        const sg = ctx.createRadialGradient(sx - 22, sy - 22, 6, sx, sy, SUN_R);
         sg.addColorStop(0, "#fffde6"); sg.addColorStop(0.35, "#ffe566");
         sg.addColorStop(0.75, "#ff8c00"); sg.addColorStop(1, "rgba(255,50,0,0.4)");
-        ctx.beginPath(); ctx.arc(sx, sy, 38, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
+        ctx.beginPath(); ctx.arc(sx, sy, SUN_R, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
       }
 
       // "Me" label
       if (sx > -100 && sx < W + 100) {
         ctx.globalAlpha = Math.max(0, 1 - Math.abs(sx - W / 2) / (W * 0.6));
         ctx.fillStyle = "#ffe566"; ctx.font = "bold 13px monospace";
-        ctx.textAlign = "center"; ctx.fillText("— me —", sx, sy + 58);
+        ctx.textAlign = "center"; ctx.fillText("— me —", sx, sy + SUN_R + 20);
         ctx.globalAlpha = 1;
       }
     }
@@ -428,6 +430,8 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       }
     }
 
+    const SHIP_SCALE = 0.30;   // tiny ship, vast star system
+
     function drawShip(W: number, H: number, speed: number, scaleX: number) {
       const cx = W / 2;
       const cy = H / 2 + Math.sin(bobT) * 4;
@@ -435,7 +439,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
 
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.scale(scaleX, 1);
+      ctx.scale(scaleX * SHIP_SCALE, SHIP_SCALE);
       // ship points right (positive-X); scaleX flips it when going left
 
       // ── Dual engine exhausts (drawn first, behind everything) ─────────────
