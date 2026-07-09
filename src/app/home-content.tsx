@@ -381,7 +381,7 @@ export function HomeContent() {
           </div>
           <div className="flex items-center gap-5">
             <span className="meta-label">Playground</span>
-            {["piano", "matrix", "snake"].map((slug) => (
+            {["piano", "matrix", "snake", "farm"].map((slug) => (
               <Link
                 key={slug}
                 href={`/artifacts/${slug}`}

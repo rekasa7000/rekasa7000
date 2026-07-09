@@ -3,11 +3,13 @@ import Link from "next/link";
 import { Piano } from "@/components/artifacts/piano";
 import { Matrix } from "@/components/artifacts/matrix";
 import { Snake } from "@/components/artifacts/snake";
+import { Farm } from "@/components/artifacts/farm";
 
 const artifacts: Record<string, React.ComponentType> = {
   piano: Piano,
   matrix: Matrix,
   snake: Snake,
+  farm: Farm,
 };
 
 export function generateStaticParams() {
