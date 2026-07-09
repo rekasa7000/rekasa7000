@@ -12,25 +12,19 @@ export function DarkModeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // Reserve the space before mount to avoid layout shift
+  if (!mounted) return <span className="icon-btn opacity-0" aria-hidden="true" />;
 
   const isDark = theme === "dark";
 
   return (
-    <div className="fixed bottom-6 left-6 z-[100]">
-      <button
-        onClick={() => setTheme(isDark ? "light" : "dark")}
-        className="jp-toggle"
-        title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      >
-        <div className="toggle-slider">
-          {isDark ? (
-            <Moon className="w-3.5 h-3.5" />
-          ) : (
-            <Sun className="w-3.5 h-3.5" />
-          )}
-        </div>
-      </button>
-    </div>
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="icon-btn"
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+    </button>
   );
 }

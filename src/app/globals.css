@@ -1,583 +1,312 @@
 @import "tailwindcss";
 
-/* Japanese Street Style Theme - Regee Casana Brand */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-hanken), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-jp: var(--font-shippori), var(--font-hanken), serif;
+}
+
+/*
+ * Ink & Washi — quiet Japanese editorial minimalism.
+ * Warm paper surfaces, sumi-ink text, a single vermillion accent.
+ * Ma (間) generous space · Kanso (簡素) simplicity · Shibui (渋い) understated elegance.
+ */
 :root {
-  /* Japanese Anime/Samurai Color Palette */
-  --demon-red: #c41e3a;
-  --water-blue: #4a90e2;
-  --thunder-yellow: #ffd700;
-  --flame-orange: #ff6b35;
-  --wind-teal: #40e0d0;
-  --stone-gray: #708090;
-  --sakura-pink: #ffb7c5;
-  --bamboo-green: #9acd32;
-  --midnight-purple: #483d8b;
-  --steel-silver: #c0c0c0;
-
-  /* Light mode */
-  --bg-primary: #ffffff;
-  --bg-secondary: rgba(255, 255, 255, 0.95);
-  --text-primary: #000000;
-  --text-secondary: #666666;
-  --border-color: #e5e7eb;
-
-  /* Japanese pattern effects */
-  --katana-glow: 0 0 15px rgba(192, 192, 192, 0.6);
-  --flame-glow: 0 0 20px rgba(255, 107, 53, 0.4);
-  --water-glow: 0 0 15px rgba(74, 144, 226, 0.4);
+  --bg-primary: #f7f4ee;
+  --bg-secondary: #fdfbf6;
+  --bg-hover: rgba(33, 30, 26, 0.035);
+  --text-primary: #211e1a;
+  --text-secondary: #6b665d;
+  --text-tertiary: #9a948a;
+  --border-color: #e4dfd4;
+  --border-strong: #cbc4b5;
+  --accent: #b23c2a;
+  --accent-soft: rgba(178, 60, 42, 0.07);
 }
 
-/* Dark mode - Night/Demon theme */
 .dark {
-  --bg-primary: #0f0e17;
-  --bg-secondary: rgba(15, 14, 23, 0.95);
-  --text-primary: #f0f0f0;
-  --text-secondary: #b0b0b0;
-  --border-color: #2a2a3a;
-
-  /* Enhanced glow effects for dark mode */
-  --katana-glow: 0 0 25px rgba(192, 192, 192, 1);
-  --flame-glow: 0 0 30px rgba(255, 107, 53, 0.8);
-  --water-glow: 0 0 25px rgba(74, 144, 226, 0.8);
-  --demon-glow: 0 0 35px rgba(196, 30, 58, 0.6);
-  --moon-glow: 0 0 40px rgba(192, 192, 192, 0.5);
-  --sun-glow: 0 0 40px rgba(255, 215, 0, 0.6);
+  --bg-primary: #171512;
+  --bg-secondary: #1e1c18;
+  --bg-hover: rgba(235, 230, 220, 0.045);
+  --text-primary: #ebe6dc;
+  --text-secondary: #a29c8f;
+  --text-tertiary: #6e6a60;
+  --border-color: #2b2823;
+  --border-strong: #403b32;
+  --accent: #e07856;
+  --accent-soft: rgba(224, 120, 86, 0.09);
 }
 
-/* Dark mode specific adjustments */
-.dark .experience-item:hover {
-  background: linear-gradient(90deg, rgba(196, 30, 58, 0.15), transparent);
-}
+/* ── Base ── */
 
-.dark .project-card:hover {
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), transparent);
-}
-
-.dark .skill-category:hover {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), transparent);
-}
-
-.dark .project-card:hover .text-gray-600 {
-  color: var(--text-secondary) !important;
-}
-
-.dark .project-card:hover .bg-gray-100 {
-  background: var(--demon-red) !important;
-  color: var(--bg-primary) !important;
-}
-
-/* Fix tech badges for dark mode */
-.dark .bg-gray-100 {
-  background: var(--border-color) !important;
-  color: var(--text-primary) !important;
-}
-
-.dark .text-gray-500 {
-  color: var(--text-secondary) !important;
-}
-
-.dark .text-gray-600 {
-  color: var(--text-secondary) !important;
-}
-
-/* Japanese Street Typography Mix */
-.jp-street-text {
-  font-family: var(--font-noto-sans-jp), var(--font-jetbrains-mono), monospace;
-}
-
-/* Japanese Anime/Samurai Accent Utilities */
-.neon-accent {
-  color: var(--demon-red);
-}
-
-.neon-border {
-  border: 1px solid var(--water-blue);
-  position: relative;
-}
-
-/* Traditional Japanese Patterns */
-.jp-pattern-dots {
-  background-image:
-    radial-gradient(circle at 25% 25%, var(--sakura-pink) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, var(--water-blue) 1px, transparent 1px);
-  background-size: 30px 30px, 30px 30px;
-  background-position: 0 0, 15px 15px;
-  opacity: 0.08;
-}
-
-/* Japanese Street Style Hover Effects */
-.street-hover {
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.street-hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: var(--water-blue);
-  transition: left 0.3s ease;
-}
-
-.street-hover:hover::before {
-  left: 0;
-}
-
-.street-hover:hover {
-  color: var(--water-blue);
-  transform: translateX(4px);
-}
-
-/* Experience items */
-.experience-item {
-  transition: background 0.2s ease;
-  padding: 1rem;
-  margin: -1rem;
-  border-radius: 4px;
-  position: relative;
-}
-
-.experience-item:hover {
-  background: rgba(74, 144, 226, 0.04);
-}
-
-.dark .experience-item:hover {
-  background: rgba(74, 144, 226, 0.06);
-}
-
-.experience-item:hover h3 {
-  color: var(--water-blue);
-  transition: color 0.2s ease;
-}
-
-/* Project cards - Sharp angular movement */
-.project-card {
-  transition: all 0.2s ease;
-  padding: 1.5rem;
-  margin: -1.5rem;
-  border-left: 3px solid transparent;
-  position: relative;
-}
-
-.project-card:hover {
-  border-left: 3px solid var(--water-blue);
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.03), transparent);
-  transform: translateY(-4px) translateX(2px);
-}
-
-.project-card:hover h3 {
-  color: var(--demon-red);
-}
-
-/* Skills categories - Clean border animation */
-.skill-category {
-  transition: all 0.2s ease;
-  padding: 1rem;
-  margin: -1rem;
-  border: 1px solid transparent;
-  position: relative;
-}
-
-.skill-category:hover {
-  border: 1px solid var(--thunder-yellow);
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), transparent);
-  transform: translateY(-2px);
-}
-
-.skill-category:hover h3 {
-  color: var(--thunder-yellow);
-}
-
-/* Tech icons - Japanese expandable pill style */
-.tech-icon {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 60px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.5s ease;
-  overflow: hidden;
-}
-
-.tech-icon::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 60px;
-  background: linear-gradient(45deg, var(--water-blue), var(--demon-red));
-  opacity: 0;
-  transition: 0.5s;
-}
-
-.tech-icon::after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  height: 100%;
-  border-radius: 60px;
-  background: linear-gradient(45deg, var(--water-blue), var(--demon-red));
-  transition: 0.5s;
-  filter: blur(15px);
-  z-index: -1;
-  opacity: 0;
-}
-
-.tech-icon:hover {
-  width: 180px;
-  border-color: transparent;
-}
-
-.tech-icon:hover::before {
-  opacity: 1;
-}
-
-.tech-icon:hover::after {
-  opacity: 0.3;
-}
-
-.tech-icon img {
-  transition: 0.5s;
-  transition-delay: 0.25s;
-  z-index: 2;
-  position: relative;
-}
-
-.tech-icon:hover img {
-  transform: scale(0);
-  transition-delay: 0s;
-}
-
-.tech-tooltip {
-  position: absolute;
-  color: #fff;
-  font-size: 1em;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transform: scale(0);
-  transition: 0.5s;
-  transition-delay: 0s;
-  font-family: var(--font-noto-sans-jp), var(--font-jetbrains-mono), monospace;
-  font-weight: 600;
-  z-index: 3;
-}
-
-.tech-icon:hover .tech-tooltip {
-  transform: scale(1);
-  transition-delay: 0.25s;
-}
-
-/* Different gradient combinations for tech categories */
-.tech-icon.frontend::before,
-.tech-icon.frontend::after {
-  background: linear-gradient(45deg, var(--water-blue), var(--wind-teal));
-}
-
-.tech-icon.language::before,
-.tech-icon.language::after {
-  background: linear-gradient(45deg, var(--demon-red), var(--flame-orange));
-}
-
-.tech-icon.backend::before,
-.tech-icon.backend::after {
-  background: linear-gradient(45deg, var(--thunder-yellow), var(--bamboo-green));
-}
-
-.tech-icon.database::before,
-.tech-icon.database::after {
-  background: linear-gradient(45deg, var(--midnight-purple), var(--sakura-pink));
-}
-
-.tech-icon.cloud::before,
-.tech-icon.cloud::after {
-  background: linear-gradient(45deg, var(--stone-gray), var(--steel-silver));
-}
-
-.tech-icon.tool::before,
-.tech-icon.tool::after {
-  background: linear-gradient(45deg, var(--wind-teal), var(--water-blue));
-}
-
-/* Contact links - Clean slide animation */
-.contact-link {
-  transition: all 0.2s ease;
-  text-decoration: none;
-  position: relative;
-  padding: 0.25rem 0.75rem;
-  margin: -0.25rem -0.75rem;
-  border-left: 2px solid transparent;
-}
-
-.contact-link:hover {
-  color: var(--wind-teal);
-  text-decoration: none;
-  border-left: 2px solid var(--wind-teal);
-  background: linear-gradient(90deg, rgba(64, 224, 208, 0.1), transparent);
-  transform: translateX(6px);
-}
-
-/* Simple Japanese Toggle */
-.jp-toggle {
-  width: 60px;
-  height: 30px;
-  background: var(--border-color);
-  border-radius: 15px;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid var(--border-color);
-}
-
-.jp-toggle:hover {
-  transform: translateY(-1px);
-}
-
-.jp-toggle .toggle-slider {
-  width: 26px;
-  height: 26px;
-  background: var(--bg-primary);
-  border-radius: 50%;
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  border: 1px solid var(--border-color);
-}
-
-.dark .jp-toggle {
-  background: var(--demon-red);
-  border-color: var(--demon-red);
-}
-
-.dark .jp-toggle .toggle-slider {
-  left: 31px;
-  background: var(--bg-primary);
-  border-color: var(--demon-red);
-}
-
-/* Blink animation for cursor effect */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-
-.animate-blink {
-  animation: blink 1s step-end infinite;
-}
-
-/* Base styles */
 html {
-  font-family: var(--font-jetbrains-mono), monospace;
   scroll-behavior: smooth;
 }
 
 body {
-  line-height: 1.6;
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-feature-settings: "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-a:hover {
-  transition: all 0.2s ease;
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
 }
 
-/* ── Easter egg: developer mode ── */
-
-html.dark.dev-mode {
-  --bg-primary: #000d00;
-  --bg-secondary: rgba(0, 12, 0, 0.97);
-  --border-color: rgba(0, 255, 65, 0.35);
-  --text-primary: #b8ffb8;
-  --text-secondary: rgba(0, 255, 65, 0.55);
-  --demon-red: #00ff41;
-  --water-blue: #00e870;
-}
-
-html:not(.dark).dev-mode {
-  --bg-primary: #edfff0;
-  --bg-secondary: rgba(220, 255, 228, 0.97);
-  --border-color: rgba(0, 160, 50, 0.35);
-  --text-primary: #042010;
-  --text-secondary: rgba(0, 130, 40, 0.7);
-  --demon-red: #008c28;
-  --water-blue: #007c20;
-}
-
-html.dev-mode .neon-accent {
-  color: #00ff41;
-  text-shadow: 0 0 8px rgba(0, 255, 65, 0.7), 0 0 20px rgba(0, 255, 65, 0.3);
-}
-
-html:not(.dark).dev-mode .neon-accent {
-  color: #007c20;
-  text-shadow: 0 0 6px rgba(0, 160, 50, 0.4);
-}
-
-html.dev-mode .jp-pattern-dots {
-  background-image:
-    radial-gradient(circle at 25% 25%, rgba(0, 255, 65, 0.6) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(0, 255, 65, 0.3) 1px, transparent 1px);
-  opacity: 0.15;
-}
-
-@keyframes glitch {
-  0%, 55%, 100% {
-    transform: translate(0);
-    text-shadow: none;
-    filter: none;
-  }
-  57% {
-    transform: translate(-8px, 3px) skewX(-3deg);
-    text-shadow: 8px 0 rgba(0, 255, 65, 0.9), -4px 0 rgba(255, 0, 64, 0.8);
-    filter: brightness(1.6);
-  }
-  59% {
-    transform: translate(10px, -3px) skewX(3deg);
-    text-shadow: -8px 0 rgba(0, 255, 65, 0.9), 4px 0 rgba(255, 0, 64, 0.8);
-    filter: hue-rotate(90deg) brightness(1.4);
-  }
-  61% {
-    transform: translate(-5px, 1px);
-    text-shadow: 5px 0 rgba(0, 255, 65, 0.6);
-    filter: none;
-  }
-  63% {
-    transform: translate(0);
-    text-shadow: none;
-  }
-}
-
-.easter-egg-glitch {
-  animation: glitch 2.5s infinite;
-}
-
-/* ── Matcha mode ── */
-
-html.dark.matcha-mode {
-  --bg-primary: #080f09;
-  --bg-secondary: rgba(8, 15, 9, 0.97);
-  --border-color: rgba(143, 188, 90, 0.28);
-  --text-primary: #deefc8;
-  --text-secondary: rgba(143, 188, 90, 0.55);
-  --demon-red: #8fbc5a;
-  --water-blue: #7ab648;
-}
-
-html:not(.dark).matcha-mode {
-  --bg-primary: #f4f9ec;
-  --bg-secondary: rgba(238, 248, 224, 0.97);
-  --border-color: rgba(100, 148, 55, 0.3);
-  --text-primary: #1e2e0a;
-  --text-secondary: rgba(80, 120, 30, 0.7);
-  --demon-red: #4a7c18;
-  --water-blue: #3d6e12;
-}
-
-html.matcha-mode .neon-accent {
-  color: #8fbc5a;
-  text-shadow: 0 0 10px rgba(143, 188, 90, 0.5), 0 0 25px rgba(143, 188, 90, 0.2);
-}
-
-html:not(.dark).matcha-mode .neon-accent {
-  color: #3d6e12;
-  text-shadow: 0 0 6px rgba(100, 148, 55, 0.35);
-}
-
-html.matcha-mode .jp-pattern-dots {
-  background-image:
-    radial-gradient(circle at 25% 25%, rgba(143, 188, 90, 0.5) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(143, 188, 90, 0.25) 1px, transparent 1px);
-  opacity: 0.12;
-}
-
-@keyframes matcha-breathe {
-  0%, 100% {
-    text-shadow: 0 0 12px rgba(143, 188, 90, 0.2);
-  }
-  50% {
-    text-shadow: 0 0 30px rgba(143, 188, 90, 0.6), 0 0 60px rgba(143, 188, 90, 0.2);
-  }
-}
-
-.matcha-glow {
-  animation: matcha-breathe 4s ease-in-out infinite;
-}
-
-/* ── Strawberry mode ── */
-
-html.dark.strawberry-mode {
-  --bg-primary: #150409;
-  --bg-secondary: rgba(21, 4, 9, 0.97);
-  --border-color: rgba(255, 80, 120, 0.28);
-  --text-primary: #ffd6e0;
-  --text-secondary: rgba(255, 80, 120, 0.55);
-  --demon-red: #ff5078;
-  --water-blue: #ff3d6b;
-}
-
-html:not(.dark).strawberry-mode {
-  --bg-primary: #fff5f7;
-  --bg-secondary: rgba(255, 240, 245, 0.97);
-  --border-color: rgba(220, 50, 90, 0.28);
-  --text-primary: #3a0010;
-  --text-secondary: rgba(200, 40, 80, 0.7);
-  --demon-red: #d42255;
-  --water-blue: #b81845;
-}
-
-html.strawberry-mode .neon-accent {
-  color: #ff5078;
-  text-shadow: 0 0 8px rgba(255, 80, 120, 0.7), 0 0 20px rgba(255, 80, 120, 0.3);
-}
-
-html:not(.dark).strawberry-mode .neon-accent {
-  color: #c41848;
-  text-shadow: 0 0 6px rgba(220, 50, 90, 0.4);
-}
-
-html.strawberry-mode .jp-pattern-dots {
-  background-image:
-    radial-gradient(circle at 25% 25%, rgba(255, 80, 120, 0.6) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(255, 80, 120, 0.3) 1px, transparent 1px);
-  opacity: 0.14;
-}
-
-@keyframes strawberry-pulse {
-  0%, 100% {
-    text-shadow: 0 0 10px rgba(255, 80, 120, 0.2);
-  }
-  50% {
-    text-shadow: 0 0 28px rgba(255, 80, 120, 0.7), 0 0 55px rgba(255, 80, 120, 0.2);
-  }
-}
-
-.strawberry-glow {
-  animation: strawberry-pulse 3s ease-in-out infinite;
-}
-
-/* ── Role marquee ticker ── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-.marquee-inner {
-  display: inline-flex;
-  animation: marquee 32s linear infinite;
-  will-change: transform;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-inner { animation: none; }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Typography helpers ── */
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+.font-jp {
+  font-family: var(--font-jp);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+/* Small uppercase mono label — section indices, dates, tags */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-tertiary);
+}
+
+/* ── Washi paper grain ── */
+
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.dark .paper-grain {
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+/* ── Links ── */
+
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
+  padding-bottom: 1px;
+}
+
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+.contact-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  transition: border-color 0.25s ease, color 0.25s ease;
+  padding-bottom: 1px;
+}
+
+.contact-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Interactive elements ── */
+
+/* Quiet pill button / chip */
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.chip[data-active="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Primary / secondary editorial buttons */
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: 1px solid var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.btn-ink:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fdfbf6;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* Icon-sized quiet button (theme toggle, nav actions) */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+
+/* Skill chip with icon */
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.skill-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.skill-chip img {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 999px;
+}
+
+/* Hover surface for list rows */
+.row-hover {
+  transition: background-color 0.25s ease;
+  border-radius: 0.5rem;
+}
+
+.row-hover:hover {
+  background: var(--bg-hover);
+}
+
+/* ── Section heading rule ── */
+
+.section-rule {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+}
+
+.section-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+  transform: translateY(-0.4em);
+}
+
+/* ── Vermillion hanko mark (personal seal) ── */
+
+.hanko {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  background: var(--accent);
+  color: #fdfbf6;
+  font-family: var(--font-jp);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0;
+  box-shadow: 0 1px 2px rgba(33, 30, 26, 0.15);
 }

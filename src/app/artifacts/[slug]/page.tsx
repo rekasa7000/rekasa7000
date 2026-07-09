@@ -25,19 +25,17 @@ export default async function ArtifactPage({
 
   return (
     <div
-      className="min-h-screen font-mono"
+      className="min-h-screen"
       style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
     >
       <div
         className="flex items-center justify-between px-6 py-4 border-b"
         style={{ borderColor: "var(--border-color)" }}
       >
-        <Link href="/" className="text-sm neon-accent hover:underline">
-          ← cd ..
+        <Link href="/" className="link-underline text-sm" style={{ color: "var(--text-secondary)" }}>
+          ← Back home
         </Link>
-        <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-          ~/artifacts/{slug}
-        </span>
+        <span className="meta-label">Playground / {slug}</span>
       </div>
       <Component />
     </div>

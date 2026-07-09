@@ -15,61 +15,63 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
       {entries.map((entry, i) => (
         <motion.div
           key={i}
-          className="flex gap-6 pb-10 group"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          className="flex gap-6 group"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.08 }}
+          transition={{ duration: 0.45, ease: "easeOut", delay: i * 0.06 }}
         >
           {/* Left: dot + line */}
           <div className="hidden md:flex flex-col items-center shrink-0 w-3">
-            <motion.div
-              className="w-3 h-3 rounded-full border-2 shrink-0"
-              style={{
-                borderColor: "var(--demon-red)",
-                backgroundColor: "var(--bg-primary)",
-                marginTop: "3px",
-              }}
-              whileHover={{ scale: 1.4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            <div
+              className="w-2 h-2 rounded-full shrink-0 mt-2 transition-transform duration-300 group-hover:scale-150"
+              style={{ backgroundColor: "var(--accent)" }}
             />
             {i < entries.length - 1 && (
               <motion.div
-                className="w-0.5 flex-1 mt-2"
+                className="w-px flex-1 mt-3"
                 style={{ backgroundColor: "var(--border-color)", transformOrigin: "top" }}
                 initial={{ scaleY: 0 }}
                 whileInView={{ scaleY: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 + 0.2 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.06 + 0.2 }}
               />
             )}
           </div>
 
           {/* Content */}
-          <div
-            className="flex-1 grid md:grid-cols-12 gap-8 pb-4 rounded transition-colors duration-200"
-          >
-            <div className="md:col-span-3">
-              <div className="text-sm text-gray-500">{entry.period}</div>
+          <div className="flex-1 grid md:grid-cols-12 gap-3 md:gap-8 pb-14">
+            <div className="md:col-span-3 pt-1">
+              <div className="meta-label">{entry.period}</div>
             </div>
             <div className="md:col-span-9">
-              <h3
-                className="font-semibold mb-1 transition-colors duration-200 group-hover:text-(--water-blue)"
-              >
+              <h3 className="font-display text-xl mb-1" style={{ color: "var(--text-primary)" }}>
                 {entry.title}
               </h3>
-              <div className="text-gray-600 mb-3">{entry.organization}</div>
+              <div className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+                {entry.organization}
+              </div>
               {Array.isArray(entry.description) ? (
-                <ul className="space-y-2">
+                <ul className="space-y-2.5">
                   {entry.description.map((point, j) => (
-                    <li key={j} className="text-sm text-gray-600 flex gap-2">
-                      <span className="neon-accent mt-0.75 shrink-0">▸</span>
+                    <li
+                      key={j}
+                      className="text-sm leading-relaxed flex gap-3"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <span
+                        className="mt-2.5 w-3 h-px shrink-0"
+                        style={{ backgroundColor: "var(--border-strong)" }}
+                        aria-hidden="true"
+                      />
                       <span>{point}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-600">{entry.description}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  {entry.description}
+                </p>
               )}
             </div>
           </div>

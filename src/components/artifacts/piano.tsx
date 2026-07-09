@@ -81,11 +81,11 @@ export function Piano() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-57px)] px-6 py-12 select-none">
       <div className="text-center mb-10">
-        <h2 className="text-2xl font-bold neon-accent mb-2">piano</h2>
+        <h2 className="text-2xl font-bold accent-text mb-2">piano</h2>
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-          white keys: <span className="neon-accent">a s d f g h j k l ;</span>
+          white keys: <span className="accent-text">a s d f g h j k l ;</span>
           &nbsp;·&nbsp; black keys:{" "}
-          <span className="neon-accent">w e t y u o p</span>
+          <span className="accent-text">w e t y u o p</span>
         </p>
       </div>
 
@@ -103,7 +103,7 @@ export function Piano() {
                 width: `calc(${100 / n}% - 2px)`,
                 height: "100%",
                 top: 0,
-                backgroundColor: active ? "var(--water-blue)" : "white",
+                backgroundColor: active ? "var(--accent)" : "white",
                 borderColor: "#ccc",
                 color: active ? "white" : "#aaa",
               }}
@@ -130,7 +130,7 @@ export function Piano() {
                 width: `${blackWidthPct}%`,
                 height: "60%",
                 top: 0,
-                backgroundColor: active ? "var(--water-blue)" : "#111",
+                backgroundColor: active ? "var(--accent)" : "#111",
                 border: "1px solid #333",
                 color: active ? "white" : "#555",
               }}

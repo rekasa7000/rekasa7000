@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ArrowDown } from "lucide-react";
 
 export function ScrollIndicator() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      setIsVisible(scrollPosition < windowHeight * 0.5);
+      setIsVisible(window.scrollY < window.innerHeight * 0.4);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -17,35 +16,24 @@ export function ScrollIndicator() {
   }, []);
 
   const scrollToNextSection = () => {
-    const experienceSection = document.getElementById("experience");
-    if (experienceSection) {
-      experienceSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
   };
 
   if (!isVisible) return null;
 
   return (
-    <div
-      className="fixed right-8 bottom-8 z-40 cursor-pointer"
+    <button
+      className="fixed right-8 bottom-8 z-40 hidden md:flex items-center gap-2.5 cursor-pointer bg-transparent border-0 p-0 transition-colors duration-200"
+      style={{ color: "var(--text-tertiary)" }}
       onClick={scrollToNextSection}
+      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
+      aria-label="Scroll to experience section"
     >
-      <div className="flex items-center space-x-3 text-gray-500 hover:text-black transition-colors">
-        <span className="text-sm font-mono">scroll</span>
-        <svg
-          className="w-5 h-8 animate-pulse"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-            d="M12 5v14m7-7l-7 7-7-7"
-          />
-        </svg>
-      </div>
-    </div>
+      <span className="meta-label" style={{ color: "inherit" }}>
+        Scroll
+      </span>
+      <ArrowDown className="w-3.5 h-3.5 animate-bounce" style={{ animationDuration: "2s" }} />
+    </button>
   );
 }

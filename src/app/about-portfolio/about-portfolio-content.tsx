@@ -1,361 +1,260 @@
 "use client";
 
-import { DarkModeToggle } from "@/components/dark-mode-toggle";
 import { Header } from "@/components/header";
+import { FadeInSection } from "@/components/motion-wrappers";
+
+function ProseSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <FadeInSection>
+      <div className="grid md:grid-cols-12 gap-4 md:gap-8">
+        <h2 className="font-display text-2xl md:col-span-4">{title}</h2>
+        <div
+          className="md:col-span-8 space-y-5 leading-relaxed text-[15px] md:text-base"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          {children}
+        </div>
+      </div>
+    </FadeInSection>
+  );
+}
+
+function TechCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div
+      className="border rounded-lg p-5 md:p-6"
+      style={{ borderColor: "var(--border-color)", backgroundColor: "var(--bg-secondary)" }}
+    >
+      <h3 className="meta-label mb-4" style={{ color: "var(--text-primary)" }}>
+        {title}
+      </h3>
+      <ul className="space-y-3 text-sm md:text-[15px]" style={{ color: "var(--text-secondary)" }}>
+        {children}
+      </ul>
+    </div>
+  );
+}
+
+function DefItem({ term, children }: { term: string; children: React.ReactNode }) {
+  return (
+    <li>
+      <strong style={{ color: "var(--text-primary)" }}>{term}</strong>
+      <br />
+      {children}
+    </li>
+  );
+}
 
 export function AboutPortfolioContent() {
   return (
     <div
-      className="min-h-screen font-mono relative transition-colors duration-300"
-      style={{
-        backgroundColor: "var(--bg-primary)",
-        color: "var(--text-primary)",
-      }}
+      className="min-h-screen relative transition-colors duration-300"
+      style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
     >
-      {/* Subtle Japanese pattern background */}
-      <div className="fixed inset-0 jp-pattern-dots pointer-events-none z-0" />
-
-      <DarkModeToggle />
       <Header activePage="about-portfolio" />
 
       {/* Main Content */}
-      <main
-        className="max-w-6xl mx-auto px-4 md:px-6 relative z-10 backdrop-blur-sm"
-        style={{ backgroundColor: "var(--bg-secondary)" }}
-      >
+      <main className="max-w-5xl mx-auto px-6 relative z-10">
         {/* Hero Section */}
-        <section
-          className="py-12 md:py-20 border-b"
-          style={{ borderColor: "var(--border-color)" }}
-        >
-          <div className="max-w-4xl">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight jp-street-text">
-              About Portfolio{" "}
-              <span className="text-sm md:text-xl neon-accent ml-2">
-                ポートフォリオについて
-              </span>
-            </h1>
-            <p
-              className="text-base md:text-lg"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              The technologies, design decisions, and philosophy behind this
-              portfolio website.
+        <section className="pt-20 pb-16 md:pt-28 md:pb-20 border-b" style={{ borderColor: "var(--border-color)" }}>
+          <div className="max-w-3xl">
+            <p className="meta-label mb-6" style={{ color: "var(--accent)" }}>
+              <span className="font-jp normal-case tracking-normal">ポートフォリオについて</span>
+            </p>
+            <h1 className="font-display text-4xl md:text-6xl leading-tight mb-6">About Portfolio</h1>
+            <p className="text-base md:text-lg" style={{ color: "var(--text-secondary)" }}>
+              The technologies, design decisions, and philosophy behind this portfolio website.
             </p>
           </div>
         </section>
 
         {/* Content Sections */}
-        <section className="py-12 md:py-20">
-          <div className="max-w-4xl space-y-12 md:space-y-16">
-            {/* Technologies Used */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Technologies Used
-              </h2>
-              <div className="space-y-4 md:space-y-6">
-                <div
-                  className="border p-4 md:p-6"
-                  style={{ borderColor: "var(--border-color)" }}
-                >
-                  <h3 className="font-semibold mb-3 md:mb-4 text-sm md:text-base">
-                    Core Technologies
-                  </h3>
-                  <ul
-                    className="space-y-2 md:space-y-3 text-sm md:text-base"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    <li>
-                      <strong>Next.js</strong> - React framework for
-                      server-side rendering and optimal performance
-                    </li>
-                    <li>
-                      <strong>React</strong> - JavaScript library for building
-                      user interfaces with component architecture
-                    </li>
-                    <li>
-                      <strong>TypeScript</strong> - Type-safe JavaScript for
-                      better development experience
-                    </li>
-                    <li>
-                      <strong>Tailwind CSS</strong> - Utility-first CSS
-                      framework for rapid styling
-                    </li>
-                  </ul>
-                </div>
+        <section className="py-16 md:py-24 space-y-16 md:space-y-24">
+          <ProseSection title="Technologies Used">
+            <div className="space-y-5">
+              <TechCard title="Core Technologies">
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Next.js</strong> - React framework for server-side
+                  rendering and optimal performance
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>React</strong> - JavaScript library for building
+                  user interfaces with component architecture
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>TypeScript</strong> - Type-safe JavaScript for
+                  better development experience
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Tailwind CSS</strong> - Utility-first CSS framework
+                  for rapid styling
+                </li>
+              </TechCard>
 
-                <div
-                  className="border p-4 md:p-6"
-                  style={{ borderColor: "var(--border-color)" }}
-                >
-                  <h3 className="font-semibold mb-3 md:mb-4 text-sm md:text-base">
-                    Design & Assets
-                  </h3>
-                  <ul
-                    className="space-y-2 md:space-y-3 text-sm md:text-base"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    <li>
-                      <strong>JetBrains Mono</strong> - Clean, professional
-                      monospace typography
-                    </li>
-                    <li>
-                      <strong>Skillicons.dev</strong> - Technology stack
-                      visualization icons
-                    </li>
-                    <li>
-                      <strong>Lucide Icons</strong> - Minimal, consistent icon
-                      system
-                    </li>
-                    <li>
-                      <strong>shadcn/ui</strong> - Accessible, customizable UI
-                      components
-                    </li>
-                  </ul>
-                </div>
+              <TechCard title="Design & Assets">
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>JetBrains Mono</strong> - Clean, professional
+                  monospace typography
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Skillicons.dev</strong> - Technology stack
+                  visualization icons
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Lucide Icons</strong> - Minimal, consistent icon
+                  system
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>shadcn/ui</strong> - Accessible, customizable UI
+                  components
+                </li>
+              </TechCard>
 
-                <div
-                  className="border p-4 md:p-6"
-                  style={{ borderColor: "var(--border-color)" }}
-                >
-                  <h3 className="font-semibold mb-3 md:mb-4 text-sm md:text-base">
-                    Development Tools
-                  </h3>
-                  <ul
-                    className="space-y-2 md:space-y-3 text-sm md:text-base"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    <li>
-                      <strong>Bun</strong> - Fast JavaScript runtime and
-                      package manager
-                    </li>
-                    <li>
-                      <strong>ESLint</strong> - Code quality and consistency
-                    </li>
-                    <li>
-                      <strong>Git</strong> - Version control and collaboration
-                    </li>
-                    <li>
-                      <strong>VS Code</strong> - Development environment
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <TechCard title="Development Tools">
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Bun</strong> - Fast JavaScript runtime and package
+                  manager
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>ESLint</strong> - Code quality and consistency
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>Git</strong> - Version control and collaboration
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-primary)" }}>VS Code</strong> - Development environment
+                </li>
+              </TechCard>
             </div>
+          </ProseSection>
 
-            {/* Reasons for Creation */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Reasons for Creation
-              </h2>
-              <div
-                className="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <p>
-                  This portfolio was created to serve multiple purposes beyond
-                  just showcasing my work:
-                </p>
-                <ul className="space-y-3 md:space-y-4 ml-4 md:ml-6">
-                  <li>
-                    <strong>• Professional Showcase</strong>
-                    <br />A clean, professional presentation of my skills,
-                    experience, and projects that reflects my attention to
-                    detail and design sensibility.
-                  </li>
-                  <li>
-                    <strong>• Technical Demonstration</strong>
-                    <br />
-                    An opportunity to demonstrate proficiency with modern web
-                    technologies and development practices in a real-world
-                    application.
-                  </li>
-                  <li>
-                    <strong>• Learning Laboratory</strong>
-                    <br />A platform for experimenting with new technologies,
-                    design patterns, and development approaches in a controlled
-                    environment.
-                  </li>
-                  <li>
-                    <strong>• Design Philosophy Expression</strong>
-                    <br />A manifestation of my belief in minimalist design,
-                    user-centric development, and the importance of performance
-                    and accessibility.
-                  </li>
-                </ul>
-              </div>
-            </div>
+          <ProseSection title="Reasons for Creation">
+            <p>This portfolio was created to serve multiple purposes beyond just showcasing my work:</p>
+            <ul className="space-y-4">
+              <DefItem term="Professional Showcase">
+                A clean, professional presentation of my skills, experience, and projects that reflects my attention
+                to detail and design sensibility.
+              </DefItem>
+              <DefItem term="Technical Demonstration">
+                An opportunity to demonstrate proficiency with modern web technologies and development practices in a
+                real-world application.
+              </DefItem>
+              <DefItem term="Learning Laboratory">
+                A platform for experimenting with new technologies, design patterns, and development approaches in a
+                controlled environment.
+              </DefItem>
+              <DefItem term="Design Philosophy Expression">
+                A manifestation of my belief in minimalist design, user-centric development, and the importance of
+                performance and accessibility.
+              </DefItem>
+            </ul>
+          </ProseSection>
 
-            {/* Design Philosophy */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Design Philosophy
-              </h2>
-              <div
-                className="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <p>
-                  This portfolio follows Japanese minimalist design principles,
-                  heavily inspired by designers like Keisuke Watanuki. The
-                  design emphasizes clean typography, generous white space, and
-                  purposeful interactions.
-                </p>
-                <p>
-                  <strong>Key design principles:</strong>
-                </p>
-                <ul className="space-y-2 ml-4 md:ml-6">
-                  <li>
-                    • <strong>Ma (間)</strong> - Strategic use of negative space
-                  </li>
-                  <li>
-                    • <strong>Kanso (簡素)</strong> - Simplicity and elimination
-                    of clutter
-                  </li>
-                  <li>
-                    • <strong>Shibui (渋い)</strong> - Understated elegance
-                  </li>
-                  <li>
-                    • <strong>Functional Beauty</strong> - Every element serves
-                    a specific purpose
-                  </li>
-                </ul>
-                <p>
-                  The monochromatic color scheme, clean typography, and minimal
-                  interactions create a professional atmosphere that puts
-                  content first while maintaining visual interest through subtle
-                  hover effects and thoughtful spacing.
-                </p>
-              </div>
-            </div>
+          <ProseSection title="Design Philosophy">
+            <p>
+              This portfolio follows Japanese minimalist design principles, heavily inspired by designers like Keisuke
+              Watanuki. The design emphasizes clean typography, generous white space, and purposeful interactions.
+            </p>
+            <p className="font-medium" style={{ color: "var(--text-primary)" }}>
+              Key design principles:
+            </p>
+            <ul className="space-y-2.5">
+              <li>
+                <strong style={{ color: "var(--text-primary)" }}>
+                  Ma <span className="font-jp">(間)</span>
+                </strong>{" "}
+                - Strategic use of negative space
+              </li>
+              <li>
+                <strong style={{ color: "var(--text-primary)" }}>
+                  Kanso <span className="font-jp">(簡素)</span>
+                </strong>{" "}
+                - Simplicity and elimination of clutter
+              </li>
+              <li>
+                <strong style={{ color: "var(--text-primary)" }}>
+                  Shibui <span className="font-jp">(渋い)</span>
+                </strong>{" "}
+                - Understated elegance
+              </li>
+              <li>
+                <strong style={{ color: "var(--text-primary)" }}>Functional Beauty</strong> - Every element serves a
+                specific purpose
+              </li>
+            </ul>
+            <p>
+              The monochromatic color scheme, clean typography, and minimal interactions create a professional
+              atmosphere that puts content first while maintaining visual interest through subtle hover effects and
+              thoughtful spacing.
+            </p>
+          </ProseSection>
 
-            {/* Technical Approach */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Technical Approach
-              </h2>
-              <div
-                className="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <p>
-                  The portfolio was built with performance, accessibility, and
-                  maintainability as core priorities:
-                </p>
-                <ul className="space-y-3 md:space-y-4 ml-4 md:ml-6">
-                  <li>
-                    <strong>• Performance First</strong>
-                    <br />
-                    Server-side rendering with Next.js ensures fast initial
-                    load times and excellent SEO. Images are optimized and
-                    lazy-loaded where appropriate.
-                  </li>
-                  <li>
-                    <strong>• Accessibility</strong>
-                    <br />
-                    Semantic HTML structure, proper heading hierarchy, and
-                    keyboard navigation support ensure the site is usable by
-                    everyone.
-                  </li>
-                  <li>
-                    <strong>• Responsive Design</strong>
-                    <br />
-                    Mobile-first approach with careful attention to typography
-                    scaling and touch interactions across all device sizes.
-                  </li>
-                  <li>
-                    <strong>• Developer Experience</strong>
-                    <br />
-                    TypeScript provides type safety, while ESLint maintains
-                    code quality and consistency throughout development.
-                  </li>
-                </ul>
-              </div>
-            </div>
+          <ProseSection title="Technical Approach">
+            <p>The portfolio was built with performance, accessibility, and maintainability as core priorities:</p>
+            <ul className="space-y-4">
+              <DefItem term="Performance First">
+                Server-side rendering with Next.js ensures fast initial load times and excellent SEO. Images are
+                optimized and lazy-loaded where appropriate.
+              </DefItem>
+              <DefItem term="Accessibility">
+                Semantic HTML structure, proper heading hierarchy, and keyboard navigation support ensure the site is
+                usable by everyone.
+              </DefItem>
+              <DefItem term="Responsive Design">
+                Mobile-first approach with careful attention to typography scaling and touch interactions across all
+                device sizes.
+              </DefItem>
+              <DefItem term="Developer Experience">
+                TypeScript provides type safety, while ESLint maintains code quality and consistency throughout
+                development.
+              </DefItem>
+            </ul>
+          </ProseSection>
 
-            {/* Future Development */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Future Development
-              </h2>
-              <div
-                className="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <p>
-                  This portfolio is a living project that continues to evolve.
-                  Planned improvements include:
-                </p>
-                <ul className="space-y-3 md:space-y-4 ml-4 md:ml-6">
-                  <li>
-                    <strong>• Blog Section</strong>
-                    <br />A dedicated space for technical articles, tutorials,
-                    and thoughts on software development and design.
-                  </li>
-                  <li>
-                    <strong>• Dark Mode</strong>
-                    <br />
-                    An elegant dark theme option that maintains the minimalist
-                    aesthetic while providing a comfortable viewing experience
-                    in low-light conditions.
-                  </li>
-                  <li>
-                    <strong>• Interactive Project Demos</strong>
-                    <br />
-                    Embedded demos and detailed case studies for selected
-                    projects to provide deeper insights into the development
-                    process.
-                  </li>
-                  <li>
-                    <strong>• Performance Optimizations</strong>
-                    <br />
-                    Continuous improvements to loading times, bundle size, and
-                    user experience metrics.
-                  </li>
-                </ul>
-                <p>
-                  The portfolio itself serves as a continuous learning project
-                  and showcase of evolving technical skills. Each update
-                  reflects new knowledge and improved development practices.
-                </p>
-              </div>
-            </div>
+          <ProseSection title="Future Development">
+            <p>This portfolio is a living project that continues to evolve. Planned improvements include:</p>
+            <ul className="space-y-4">
+              <DefItem term="Blog Section">
+                A dedicated space for technical articles, tutorials, and thoughts on software development and design.
+              </DefItem>
+              <DefItem term="Dark Mode">
+                An elegant dark theme option that maintains the minimalist aesthetic while providing a comfortable
+                viewing experience in low-light conditions.
+              </DefItem>
+              <DefItem term="Interactive Project Demos">
+                Embedded demos and detailed case studies for selected projects to provide deeper insights into the
+                development process.
+              </DefItem>
+              <DefItem term="Performance Optimizations">
+                Continuous improvements to loading times, bundle size, and user experience metrics.
+              </DefItem>
+            </ul>
+            <p>
+              The portfolio itself serves as a continuous learning project and showcase of evolving technical skills.
+              Each update reflects new knowledge and improved development practices.
+            </p>
+          </ProseSection>
 
-            {/* Conclusion */}
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Conclusion
-              </h2>
-              <div
-                className="space-y-4 md:space-y-6 leading-relaxed text-sm md:text-base"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <p>
-                  このポートフォリオそのものも制作物の1つと捉えています。
-                  <em>
-                    (I consider this portfolio itself as one of my works.)
-                  </em>
-                </p>
-                <p>
-                  More than just a showcase, this portfolio represents my
-                  approach to software development: thoughtful planning, careful
-                  execution, and continuous improvement. It demonstrates not
-                  just what I can build, but how I think about problems and
-                  solutions.
-                </p>
-              </div>
-            </div>
-          </div>
+          <ProseSection title="Conclusion">
+            <p className="font-jp">
+              このポートフォリオそのものも制作物の1つと捉えています。
+              <em className="font-sans block mt-1 text-sm">(I consider this portfolio itself as one of my works.)</em>
+            </p>
+            <p>
+              More than just a showcase, this portfolio represents my approach to software development: thoughtful
+              planning, careful execution, and continuous improvement. It demonstrates not just what I can build, but
+              how I think about problems and solutions.
+            </p>
+          </ProseSection>
         </section>
       </main>
 
       {/* Footer */}
-      <footer
-        className="border-t mt-12 md:mt-20"
-        style={{ borderColor: "var(--border-color)" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
-          <div className="text-sm text-gray-500">© 2024 Regee Casaña</div>
+      <footer className="border-t" style={{ borderColor: "var(--border-color)" }}>
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+            © 2024 Regee Casaña
+          </div>
         </div>
       </footer>
     </div>

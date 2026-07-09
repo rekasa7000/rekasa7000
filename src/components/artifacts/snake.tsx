@@ -149,7 +149,7 @@ export function Snake() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-57px)] gap-6 select-none">
       <div className="text-center">
-        <h2 className="text-2xl font-bold neon-accent mb-1">snake</h2>
+        <h2 className="text-2xl font-bold accent-text mb-1">snake</h2>
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
           arrow keys or WASD to move
         </p>
@@ -166,14 +166,14 @@ export function Snake() {
             className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-sm"
             style={{ backgroundColor: "rgba(0,0,0,0.8)" }}
           >
-            <div className="text-2xl font-bold" style={{ color: "var(--demon-red)" }}>
+            <div className="text-2xl font-bold" style={{ color: "var(--accent)" }}>
               game over
             </div>
-            <div className="text-lg neon-accent">score: {score}</div>
+            <div className="text-lg accent-text">score: {score}</div>
             <button
               onClick={reset}
               className="text-sm px-4 py-2 border transition-colors"
-              style={{ borderColor: "var(--water-blue)", color: "var(--water-blue)" }}
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
             >
               play again
             </button>
@@ -181,7 +181,7 @@ export function Snake() {
         )}
       </div>
 
-      <div className="text-sm neon-accent">score: {score}</div>
+      <div className="text-sm accent-text">score: {score}</div>
     </div>
   );
 }
