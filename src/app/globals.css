@@ -403,33 +403,32 @@ body {
   color: #0c0e13;
 }
 
-/* ── Brand badge: a planet with a ring ── */
-
-.hanko {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 999px;
-  background: radial-gradient(circle at 32% 30%, var(--accent-3), var(--accent) 62%);
-  color: #fff8ec;
-  font-family: var(--stack-display);
-  font-weight: 700;
-  font-size: 0.7rem;
-  letter-spacing: -0.02em;
-  line-height: 1;
+/* Owner's logo mark: dark tile, so it gets a hard shadow on paper and a soft ring in the dark */
+.brand-logo {
+  border-radius: 22%;
+  box-shadow: 2px 2px 0 var(--accent);
 }
 
-.hanko::after {
-  content: "";
-  position: absolute;
-  inset: 38% -22%;
+.dark .brand-logo {
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+/* Generated illustrations sit in a printed frame */
+.print-frame {
   border: 1.5px solid var(--text-primary);
-  border-radius: 999px;
-  transform: rotate(-18deg);
-  pointer-events: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  box-shadow: 8px 8px 0 var(--accent);
+}
+
+.dark .print-frame {
+  border-color: var(--border-strong);
+  box-shadow: 8px 8px 0 rgba(255, 107, 44, 0.3);
+}
+
+.dark .print-frame img {
+  filter: saturate(0.9) brightness(0.88);
 }
 
 /* ── Hero orbital diagram ── */

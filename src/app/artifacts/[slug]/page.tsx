@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Piano } from "@/components/artifacts/piano";
 import { Matrix } from "@/components/artifacts/matrix";
 import { Snake } from "@/components/artifacts/snake";
@@ -16,26 +17,22 @@ export function generateStaticParams() {
   return Object.keys(artifacts).map((slug) => ({ slug }));
 }
 
-export default async function ArtifactPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ArtifactPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const Component = artifacts[slug];
   if (!Component) notFound();
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}>
       <div
         className="flex items-center justify-between px-6 py-4 border-b"
         style={{ borderColor: "var(--border-color)" }}
       >
-        <Link href="/" className="link-underline text-sm" style={{ color: "var(--text-secondary)" }}>
-          ← Back home
+        <Link href="/" className="flex items-center gap-3 group">
+          <Image src="/logo.png" alt="re7000 logo" width={28} height={28} className="brand-logo" />
+          <span className="link-underline meta-label" style={{ color: "var(--text-secondary)" }}>
+            ← Back home
+          </span>
         </Link>
         <span className="meta-label">Playground / {slug}</span>
       </div>

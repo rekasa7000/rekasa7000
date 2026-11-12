@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 
@@ -52,6 +53,20 @@ export function AboutMeContent() {
               A deeper look into my background, philosophy, and journey as a software engineer.
             </p>
           </div>
+          <figure className="mt-14">
+            <div className="print-frame">
+              <Image
+                src="/images/workstation.webp"
+                alt="Retro-futurist illustration of a console desk with two green-screen CRT monitors, a coffee mug and a plant, under a round window showing a striped sun and a ringed planet"
+                width={1664}
+                height={928}
+                priority
+                sizes="(min-width: 1024px) 976px, 100vw"
+                className="w-full h-auto block"
+              />
+            </div>
+            <figcaption className="meta-label mt-5 text-right">Plate II — Home station</figcaption>
+          </figure>
         </section>
 
         {/* Content Sections */}

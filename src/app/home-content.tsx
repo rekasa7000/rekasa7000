@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ChevronDown, Plus } from "lucide-react";
 import { Header } from "@/components/header";
@@ -232,6 +233,26 @@ export function HomeContent() {
             <SectionHeading index="02" title="Education" track="Track B — Training" />
             <AnimatedTimeline entries={educationEntries} />
           </section>
+
+          {/* Intermission — generated illustration */}
+          <FadeInSection>
+            <figure className="pb-24">
+              <div className="print-frame">
+                <Image
+                  src="/images/orbit-banner.webp"
+                  alt="Retro-futurist screen print of a striped orange sun, a ringed planet and a small AI satellite tracing orbit lines"
+                  width={1664}
+                  height={842}
+                  sizes="(min-width: 1024px) 976px, 100vw"
+                  className="w-full h-auto block"
+                />
+              </div>
+              <figcaption className="flex justify-between gap-4 mt-5">
+                <span className="session-tag">Intermission</span>
+                <span className="meta-label text-right">Plate I — The long orbit</span>
+              </figcaption>
+            </figure>
+          </FadeInSection>
 
           {/* Skills Section */}
           <section id="skills" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>

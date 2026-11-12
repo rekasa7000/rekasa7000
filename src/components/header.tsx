@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
 
@@ -29,8 +30,15 @@ export function Header({ activePage }: HeaderProps) {
     >
       <div className="max-w-5xl mx-auto px-6 h-[68px] flex items-center justify-between gap-4">
         {/* Wordmark + seal */}
-        <Link href="/" className="flex items-center gap-4 group shrink-0 pl-1">
-          <span className="hanko transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
+        <Link href="/" className="flex items-center gap-3 group shrink-0">
+          <Image
+            src="/logo.png"
+            alt="re7000 logo"
+            width={36}
+            height={36}
+            priority
+            className="brand-logo transition-transform duration-300 group-hover:-rotate-6"
+          />
           <span className="hidden sm:flex flex-col leading-none gap-1">
             <span className="font-display text-[15px]">Regee Casaña</span>
             <span className="meta-label" style={{ fontSize: "0.5625rem" }}>
