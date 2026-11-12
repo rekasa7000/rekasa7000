@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
+import { motion, useScroll } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
 
 interface HeaderProps {
@@ -17,6 +18,7 @@ const SECTION_LINKS = [
 ];
 
 export function Header({ activePage }: HeaderProps) {
+  const { scrollYProgress } = useScroll();
   const openGalaxy = () => window.dispatchEvent(new CustomEvent("galaxy-mode"));
 
   return (
@@ -104,6 +106,7 @@ export function Header({ activePage }: HeaderProps) {
           </div>
         </div>
       </div>
+      <motion.div className="scroll-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
     </header>
   );
 }
