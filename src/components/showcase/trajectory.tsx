@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flower } from "./garden";
+import { Flower, GardenSvg } from "./garden";
 
 const WAYPOINTS = [
   { t: 0.02, year: "2018", title: "STEM track", sub: "Microcity College" },
@@ -35,12 +35,7 @@ export function Trajectory() {
 
   return (
     <div className="trajectory-scroll -mx-6 px-6 overflow-x-auto">
-      <svg
-        viewBox="0 0 1000 420"
-        className="min-w-[760px] w-full"
-        role="img"
-        aria-label="Career trajectory from 2018 to today"
-      >
+      <GardenSvg viewBox="0 0 1000 420" className="min-w-[760px] w-full" label="Career growth from 2018 to today">
         {/* altitude grid */}
         <g stroke="var(--text-tertiary)" strokeOpacity="0.3" strokeDasharray="2 8">
           {[60, 140, 220, 300].map((y) => (
@@ -106,7 +101,7 @@ export function Trajectory() {
 
         {/* the bloom at the tip */}
         <g transform={`translate(${ex} ${ey + 2})`}>
-          <Flower kind="sunflower" h={2} delay={DRAW - 0.5} scale={1.5} />
+          <Flower kind="sunflower" h={2} delay={DRAW - 0.8} scale={1.7} />
         </g>
         <motion.text
           x={ex - 30}
@@ -121,7 +116,7 @@ export function Trajectory() {
         >
           Now
         </motion.text>
-      </svg>
+      </GardenSvg>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Flower, type FlowerKind } from "./garden";
+import { Flower, GardenSvg, type FlowerKind } from "./garden";
 import {
   ArrowUpRight,
   BookOpen,
@@ -183,7 +183,7 @@ export function PrincipleSwitches() {
 
 const POTS: { title: string; note: string; kind: FlowerKind; color: string; h: number }[] = [
   { title: "Real-time data", note: "Processing & visualization", kind: "daisy", color: "var(--petal)", h: 62 },
-  { title: "IoT systems", note: "Architecture & integration", kind: "tulip", color: "var(--accent)", h: 54 },
+  { title: "IoT systems", note: "Architecture & integration", kind: "poppy", color: "var(--petal)", h: 54 },
   { title: "Team leadership", note: "Leading & mentoring", kind: "sunflower", color: "", h: 74 },
   { title: "AI / ML", note: "Practical applications", kind: "lavender", color: "var(--lilac)", h: 58 },
   { title: "Modern web", note: "Frameworks & tooling", kind: "sprout", color: "", h: 34 },
@@ -199,34 +199,40 @@ export function FocusChannels() {
           transition={{ duration: 0.4, delay: i * 0.07 }}
           className={`pot-card ${i === POTS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
         >
-          <svg viewBox="0 0 120 130" className="w-full h-36" aria-hidden="true">
+          <GardenSvg viewBox="0 0 120 138" className="w-full h-40">
+            <ellipse cx="60" cy="128" rx="34" ry="5" fill="var(--text-primary)" opacity="0.12" />
             <Flower
               x={60}
-              y={96}
-              h={c.h}
+              y={98}
+              h={c.h + 4}
               kind={c.kind}
               color={c.color}
               delay={i * 0.12}
               scale={c.kind === "sprout" ? 1.3 : 1}
             />
+            <ellipse cx="60" cy="96" rx="26" ry="5" fill="var(--soil)" />
             <path
-              d="M34 92 h52 l-7 32 h-38z"
+              d="M36 98 h48 l-6 30 a4 4 0 0 1 -4 3 h-28 a4 4 0 0 1 -4 -3z"
               fill="var(--accent)"
               stroke="var(--text-primary)"
               strokeWidth="1.5"
               strokeLinejoin="round"
             />
+            <path d="M70 100 l-4 30 h8 l5 -30z" fill="#1d2433" opacity="0.14" />
+            <path d="M42 104 l3 22" stroke="#fff8ec" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
             <rect
-              x="30"
-              y="86"
-              width="60"
-              height="10"
-              rx="3"
+              x="31"
+              y="90"
+              width="58"
+              height="11"
+              rx="3.5"
               fill="var(--accent)"
               stroke="var(--text-primary)"
               strokeWidth="1.5"
             />
-          </svg>
+            <path d="M35 93.5 h50" stroke="#fff8ec" strokeWidth="1.4" strokeLinecap="round" opacity="0.4" />
+            <path d="M44 112 h32 M46 120 h28" stroke="var(--text-primary)" strokeWidth="0.8" opacity="0.25" />
+          </GardenSvg>
           <div className="px-4 pb-4">
             <div className="font-display text-lg mb-1" style={{ lineHeight: 1.1 }}>
               {c.title}
