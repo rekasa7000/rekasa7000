@@ -12,6 +12,8 @@ const STATS = [
   { to: 4, suffix: "", label: "Engineers led", note: "Across 2 platform versions" },
 ];
 
+const COLORS = ["var(--accent)", "var(--leaf)", "var(--accent)", "var(--leaf)", "var(--accent)", "var(--leaf)"];
+
 /** Headline numbers from the career log, counted up on scroll. */
 export function MissionStats() {
   return (
@@ -25,7 +27,10 @@ export function MissionStats() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.45, delay: (i % 3) * 0.08 }}
         >
-          <div className="font-display text-[2rem] sm:text-5xl md:text-6xl mb-3" style={{ color: "var(--accent)" }}>
+          <div
+            className="font-display text-[2rem] sm:text-5xl md:text-6xl mb-3"
+            style={{ color: COLORS[i % COLORS.length] }}
+          >
             <CountUp to={s.to} prefix={s.prefix} suffix={s.suffix} />
           </div>
           <div className="font-medium text-sm md:text-base leading-snug">{s.label}</div>

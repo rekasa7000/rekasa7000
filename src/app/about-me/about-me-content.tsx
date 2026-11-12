@@ -55,7 +55,7 @@ export function AboutMeContent() {
           <div className="grid md:grid-cols-12 gap-12 md:gap-8 items-center">
             <div className="md:col-span-7">
               <p className="meta-label mb-8 flex items-center gap-4" style={{ color: "var(--accent)" }}>
-                <span className="session-tag">Speaker profile</span>
+                <span className="session-tag">The gardener</span>
                 <span className="font-jp normal-case tracking-normal">私について</span>
               </p>
               <h1 className="font-display text-5xl md:text-7xl mb-8">About Me</h1>
@@ -95,7 +95,7 @@ export function AboutMeContent() {
         </section>
 
         <section className="py-16 md:py-20 border-t" style={{ borderColor: "var(--border-color)" }}>
-          <BlockHeading tag="Chapter 03" title="Now tracking" note="Current focus" />
+          <BlockHeading tag="Chapter 03" title="Now growing" note="Current focus" />
           <FocusChannels />
         </section>
 
@@ -195,7 +195,7 @@ export function AboutMeContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="meta-label">© 2024 Regee Casaña · End of transmission</div>
+          <div className="meta-label">© 2024 Regee Casaña · Grown with care</div>
         </div>
       </footer>
     </div>

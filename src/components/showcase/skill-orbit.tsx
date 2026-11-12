@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { SKILL_ICONS } from "@/lib/career-data";
+import { MiniPlanet } from "./garden";
 
 const RINGS = [
   { id: "backend", label: "Backend", size: 28, speed: 38 },
@@ -57,7 +57,7 @@ export function SkillOrbit() {
             </div>
           ))}
           <div className="skill-core">
-            <Image src="/logo.png" alt="" width={56} height={56} className="w-full h-full" />
+            <MiniPlanet className="w-full h-full" />
           </div>
         </div>
       </div>
@@ -105,7 +105,7 @@ export function SkillOrbit() {
         </div>
         {!active && (
           <p className="meta-label mt-6" style={{ color: "var(--accent)" }}>
-            Tap a discipline to light up its orbit →
+            Tap a discipline to light up its orbit
           </p>
         )}
       </div>

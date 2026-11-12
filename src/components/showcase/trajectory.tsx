@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Flower } from "./garden";
 
 const WAYPOINTS = [
   { t: 0.02, year: "2018", title: "STEM track", sub: "Microcity College" },
@@ -27,9 +28,10 @@ function at(t: number) {
 const PATH = `M${P[0][0]} ${P[0][1]} C${P[1][0]} ${P[1][1]}, ${P[2][0]} ${P[2][1]}, ${P[3][0]} ${P[3][1]}`;
 const DRAW = 2.4;
 
-/** The career as a launch arc that draws itself when scrolled into view. */
+/** The career as a vine that grows across the years when scrolled into view. */
 export function Trajectory() {
   const [ex, ey] = at(1);
+  // soil line under the vine
 
   return (
     <div className="trajectory-scroll -mx-6 px-6 overflow-x-auto">
@@ -45,7 +47,7 @@ export function Trajectory() {
             <line key={y} x1="30" x2="980" y1={y} y2={y} />
           ))}
         </g>
-        <line x1="30" x2="980" y1="372" y2="372" stroke="var(--text-primary)" strokeWidth="1.5" />
+        <line x1="30" x2="980" y1="372" y2="372" stroke="var(--soil)" strokeWidth="4" strokeLinecap="round" />
 
         <path
           d={PATH}
@@ -58,8 +60,8 @@ export function Trajectory() {
         <motion.path
           d={PATH}
           fill="none"
-          stroke="var(--accent)"
-          strokeWidth="4"
+          stroke="var(--leaf)"
+          strokeWidth="5"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
           whileInView={{ pathLength: 1 }}
@@ -82,8 +84,13 @@ export function Trajectory() {
               transition={{ duration: 0.4, delay: 0.2 + w.t * DRAW }}
             >
               <line x1={x} x2={x} y1={y} y2={372} stroke="var(--text-primary)" strokeOpacity="0.25" />
-              <circle cx={x} cy={y} r="9" fill="var(--bg-primary)" stroke="var(--text-primary)" strokeWidth="2.5" />
-              <circle cx={x} cy={y} r="3.5" fill="var(--accent)" />
+              <path
+                d="M0 0 C8 -14 24 -14 28 -6 C20 4 8 5 0 0Z"
+                fill="var(--leaf-2)"
+                transform={`translate(${x} ${y}) rotate(${i % 2 ? 150 : -20})`}
+              />
+              <circle cx={x} cy={y} r="8" fill="var(--bg-primary)" stroke="var(--leaf)" strokeWidth="3" />
+              <circle cx={x} cy={y} r="3" fill="var(--accent)" />
               <text x={x} y={394} textAnchor="middle" className="traj-year">
                 {w.year}
               </text>
@@ -97,22 +104,23 @@ export function Trajectory() {
           );
         })}
 
-        {/* craft at the tip */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0.4 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+        {/* the bloom at the tip */}
+        <g transform={`translate(${ex} ${ey + 2})`}>
+          <Flower kind="sunflower" h={2} delay={DRAW - 0.5} scale={1.5} />
+        </g>
+        <motion.text
+          x={ex - 30}
+          y={ey - 22}
+          textAnchor="end"
+          className="traj-title"
+          style={{ fill: "var(--accent)" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, delay: DRAW }}
-          style={{ transformOrigin: `${ex}px ${ey}px`, transformBox: "view-box" }}
+          transition={{ delay: DRAW }}
         >
-          <circle cx={ex} cy={ey} r="20" fill="var(--accent)" fillOpacity="0.18" className="blip-soft" />
-          <g transform={`translate(${ex} ${ey}) rotate(-27)`}>
-            <path d="M-16 -8 L14 0 L-16 8 L-9 0 Z" fill="var(--text-primary)" />
-          </g>
-          <text x={ex - 12} y={ey - 26} textAnchor="end" className="traj-title" fill="var(--accent)">
-            Now
-          </text>
-        </motion.g>
+          Now
+        </motion.text>
       </svg>
     </div>
   );

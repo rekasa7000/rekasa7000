@@ -4,7 +4,7 @@
 
 @theme inline {
   --font-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-unbounded), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
   --font-mono: var(--font-space-mono), ui-monospace, monospace;
   --font-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
 }
@@ -15,51 +15,63 @@
  */
 body {
   --stack-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
-  --stack-display: var(--font-unbounded), "Helvetica Neue", Arial, sans-serif;
+  --stack-display: var(--font-fraunces), Georgia, serif;
   --stack-mono: var(--font-space-mono), ui-monospace, monospace;
   --stack-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
 }
 
 /*
- * Mission Control — retro-futurist conference programme.
- * Light: 1970s space-age print. Cream stock, navy ink, signal orange, cobalt, sun yellow.
- * Dark: phosphor terminal. Deep console black, warm amber-orange, phosphor green readouts.
- * Ideas: signal over noise · every element is an instrument · warm machines · optimism by design.
+ * Homestead — a small farm on a small planet.
+ * Light: a seed-catalogue print. Cream stock, navy ink, terracotta, leaf green, sun yellow, petal pink.
+ * Dark: the same garden at night, under the stars.
+ * Space and tech are the setting; the flowers are the subject.
  */
 :root {
-  --bg-primary: #efe8d9;
-  --bg-secondary: #f8f3e8;
-  --bg-hover: rgba(27, 26, 46, 0.045);
-  --text-primary: #1b1a2e;
-  --text-secondary: #4f4c5e;
-  --text-tertiary: #857f72;
-  --border-color: #d8cdb6;
-  --border-strong: #1b1a2e;
-  --accent: #e0531c;
-  --accent-soft: rgba(224, 83, 28, 0.1);
-  --accent-2: #2b55c9;
-  --accent-3: #f0b232;
-  --signal: #2b55c9;
-  --shadow-hard: #1b1a2e;
-  --grid-dot: rgba(27, 26, 46, 0.09);
+  --bg-primary: #f4eedd;
+  --bg-secondary: #fbf7ea;
+  --bg-hover: rgba(29, 36, 51, 0.045);
+  --text-primary: #1d2433;
+  --text-secondary: #4d5361;
+  --text-tertiary: #8a8778;
+  --border-color: #ddd3ba;
+  --border-strong: #1d2433;
+  --accent: #d9552b;
+  --accent-soft: rgba(217, 85, 43, 0.1);
+  --accent-2: #3d7f56;
+  --accent-3: #efb23a;
+  --signal: #3d7f56;
+  --leaf: #3d7f56;
+  --leaf-2: #6fae7f;
+  --leaf-deep: #2a5c3d;
+  --soil: #7a4a2b;
+  --petal: #e58aa0;
+  --lilac: #9a86d6;
+  --shadow-hard: #1d2433;
+  --grid-dot: rgba(29, 36, 51, 0.07);
 }
 
 .dark {
-  --bg-primary: #0c0e13;
-  --bg-secondary: #13161e;
-  --bg-hover: rgba(233, 228, 212, 0.05);
-  --text-primary: #ece6d4;
-  --text-secondary: #a8a392;
-  --text-tertiary: #6e6b61;
-  --border-color: #252a37;
-  --border-strong: #4a5164;
-  --accent: #ff6b2c;
-  --accent-soft: rgba(255, 107, 44, 0.12);
-  --accent-2: #5c86ff;
-  --accent-3: #f4b63e;
-  --signal: #7ee2a8;
-  --shadow-hard: #ff6b2c;
-  --grid-dot: rgba(236, 230, 212, 0.06);
+  --bg-primary: #0d111c;
+  --bg-secondary: #151a28;
+  --bg-hover: rgba(239, 233, 216, 0.05);
+  --text-primary: #efe9d8;
+  --text-secondary: #aaa794;
+  --text-tertiary: #717064;
+  --border-color: #262c3d;
+  --border-strong: #4b5368;
+  --accent: #ff7a45;
+  --accent-soft: rgba(255, 122, 69, 0.12);
+  --accent-2: #86cf9a;
+  --accent-3: #f5bd4a;
+  --signal: #86cf9a;
+  --leaf: #5fae77;
+  --leaf-2: #9bdcab;
+  --leaf-deep: #2f6a46;
+  --soil: #5a3a22;
+  --petal: #f4a3b5;
+  --lilac: #b9a4ee;
+  --shadow-hard: #ff7a45;
+  --grid-dot: rgba(239, 233, 216, 0.05);
 }
 
 /* ── Base ── */
@@ -113,7 +125,8 @@ body {
 .font-display {
   font-family: var(--stack-display);
   font-weight: 600;
-  letter-spacing: -0.035em;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.025em;
   line-height: 1;
 }
 
@@ -153,9 +166,7 @@ body {
 .dark .crt-overlay {
   opacity: 1;
   mix-blend-mode: normal;
-  background-image:
-    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0, 0, 0, 0.22) 3px),
-    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
+  background-image: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
 }
 
 /* ── Links ── */
@@ -194,13 +205,12 @@ body {
 
 /* Console key / filter chip */
 .chip {
-  font-family: var(--stack-mono);
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.75rem;
+  font-family: var(--stack-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  padding: 0.3rem 0.8rem;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 999px;
   color: var(--text-secondary);
   background: var(--bg-secondary);
   cursor: pointer;
@@ -223,13 +233,12 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: var(--stack-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.85rem 1.4rem;
-  border-radius: 6px;
+  font-family: var(--stack-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
   background: var(--accent);
   color: #fff8ec;
   border: 1.5px solid var(--text-primary);
@@ -261,13 +270,12 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: var(--stack-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.85rem 1.4rem;
-  border-radius: 6px;
+  font-family: var(--stack-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
   color: var(--text-primary);
   border: 1.5px solid var(--text-primary);
   background: var(--bg-secondary);
@@ -290,7 +298,7 @@ body {
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 6px;
+  border-radius: 999px;
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   background: var(--bg-secondary);
@@ -316,9 +324,9 @@ body {
   gap: 0.5rem;
   padding: 0.3rem 0.8rem 0.3rem 0.35rem;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-family: var(--stack-mono);
-  font-size: 0.75rem;
+  border-radius: 999px;
+  font-family: var(--stack-sans);
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   background: var(--bg-secondary);
   transition: color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
@@ -379,7 +387,8 @@ body {
   min-width: 2rem;
   height: 6px;
   align-self: center;
-  background-image: repeating-linear-gradient(to right, var(--text-primary) 0 1px, transparent 1px 8px);
+  background-image: radial-gradient(circle, var(--leaf) 1.5px, transparent 2px);
+  background-size: 12px 6px;
   opacity: 0.35;
 }
 
@@ -392,15 +401,15 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--leaf);
+  color: #fbf7ea;
 }
 
 .dark .session-tag {
-  background: var(--accent);
-  color: #0c0e13;
+  background: var(--leaf-2);
+  color: #0d111c;
 }
 
 /* Owner's logo mark: dark tile, so it gets a hard shadow on paper and a soft ring in the dark */
@@ -483,14 +492,14 @@ body {
 .marquee {
   overflow: hidden;
   border-block: 1.5px solid var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: var(--leaf-deep);
+  color: #fbf7ea;
   mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
 .dark .marquee {
   background: transparent;
-  color: var(--signal);
+  color: var(--text-primary);
   border-color: var(--border-strong);
 }
 
@@ -866,12 +875,9 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 13%;
+  width: 17%;
   aspect-ratio: 1;
-  translate: -50% -50%;
-  border-radius: 22%;
-  overflow: hidden;
-  box-shadow: 0 0 0 6px var(--accent-soft), 0 0 0 14px color-mix(in srgb, var(--accent) 6%, transparent);
+  translate: -50% -58%;
 }
 
 .gauge {
@@ -1506,5 +1512,130 @@ body {
   }
   .wave span:nth-child(odd) {
     transform: scaleY(0.45);
+  }
+}
+
+
+/* ══ Garden ══ */
+
+.sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: sway 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes sway {
+  from {
+    transform: rotate(-3.5deg);
+  }
+  to {
+    transform: rotate(3.5deg);
+  }
+}
+
+/* Job scene panel: a window onto a small world */
+.plot-scene {
+  position: relative;
+  height: 100%;
+  min-height: 280px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1b2440;
+  box-shadow: inset 0 0 0 1.5px #12182b;
+}
+
+.plot-scene > svg {
+  position: absolute;
+  inset: 0;
+}
+
+.plot-caption {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #f4eedd;
+  color: #1d2433;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1.5px solid #12182b;
+  max-width: calc(100% - 1.8rem);
+}
+
+.plot-tag {
+  font-family: var(--stack-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  fill: #1d2433;
+}
+
+.co2 {
+  animation: co2 5s ease-in infinite;
+}
+
+@keyframes co2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.cloud-drift {
+  animation: cloud-drift 9s ease-in-out infinite alternate;
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-60px);
+  }
+  to {
+    transform: translateX(60px);
+  }
+}
+
+.rain line {
+  stroke-dasharray: 10 14;
+  animation: rain 0.7s linear infinite;
+}
+
+@keyframes rain {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* Plant pots (About Me, current focus) */
+.pot-card {
+  border: 1.5px solid var(--text-primary);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  box-shadow: 5px 5px 0 var(--leaf);
+  overflow: hidden;
+}
+
+.dark .pot-card {
+  border-color: var(--border-strong);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--leaf) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sway,
+  .co2,
+  .cloud-drift,
+  .rain line {
+    animation: none !important;
+  }
+  .co2 {
+    opacity: 0.8;
   }
 }

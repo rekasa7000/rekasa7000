@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { WORK_ENTRIES } from "@/lib/career-data";
-import { BootScreen, EmissionsScreen, RadarScreen, RelayScreen } from "./mission-screens";
+import { CarbonTree, FirstSprout, LanguageGarden, RainField } from "./plot-scenes";
 
 type MissionMeta = {
   codename: string;
@@ -15,50 +15,50 @@ type MissionMeta = {
 
 const META: Record<string, MissionMeta> = {
   concentrix: {
-    codename: "Relay",
+    codename: "Language garden",
     headline: "Wiring live translation into the help desk for an international team.",
     metrics: [
       { value: "100+", label: "Support agents" },
       { value: "20+", label: "Languages" },
       { value: "10K+", label: "Tickets migrated" },
     ],
-    Screen: RelayScreen,
+    Screen: LanguageGarden,
   },
   revearth: {
-    codename: "Carbon ledger",
+    codename: "Carbon tree",
     headline: "A carbon-footprint tracker for Philippine organizations, backed by real emission science.",
     metrics: [
       { value: "21", label: "API endpoints" },
       { value: "13", label: "Data models" },
       { value: "3", label: "Emission scopes" },
     ],
-    Screen: EmissionsScreen,
+    Screen: CarbonTree,
   },
   "kloudtech-swe": {
-    codename: "Storm watch",
+    codename: "Rain field",
     headline: "Leading the team behind a real-time weather network for disaster-response offices.",
     metrics: [
       { value: "25+", label: "Weather stations" },
       { value: "<100ms", label: "Telemetry latency" },
       { value: "8+ mo", label: "Continuous uptime" },
     ],
-    Screen: RadarScreen,
+    Screen: RainField,
   },
   "kloudtech-intern": {
-    codename: "Ignition",
-    headline: "First launch: IoT hardware, security practice, and a production web app.",
+    codename: "First sprout",
+    headline: "Where it took root: IoT hardware, security practice, and a production web app.",
     metrics: [
       { value: "9 mo", label: "On the team" },
       { value: "IoT", label: "Embedded systems" },
       { value: "SEC", label: "Applied cybersecurity" },
     ],
-    Screen: BootScreen,
+    Screen: FirstSprout,
   },
 };
 
 const missions = [...WORK_ENTRIES].reverse();
 
-/** Experience as mission cards: three numbers and a working simulation each; full text is one tap away. */
+/** Experience as garden plots: three numbers and a growing scene each; full text is one tap away. */
 export function Missions() {
   const [open, setOpen] = useState<string | null>(null);
 
@@ -81,14 +81,14 @@ export function Missions() {
           >
             <div className={`p-6 md:p-9 flex flex-col ${i % 2 ? "md:order-2" : ""}`}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-5">
-                <span className="session-tag">Mission {String(missions.length - i).padStart(2, "0")}</span>
+                <span className="session-tag">Plot {String(missions.length - i).padStart(2, "0")}</span>
                 <span className="meta-label">{meta.codename}</span>
                 {live && (
                   <span className="meta-label signal-text ml-auto">
                     <span className="blink" aria-hidden="true">
                       ●
                     </span>{" "}
-                    Active
+                    Growing
                   </span>
                 )}
               </div>
@@ -128,7 +128,7 @@ export function Missions() {
                 onClick={() => setOpen(isOpen ? null : m.id)}
                 aria-expanded={isOpen}
               >
-                {isOpen ? "Close" : "Open"} full mission log
+                {isOpen ? "Close" : "Read"} the full story
                 <ChevronDown
                   className="w-3.5 h-3.5 transition-transform duration-300"
                   style={{ transform: isOpen ? "rotate(180deg)" : "none" }}

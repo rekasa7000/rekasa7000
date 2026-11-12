@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Canvas starfield behind the hero: twinkling stars that drift with scroll,
- * plus the occasional shooting star. Static under prefers-reduced-motion.
+ * Canvas sky behind the hero: twinkling stars that drift with scroll, petals
+ * floating down, plus the occasional shooting star. Static under prefers-reduced-motion.
  */
 export function Starfield({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -33,6 +33,14 @@ export function Starfield({ className = "" }: { className?: string }) {
       warm: i % 9 === 0,
     }));
 
+    const petals = Array.from({ length: 9 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      size: 4 + Math.random() * 4,
+      speed: 0.012 + Math.random() * 0.016,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
     const resize = () => {
       w = canvas.clientWidth;
       h = canvas.clientHeight;
@@ -57,6 +65,24 @@ export function Starfield({ className = "" }: { className?: string }) {
         ctx.fillStyle = s.warm ? accent : ink;
         ctx.beginPath();
         ctx.arc(s.x * w, y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // petals drifting down through the sky
+      const petal = styles.getPropertyValue("--petal").trim() || "#e58aa0";
+      ctx.fillStyle = petal;
+      for (const p of petals) {
+        if (!reduce) {
+          p.y += (p.speed * dt) / 1000;
+          if (p.y > 1.05) {
+            p.y = -0.05;
+            p.x = Math.random();
+          }
+        }
+        const px = p.x * w + Math.sin(now / 1400 + p.phase) * 26;
+        ctx.globalAlpha = 0.75;
+        ctx.beginPath();
+        ctx.ellipse(px, p.y * h, p.size, p.size * 0.55, now / 1100 + p.phase, 0, Math.PI * 2);
         ctx.fill();
       }
 

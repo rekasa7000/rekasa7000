@@ -96,7 +96,7 @@ export function AboutPortfolioContent() {
         </section>
 
         <section className="py-16 md:py-20 border-t" style={{ borderColor: "var(--border-color)" }}>
-          <BlockHeading tag="Part 05" title="Flight plan" note="Roadmap" />
+          <BlockHeading tag="Part 05" title="Planting next" note="Roadmap" />
           <Roadmap />
         </section>
 
@@ -145,7 +145,7 @@ export function AboutPortfolioContent() {
 
                 <TechCard title="Design & Assets">
                   <li>
-                    <strong style={{ color: "var(--text-primary)" }}>Unbounded, Space Grotesk, Space Mono</strong> -
+                    <strong style={{ color: "var(--text-primary)" }}>Fraunces, Space Grotesk, Space Mono</strong> -
                     Display, reading and label typefaces
                   </li>
                   <li>
@@ -204,36 +204,35 @@ export function AboutPortfolioContent() {
 
             <ProseSection title="Design Philosophy">
               <p>
-                This portfolio is styled like a retro-futurist AI design conference: 1970s space-program print graphics
-                on the light side, and a phosphor mission-control terminal after dark. It borrows the optimism of
-                mid-century visions of thinking machines, then holds it to the standards of a modern, accessible web.
+                This portfolio is drawn as a small homestead on a small planet: flowers, farm plots and a farmhouse, out
+                among the stars. It is the two halves of me in one picture. I build software, and one day I want to
+                trade the keyboard for a watering can.
               </p>
               <p className="font-medium" style={{ color: "var(--text-primary)" }}>
                 Key design principles:
               </p>
               <ul className="space-y-2.5">
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Signal over noise</strong> - Every flourish has to
-                  carry information: session numbers, tracks, coordinates and a live readout
+                  <strong style={{ color: "var(--text-primary)" }}>Flowers first, tech as the soil</strong> - Space and
+                  technology are the setting; the garden is the subject
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Instruments, not decoration</strong> - Buttons behave
-                  like console keys, sections read like a programme, contact is a ticket
+                  <strong style={{ color: "var(--text-primary)" }}>Everything grows</strong> - Careers, skills and
+                  projects are shown as things that were planted and tended
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Warm machines</strong> - Cream paper stock, navy ink
-                  and a signal-orange sun instead of cold chrome
+                  <strong style={{ color: "var(--text-primary)" }}>Warm, never cold</strong> - Cream paper, terracotta,
+                  leaf green and petal pink instead of chrome and neon
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Optimism by design</strong> - The future as something
-                  to look forward to, not something to fear
+                  <strong style={{ color: "var(--text-primary)" }}>Room to breathe</strong> - Fewer words, more pictures
                 </li>
               </ul>
               <p>
-                Type is set in Unbounded for display, Space Grotesk for reading and Space Mono for labels. Motion is
-                slow orbital drift and a scrolling ticker, and all of it stops for anyone who prefers reduced motion.
-                The illustrated plates were generated with open image models (Qwen-Image) on Hugging Face, prompted to
-                the same palette.
+                Type is set in Fraunces for display, Space Grotesk for reading and Space Mono for small labels. Flowers
+                grow as you scroll and sway gently; all of it stops for anyone who prefers reduced motion. One
+                illustration (the home station) was generated with Qwen-Image on Hugging Face; the rest is drawn in
+                code.
               </p>
             </ProseSection>
 
@@ -297,7 +296,7 @@ export function AboutPortfolioContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="meta-label">© 2024 Regee Casaña · End of transmission</div>
+          <div className="meta-label">© 2024 Regee Casaña · Grown with care</div>
         </div>
       </footer>
     </div>

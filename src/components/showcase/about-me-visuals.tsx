@@ -4,16 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Flower, type FlowerKind } from "./garden";
 import {
-  Activity,
   ArrowUpRight,
   BookOpen,
-  Brain,
   Compass,
-  Cpu,
   Gem,
   GitBranch,
-  Globe,
   GraduationCap,
   Handshake,
   Lightbulb,
@@ -50,14 +47,14 @@ export function BlockHeading({ tag, title, note }: { tag: string; title: string;
 
 export function SpeakerBadge() {
   return (
-    <div className="badge-rig" aria-label="Speaker badge for Regee Casaña">
+    <div className="badge-rig" aria-label="Name badge for Regee Casaña">
       <div className="badge-strap" aria-hidden="true" />
       <div className="badge-swing">
         <div className="badge-clip" aria-hidden="true" />
         <div className="badge-card">
           <div className="flex items-center justify-between px-4 py-2.5 badge-head">
-            <span>Speaker</span>
-            <span>All access</span>
+            <span>Gardener</span>
+            <span>Plot No. 1</span>
           </div>
           <div className="p-4">
             <div className="badge-photo">
@@ -182,43 +179,62 @@ export function PrincipleSwitches() {
   );
 }
 
-/* ── Current focus as live channels ── */
+/* ── Current focus as potted plants ── */
 
-const CHANNELS = [
-  { icon: Activity, title: "Real-time data", note: "Processing & visualization" },
-  { icon: Cpu, title: "IoT systems", note: "Architecture & integration" },
-  { icon: Users, title: "Team leadership", note: "Leading & mentoring" },
-  { icon: Brain, title: "AI / ML", note: "Practical applications" },
-  { icon: Globe, title: "Modern web", note: "Frameworks & tooling" },
+const POTS: { title: string; note: string; kind: FlowerKind; color: string; h: number }[] = [
+  { title: "Real-time data", note: "Processing & visualization", kind: "daisy", color: "var(--petal)", h: 62 },
+  { title: "IoT systems", note: "Architecture & integration", kind: "tulip", color: "var(--accent)", h: 54 },
+  { title: "Team leadership", note: "Leading & mentoring", kind: "sunflower", color: "", h: 74 },
+  { title: "AI / ML", note: "Practical applications", kind: "lavender", color: "var(--lilac)", h: 58 },
+  { title: "Modern web", note: "Frameworks & tooling", kind: "sprout", color: "", h: 34 },
 ];
 
 export function FocusChannels() {
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      {CHANNELS.map((c, i) => (
-        <motion.div key={c.title} {...rise} transition={{ duration: 0.4, delay: i * 0.07 }} className="crt-screen p-4">
-          <div className="flex items-center justify-between mb-5">
-            <c.icon className="w-4 h-4" aria-hidden="true" />
-            <span>CH {String(i + 1).padStart(2, "0")}</span>
+    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      {POTS.map((c, i) => (
+        <motion.div
+          key={c.title}
+          {...rise}
+          transition={{ duration: 0.4, delay: i * 0.07 }}
+          className={`pot-card ${i === POTS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+        >
+          <svg viewBox="0 0 120 130" className="w-full h-36" aria-hidden="true">
+            <Flower
+              x={60}
+              y={96}
+              h={c.h}
+              kind={c.kind}
+              color={c.color}
+              delay={i * 0.12}
+              scale={c.kind === "sprout" ? 1.3 : 1}
+            />
+            <path
+              d="M34 92 h52 l-7 32 h-38z"
+              fill="var(--accent)"
+              stroke="var(--text-primary)"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <rect
+              x="30"
+              y="86"
+              width="60"
+              height="10"
+              rx="3"
+              fill="var(--accent)"
+              stroke="var(--text-primary)"
+              strokeWidth="1.5"
+            />
+          </svg>
+          <div className="px-4 pb-4">
+            <div className="font-display text-lg mb-1" style={{ lineHeight: 1.1 }}>
+              {c.title}
+            </div>
+            <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              {c.note}
+            </div>
           </div>
-          <div className="wave" aria-hidden="true">
-            {Array.from({ length: 14 }).map((_, b) => (
-              <span key={b} style={{ animationDelay: `${((b * 37 + i * 53) % 100) / 100 - 1}s` }} />
-            ))}
-          </div>
-          <div
-            className="mt-5 mb-1 normal-case"
-            style={{
-              fontFamily: "var(--stack-display)",
-              fontWeight: 600,
-              fontSize: "0.95rem",
-              letterSpacing: "-0.02em",
-              color: "#ece6d4",
-            }}
-          >
-            {c.title}
-          </div>
-          <div className="opacity-70">{c.note}</div>
         </motion.div>
       ))}
     </div>

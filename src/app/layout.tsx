@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Unbounded, Space_Grotesk, Space_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
+import { Fraunces, Space_Grotesk, Space_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
@@ -7,9 +7,10 @@ import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import { GalaxyMode } from "@/components/galaxy-mode";
 import "./globals.css";
 
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin", "latin-ext"],
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -46,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${unbounded.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${zenKaku.variable} antialiased`}
+        className={`${fraunces.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${zenKaku.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <div className="crt-overlay" aria-hidden="true" />

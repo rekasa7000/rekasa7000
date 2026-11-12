@@ -47,7 +47,7 @@ export function Header({ activePage }: HeaderProps) {
               <span className="blink signal-text" aria-hidden="true">
                 ●
               </span>{" "}
-              Transmitting from PH
+              Growing in the Philippines
             </span>
           </span>
         </Link>

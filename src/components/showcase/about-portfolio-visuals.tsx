@@ -45,7 +45,7 @@ const LAYERS = [
     color: "var(--accent-2)",
   },
   {
-    name: "Ground crew",
+    name: "Roots",
     role: "Build, check, ship",
     items: ["Bun", "ESLint", "Git", "Vercel"],
     color: "var(--text-primary)",
@@ -156,18 +156,19 @@ export function IconTiles({ tiles }: { tiles: Tile[] }) {
 const SWATCHES = [
   { name: "Paper", v: "--bg-primary" },
   { name: "Ink", v: "--text-primary" },
-  { name: "Signal", v: "--accent" },
-  { name: "Cobalt", v: "--accent-2" },
+  { name: "Clay", v: "--accent" },
+  { name: "Leaf", v: "--leaf" },
   { name: "Sun", v: "--accent-3" },
+  { name: "Petal", v: "--petal" },
 ];
 
 const TYPE = [
-  { name: "Unbounded", use: "Display", stack: "var(--stack-display)", weight: 600 },
+  { name: "Fraunces", use: "Display", stack: "var(--stack-display)", weight: 600 },
   { name: "Space Grotesk", use: "Reading", stack: "var(--stack-sans)", weight: 500 },
   { name: "Space Mono", use: "Labels", stack: "var(--stack-mono)", weight: 400 },
 ];
 
-const DESIGN_RULES = ["Signal over noise", "Instruments, not decoration", "Warm machines", "Optimism by design"];
+const DESIGN_RULES = ["Flowers first, tech as the soil", "Everything grows", "Warm, never cold", "Room to breathe"];
 
 export function DesignSpecimen() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -189,8 +190,8 @@ export function DesignSpecimen() {
   return (
     <div className="grid lg:grid-cols-12 gap-6">
       <motion.div {...rise} transition={{ duration: 0.45 }} className="lg:col-span-7 stage-card p-6 md:p-8">
-        <div className="meta-label mb-5">Palette · {dark ? "Phosphor terminal" : "Space-age print"}</div>
-        <div className="grid grid-cols-5 gap-2 sm:gap-3 mb-9">
+        <div className="meta-label mb-5">Palette · {dark ? "Garden at night" : "Seed catalogue"}</div>
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-9">
           {SWATCHES.map((s) => (
             <div key={s.v}>
               <div className="swatch" style={{ background: `var(${s.v})` }} />
@@ -211,7 +212,7 @@ export function DesignSpecimen() {
                 style={{
                   fontFamily: t.stack,
                   fontWeight: t.weight,
-                  letterSpacing: t.name === "Unbounded" ? "-0.035em" : undefined,
+                  letterSpacing: t.name === "Fraunces" ? "-0.025em" : undefined,
                 }}
               >
                 {t.name}
@@ -232,15 +233,15 @@ export function DesignSpecimen() {
             aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           >
             <span className="lever-side">
-              <Sun className="w-4 h-4" aria-hidden="true" /> Print
+              <Sun className="w-4 h-4" aria-hidden="true" /> Day
             </span>
             <span className="lever-side">
-              <Moon className="w-4 h-4" aria-hidden="true" /> Terminal
+              <Moon className="w-4 h-4" aria-hidden="true" /> Night
             </span>
             <span className="lever-thumb" aria-hidden="true" />
           </button>
           <p className="text-sm mt-5" style={{ color: "var(--text-secondary)" }}>
-            Flip it. The whole site changes era.
+            Flip it. The sun sets on the whole garden.
           </p>
         </motion.div>
 
@@ -265,8 +266,8 @@ export function DesignSpecimen() {
 /* ── Roadmap ── */
 
 const ROADMAP = [
-  { title: "Dark mode", note: "The phosphor terminal", done: true },
-  { title: "Interactive homepage", note: "Missions, orbit, flight path", done: true },
+  { title: "Dark mode", note: "The garden at night", done: true },
+  { title: "Interactive homepage", note: "Garden plots, skill orbit, growth vine", done: true },
   { title: "Blog", note: "Articles, tutorials, notes", done: false },
   { title: "Project case studies", note: "Embedded demos and deep dives", done: false },
   { title: "Performance tuning", note: "Load time and bundle size", done: false },
@@ -293,7 +294,7 @@ export function Roadmap() {
             </div>
           </div>
           <span className="meta-label ml-auto shrink-0" style={{ color: r.done ? "var(--signal)" : undefined }}>
-            {r.done ? "Landed" : "Planned"}
+            {r.done ? "In bloom" : "Seeded"}
           </span>
         </motion.li>
       ))}

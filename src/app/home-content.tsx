@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Plus } from "lucide-react";
+import { ArrowUpRight, Flower2 } from "lucide-react";
 import { Header } from "@/components/header";
 import { ScrollIndicator } from "@/components/scroll-indicator";
 import { FadeInSection } from "@/components/motion-wrappers";
-import { OrbitDiagram } from "@/components/orbit-diagram";
+import { GardenPlanet } from "@/components/showcase/garden";
 import { Starfield } from "@/components/showcase/starfield";
 import { MissionStats } from "@/components/showcase/mission-stats";
 import { Trajectory } from "@/components/showcase/trajectory";
@@ -29,7 +28,7 @@ function SectionHeading({ index, title, track }: { index: string; title: string;
     <FadeInSection>
       <div className="mb-14">
         <div className="section-rule mb-5">
-          <span className="session-tag">Session {index}</span>
+          <span className="session-tag">Field {index}</span>
           <span className="rule-line" aria-hidden="true" />
           <span className="meta-label">{track}</span>
         </div>
@@ -61,10 +60,10 @@ function ManilaClock() {
 }
 
 const READOUT = [
-  { label: "Status", value: <span className="signal-text">● Building</span> },
-  { label: "Base", value: "Philippines · UTC+8" },
-  { label: "Local", value: <ManilaClock /> },
-  { label: "Focus", value: "AI × Web × IoT" },
+  { label: "Season", value: <span className="signal-text">● Growing</span> },
+  { label: "Soil", value: "Philippines · UTC+8" },
+  { label: "Local time", value: <ManilaClock /> },
+  { label: "Planting", value: "AI × Web × IoT" },
 ];
 
 function Ticker() {
@@ -76,7 +75,7 @@ function Ticker() {
           <span className="meta-label px-5 py-3" style={{ color: "inherit", letterSpacing: "0.18em" }}>
             {item}
           </span>
-          <Plus className="w-3 h-3 shrink-0" style={{ color: "var(--accent)" }} />
+          <Flower2 className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--accent-3)" }} />
         </span>
       ))}
     </div>
@@ -161,7 +160,7 @@ export function HomeContent() {
         <div className="relative">
           <Starfield className="absolute inset-0 w-full h-full" />
           <div className="max-w-5xl mx-auto px-6 relative">
-            {/* Hero Section — conference poster */}
+            {/* Hero Section — the homestead planet */}
             <section className="relative pt-16 pb-20 md:pt-24 md:pb-28">
               <motion.div
                 className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-10"
@@ -169,7 +168,7 @@ export function HomeContent() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <span className="session-tag">Keynote</span>
+                <span className="session-tag">Welcome</span>
                 <span className="meta-label">Software Engineer — Philippines</span>
                 <span className="meta-label hidden sm:inline font-jp normal-case tracking-normal">
                   レジー・カサーニャ
@@ -230,7 +229,7 @@ export function HomeContent() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 >
-                  <OrbitDiagram className="w-full max-w-[340px] mx-auto md:max-w-none" />
+                  <GardenPlanet className="w-full max-w-[340px] mx-auto md:max-w-none" />
 
                   <dl className="readout text-sm">
                     {READOUT.map((row) => (
@@ -253,7 +252,7 @@ export function HomeContent() {
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
                 <span className="meta-label" style={{ color: "var(--accent)" }}>
-                  Frequencies →
+                  Find me →
                 </span>
                 {SOCIAL_LINKS.map((link) => (
                   <a
@@ -278,9 +277,9 @@ export function HomeContent() {
         <div className="max-w-5xl mx-auto px-6 pt-20 md:pt-24">
           <FadeInSection>
             <div className="section-rule mb-8">
-              <span className="session-tag">Telemetry</span>
+              <span className="session-tag">Harvest</span>
               <span className="rule-line" aria-hidden="true" />
-              <span className="meta-label">Career readings to date</span>
+              <span className="meta-label">What has grown so far</span>
             </div>
           </FadeInSection>
           <MissionStats />
@@ -289,10 +288,10 @@ export function HomeContent() {
         <div className="max-w-5xl mx-auto px-6">
           {/* Experience Section */}
           <section className="py-24" id="experience">
-            <SectionHeading index="01" title="Experience" track="Track A — Mission log" />
+            <SectionHeading index="01" title="Experience" track="What I've grown" />
             <FadeInSection>
               <div className="flex items-center justify-between mb-2">
-                <span className="meta-label">Flight path · 2018 → now</span>
+                <span className="meta-label">Growth · 2018 → now</span>
                 <span className="meta-label md:hidden" style={{ color: "var(--accent)" }}>
                   Swipe →
                 </span>
@@ -306,7 +305,7 @@ export function HomeContent() {
 
           {/* Education Section */}
           <section className="py-24 border-t" id="education" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="02" title="Education" track="Track B — Training" />
+            <SectionHeading index="02" title="Education" track="Where I took root" />
             <div className="grid md:grid-cols-2 gap-8">
               {EDUCATION.map((e, i) => (
                 <FadeInSection key={e.school} delay={i * 0.1}>
@@ -339,57 +338,37 @@ export function HomeContent() {
             </div>
           </section>
 
-          {/* Intermission — generated illustration */}
-          <FadeInSection>
-            <figure className="pb-24">
-              <div className="print-frame">
-                <Image
-                  src="/images/orbit-banner.webp"
-                  alt="Retro-futurist screen print of a striped orange sun, a ringed planet and a small AI satellite tracing orbit lines"
-                  width={1664}
-                  height={842}
-                  sizes="(min-width: 1024px) 976px, 100vw"
-                  className="w-full h-auto block"
-                />
-              </div>
-              <figcaption className="flex justify-between gap-4 mt-5">
-                <span className="session-tag">Intermission</span>
-                <span className="meta-label text-right">Plate I — The long orbit</span>
-              </figcaption>
-            </figure>
-          </FadeInSection>
-
           {/* Skills Section */}
           <section id="skills" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="03" title="Skills & Tools" track="Track C — Instruments" />
+            <SectionHeading index="03" title="Skills & Tools" track="Tools in the shed" />
             <SkillOrbit />
           </section>
 
           {/* Works Section */}
           <section id="works" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="04" title="Selected Works" track="Track D — Demos" />
+            <SectionHeading index="04" title="Selected Works" track="Seed packets" />
             <ProjectPosters />
           </section>
 
           {/* Contact Section */}
           <section id="contact" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="05" title="Contact" track="Open floor — Q&A" />
+            <SectionHeading index="05" title="Contact" track="Come say hello" />
             <FadeInSection delay={0.1}>
               <div className="ticket grid md:grid-cols-12">
                 <div className="md:col-span-7 p-7 md:p-10">
                   <div className="flex items-center justify-between gap-4 mb-8">
-                    <span className="session-tag">Admit one</span>
-                    <span className="meta-label">No. 0001 · Open invitation</span>
+                    <span className="session-tag">Open gate</span>
+                    <span className="meta-label">Open invitation</span>
                   </div>
                   <p className="font-display text-2xl md:text-3xl mb-6" style={{ lineHeight: 1.15 }}>
-                    Let&apos;s build something that feels like the future.
+                    Let&apos;s grow something together.
                   </p>
                   <p className="text-base leading-relaxed mb-8" style={{ color: "var(--text-secondary)" }}>
                     I&apos;m always interested in discussing new opportunities, collaborations, or just having a
                     conversation about technology and software development.
                   </p>
                   <a href="mailto:regeecasana57@gmail.com" className="btn-ink">
-                    Send a transmission <ArrowUpRight className="w-3.5 h-3.5" />
+                    Say hello <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
                 <div className="ticket-stub md:col-span-5 p-7 md:p-10 space-y-5">
@@ -421,7 +400,7 @@ export function HomeContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-4">
-          <div className="meta-label">© 2024 Regee Casaña · End of transmission</div>
+          <div className="meta-label">© 2024 Regee Casaña · Grown with care</div>
           <div className="flex items-center gap-5">
             <span className="meta-label">Playground</span>
             {["piano", "matrix", "snake", "farm"].map((slug) => (
