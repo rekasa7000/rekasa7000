@@ -177,7 +177,9 @@ export function AboutPortfolioContent() {
             </ul>
             <p>
               Type is set in Unbounded for display, Space Grotesk for reading and Space Mono for labels. Motion is slow
-              orbital drift and a scrolling ticker, and all of it stops for anyone who prefers reduced motion.
+              orbital drift and a scrolling ticker, and all of it stops for anyone who prefers reduced motion. The
+              illustrated plates were generated with open image models (Qwen-Image) on Hugging Face, prompted to the
+              same palette.
             </p>
           </ProseSection>
 
