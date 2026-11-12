@@ -24,13 +24,18 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
           {/* Left: dot + line */}
           <div className="hidden md:flex flex-col items-center shrink-0 w-3">
             <div
-              className="w-2 h-2 rounded-full shrink-0 mt-2 transition-transform duration-300 group-hover:scale-150"
-              style={{ backgroundColor: "var(--accent)" }}
+              className="w-2.5 h-2.5 shrink-0 mt-2 rotate-45 border-[1.5px] transition-colors duration-200 group-hover:bg-[var(--accent)]"
+              style={{ borderColor: "var(--accent)" }}
             />
             {i < entries.length - 1 && (
               <motion.div
                 className="w-px flex-1 mt-3"
-                style={{ backgroundColor: "var(--border-color)", transformOrigin: "top" }}
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(to bottom, var(--border-strong) 0 3px, transparent 3px 7px)",
+                  opacity: 0.5,
+                  transformOrigin: "top",
+                }}
                 initial={{ scaleY: 0 }}
                 whileInView={{ scaleY: 1 }}
                 viewport={{ once: true }}
@@ -45,10 +50,13 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
               <div className="meta-label">{entry.period}</div>
             </div>
             <div className="md:col-span-9">
-              <h3 className="font-display text-xl mb-1" style={{ color: "var(--text-primary)" }}>
+              <h3
+                className="font-display text-lg md:text-xl tracking-tight mb-2"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {entry.title}
               </h3>
-              <div className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+              <div className="meta-label mb-4" style={{ color: "var(--accent)" }}>
                 {entry.organization}
               </div>
               {Array.isArray(entry.description) ? (
@@ -60,10 +68,12 @@ export function AnimatedTimeline({ entries }: { entries: TimelineEntry[] }) {
                       style={{ color: "var(--text-secondary)" }}
                     >
                       <span
-                        className="mt-2.5 w-3 h-px shrink-0"
-                        style={{ backgroundColor: "var(--border-strong)" }}
+                        className="font-mono text-xs mt-0.5 shrink-0"
+                        style={{ color: "var(--accent)" }}
                         aria-hidden="true"
-                      />
+                      >
+                        ›
+                      </span>
                       <span>{point}</span>
                     </li>
                   ))}

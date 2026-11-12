@@ -3,41 +3,63 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans: var(--font-hanken), "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-  --font-jp: var(--font-shippori), var(--font-hanken), serif;
+  --font-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-unbounded), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+  --font-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
 }
 
 /*
- * Ink & Washi — quiet Japanese editorial minimalism.
- * Warm paper surfaces, sumi-ink text, a single vermillion accent.
- * Ma (間) generous space · Kanso (簡素) simplicity · Shibui (渋い) understated elegance.
+ * `@theme inline` does not emit its variables at runtime, so plain CSS gets its own stacks.
+ * Declared on body because that is where next/font sets --font-* variables.
+ */
+body {
+  --stack-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
+  --stack-display: var(--font-unbounded), "Helvetica Neue", Arial, sans-serif;
+  --stack-mono: var(--font-space-mono), ui-monospace, monospace;
+  --stack-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
+}
+
+/*
+ * Mission Control — retro-futurist conference programme.
+ * Light: 1970s space-age print. Cream stock, navy ink, signal orange, cobalt, sun yellow.
+ * Dark: phosphor terminal. Deep console black, warm amber-orange, phosphor green readouts.
+ * Ideas: signal over noise · every element is an instrument · warm machines · optimism by design.
  */
 :root {
-  --bg-primary: #f7f4ee;
-  --bg-secondary: #fdfbf6;
-  --bg-hover: rgba(33, 30, 26, 0.035);
-  --text-primary: #211e1a;
-  --text-secondary: #6b665d;
-  --text-tertiary: #9a948a;
-  --border-color: #e4dfd4;
-  --border-strong: #cbc4b5;
-  --accent: #b23c2a;
-  --accent-soft: rgba(178, 60, 42, 0.07);
+  --bg-primary: #efe8d9;
+  --bg-secondary: #f8f3e8;
+  --bg-hover: rgba(27, 26, 46, 0.045);
+  --text-primary: #1b1a2e;
+  --text-secondary: #4f4c5e;
+  --text-tertiary: #857f72;
+  --border-color: #d8cdb6;
+  --border-strong: #1b1a2e;
+  --accent: #e0531c;
+  --accent-soft: rgba(224, 83, 28, 0.1);
+  --accent-2: #2b55c9;
+  --accent-3: #f0b232;
+  --signal: #2b55c9;
+  --shadow-hard: #1b1a2e;
+  --grid-dot: rgba(27, 26, 46, 0.09);
 }
 
 .dark {
-  --bg-primary: #171512;
-  --bg-secondary: #1e1c18;
-  --bg-hover: rgba(235, 230, 220, 0.045);
-  --text-primary: #ebe6dc;
-  --text-secondary: #a29c8f;
-  --text-tertiary: #6e6a60;
-  --border-color: #2b2823;
-  --border-strong: #403b32;
-  --accent: #e07856;
-  --accent-soft: rgba(224, 120, 86, 0.09);
+  --bg-primary: #0c0e13;
+  --bg-secondary: #13161e;
+  --bg-hover: rgba(233, 228, 212, 0.05);
+  --text-primary: #ece6d4;
+  --text-secondary: #a8a392;
+  --text-tertiary: #6e6b61;
+  --border-color: #252a37;
+  --border-strong: #4a5164;
+  --accent: #ff6b2c;
+  --accent-soft: rgba(255, 107, 44, 0.12);
+  --accent-2: #5c86ff;
+  --accent-3: #f4b63e;
+  --signal: #7ee2a8;
+  --shadow-hard: #ff6b2c;
+  --grid-dot: rgba(236, 230, 212, 0.06);
 }
 
 /* ── Base ── */
@@ -47,24 +69,25 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--stack-sans);
   background-color: var(--bg-primary);
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1.2px);
+  background-size: 22px 22px;
   color: var(--text-primary);
-  line-height: 1.65;
-  font-feature-settings: "ss01";
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
   background: var(--accent);
-  color: var(--bg-primary);
+  color: #fff8ec;
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -75,50 +98,64 @@ body {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .marquee-track,
+  .orbit-spin,
+  .blink {
+    animation: none !important;
   }
 }
 
 /* ── Typography helpers ── */
 
 .font-display {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  letter-spacing: -0.015em;
+  font-family: var(--stack-display);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 
 .font-jp {
-  font-family: var(--font-jp);
+  font-family: var(--stack-jp);
 }
 
 .accent-text {
   color: var(--accent);
 }
 
-/* Small uppercase mono label — section indices, dates, tags */
+/* Mono uppercase label — section indices, dates, tags, readouts */
 .meta-label {
-  font-family: var(--font-mono);
+  font-family: var(--stack-mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   color: var(--text-tertiary);
 }
 
-/* ── Washi paper grain ── */
+.signal-text {
+  color: var(--signal);
+}
 
-.paper-grain {
+/* ── Overlay: halftone grain on paper, scanlines on the terminal ── */
+
+.crt-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.5;
+  z-index: 60;
+  opacity: 0.45;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
 }
 
-.dark .paper-grain {
-  opacity: 0.35;
-  mix-blend-mode: screen;
+.dark .crt-overlay {
+  opacity: 1;
+  mix-blend-mode: normal;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0, 0, 0, 0.22) 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 /* ── Links ── */
@@ -126,118 +163,150 @@ body {
 .link-underline {
   position: relative;
   text-decoration: none;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 2px;
   background-repeat: no-repeat;
   background-position: 0 100%;
-  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
-  padding-bottom: 1px;
+  transition: background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
+  padding-bottom: 2px;
 }
 
 .link-underline:hover {
-  background-size: 100% 1px;
+  background-size: 100% 2px;
+  color: var(--text-primary) !important;
 }
 
 .contact-link {
   color: var(--text-primary);
   text-decoration: none;
-  border-bottom: 1px solid var(--border-strong);
-  transition: border-color 0.25s ease, color 0.25s ease;
+  border-bottom: 1.5px dashed var(--border-strong);
+  transition: border-color 0.2s ease, color 0.2s ease;
   padding-bottom: 1px;
 }
 
 .contact-link:hover {
   color: var(--accent);
+  border-bottom-style: solid;
   border-bottom-color: var(--accent);
 }
 
 /* ── Interactive elements ── */
 
-/* Quiet pill button / chip */
+/* Console key / filter chip */
 .chip {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  padding: 0.3rem 0.85rem;
+  font-family: var(--stack-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 999px;
+  border-radius: 4px;
   color: var(--text-secondary);
-  background: transparent;
+  background: var(--bg-secondary);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .chip:hover {
-  border-color: var(--border-strong);
+  border-color: var(--text-primary);
   color: var(--text-primary);
 }
 
 .chip[data-active="true"] {
   border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: #fff8ec;
+  background: var(--accent);
 }
 
-/* Primary / secondary editorial buttons */
+/* Primary button — ink slab with hard offset shadow */
 .btn-ink {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.65rem 1.4rem;
-  border-radius: 999px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  border: 1px solid var(--text-primary);
-  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  gap: 0.6rem;
+  font-family: var(--stack-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.85rem 1.4rem;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff8ec;
+  border: 1.5px solid var(--text-primary);
+  box-shadow: 4px 4px 0 var(--text-primary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dark .btn-ink {
+  border-color: var(--accent);
+  color: #0c0e13;
+  box-shadow: 4px 4px 0 rgba(255, 107, 44, 0.35);
 }
 
 .btn-ink:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fdfbf6;
-  transform: translateY(-1px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--text-primary);
+}
+
+.dark .btn-ink:hover {
+  box-shadow: 6px 6px 0 rgba(255, 107, 44, 0.45);
+}
+
+.btn-ink:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--text-primary);
 }
 
 .btn-ghost {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.65rem 1.4rem;
-  border-radius: 999px;
+  gap: 0.6rem;
+  font-family: var(--stack-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.85rem 1.4rem;
+  border-radius: 6px;
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
-  background: transparent;
-  transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  border: 1.5px solid var(--text-primary);
+  background: var(--bg-secondary);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+}
+
+.dark .btn-ghost {
+  border-color: var(--border-strong);
 }
 
 .btn-ghost:hover {
-  border-color: var(--text-primary);
-  transform: translateY(-1px);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--accent-2);
 }
 
-/* Icon-sized quiet button (theme toggle, nav actions) */
+/* Icon-sized console key */
 .icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
-  background: transparent;
+  background: var(--bg-secondary);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .icon-btn:hover {
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-  background: var(--bg-hover);
+  color: var(--accent);
+  border-color: var(--text-primary);
+  box-shadow: 2px 2px 0 var(--text-primary);
+}
+
+.dark .icon-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0 rgba(255, 107, 44, 0.4);
 }
 
 /* Skill chip with icon */
@@ -245,68 +314,283 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.35rem;
   border: 1px solid var(--border-color);
-  border-radius: 999px;
-  font-size: 0.8125rem;
+  border-radius: 6px;
+  font-family: var(--stack-mono);
+  font-size: 0.75rem;
   color: var(--text-secondary);
   background: var(--bg-secondary);
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .skill-chip:hover {
   color: var(--text-primary);
-  border-color: var(--border-strong);
-  transform: translateY(-2px);
+  border-color: var(--text-primary);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--accent-3);
 }
 
 .skill-chip img {
   width: 1.375rem;
   height: 1.375rem;
-  border-radius: 999px;
+  border-radius: 4px;
 }
 
 /* Hover surface for list rows */
 .row-hover {
-  transition: background-color 0.25s ease;
-  border-radius: 0.5rem;
+  position: relative;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.row-hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .row-hover:hover {
   background: var(--bg-hover);
 }
 
-/* ── Section heading rule ── */
+.row-hover:hover::before {
+  transform: scaleY(1);
+}
+
+/* ── Section heading: session index + title + track readout ── */
 
 .section-rule {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 1.25rem;
+  gap: 0.75rem 1.25rem;
 }
 
-.section-rule::after {
-  content: "";
+.section-rule .rule-line {
   flex: 1;
-  height: 1px;
-  background: var(--border-color);
-  transform: translateY(-0.4em);
+  min-width: 2rem;
+  height: 6px;
+  align-self: center;
+  background-image: repeating-linear-gradient(to right, var(--text-primary) 0 1px, transparent 1px 8px);
+  opacity: 0.35;
 }
 
-/* ── Vermillion hanko mark (personal seal) ── */
+.session-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--stack-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.dark .session-tag {
+  background: var(--accent);
+  color: #0c0e13;
+}
+
+/* ── Brand badge: a planet with a ring ── */
 
 .hanko {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.375rem;
-  background: var(--accent);
-  color: #fdfbf6;
-  font-family: var(--font-jp);
-  font-weight: 500;
-  font-size: 1rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 30%, var(--accent-3), var(--accent) 62%);
+  color: #fff8ec;
+  font-family: var(--stack-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: -0.02em;
   line-height: 1;
-  letter-spacing: 0;
-  box-shadow: 0 1px 2px rgba(33, 30, 26, 0.15);
+}
+
+.hanko::after {
+  content: "";
+  position: absolute;
+  inset: 38% -22%;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 999px;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+/* ── Hero orbital diagram ── */
+
+.orbit-spin {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: orbit 24s linear infinite;
+}
+
+.orbit-spin.slow {
+  animation-duration: 60s;
+  animation-direction: reverse;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.blink {
+  animation: blink 1.6s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* ── Readout panel (hero telemetry) ── */
+
+.readout {
+  border: 1.5px solid var(--text-primary);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  box-shadow: 6px 6px 0 var(--shadow-hard);
+}
+
+.dark .readout {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 1px rgba(126, 226, 168, 0.06), 0 0 40px rgba(126, 226, 168, 0.05);
+}
+
+.readout-row + .readout-row {
+  border-top: 1px dashed var(--border-color);
+}
+
+/* ── Marquee ticker ── */
+
+.marquee {
+  overflow: hidden;
+  border-block: 1.5px solid var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.dark .marquee {
+  background: transparent;
+  color: var(--signal);
+  border-color: var(--border-strong);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Ticket (contact) ── */
+
+.ticket {
+  position: relative;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  box-shadow: 8px 8px 0 var(--accent-2);
+}
+
+.dark .ticket {
+  border-color: var(--border-strong);
+  box-shadow: 8px 8px 0 rgba(92, 134, 255, 0.35);
+}
+
+.ticket-stub {
+  position: relative;
+  border-top: 1.5px dashed var(--border-strong);
+}
+
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  border: 1.5px solid var(--text-primary);
+}
+
+.dark .ticket-stub::before,
+.dark .ticket-stub::after {
+  border-color: var(--border-strong);
+}
+
+.ticket-stub::before {
+  left: -12px;
+  clip-path: inset(0 0 0 50%);
+}
+
+.ticket-stub::after {
+  right: -12px;
+  clip-path: inset(0 50% 0 0);
+}
+
+@media (min-width: 768px) {
+  .ticket-stub {
+    border-top: 0;
+    border-left: 1.5px dashed var(--border-strong);
+  }
+
+  .ticket-stub::before,
+  .ticket-stub::after {
+    left: -12px;
+    right: auto;
+  }
+
+  .ticket-stub::before {
+    top: -12px;
+    clip-path: inset(50% 0 0 0);
+  }
+
+  .ticket-stub::after {
+    top: auto;
+    bottom: -12px;
+    clip-path: inset(0 0 50% 0);
+  }
+}
+
+/* Card surface used on the about pages */
+.panel {
+  border: 1.5px solid var(--text-primary);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  box-shadow: 5px 5px 0 var(--accent-3);
+}
+
+.dark .panel {
+  border-color: var(--border-strong);
+  box-shadow: 5px 5px 0 rgba(244, 182, 62, 0.25);
 }

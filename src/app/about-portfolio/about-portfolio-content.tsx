@@ -7,7 +7,7 @@ function ProseSection({ title, children }: { title: string; children: React.Reac
   return (
     <FadeInSection>
       <div className="grid md:grid-cols-12 gap-4 md:gap-8">
-        <h2 className="font-display text-2xl md:col-span-4">{title}</h2>
+        <h2 className="font-display text-xl md:text-2xl tracking-tight md:col-span-4">{title}</h2>
         <div
           className="md:col-span-8 space-y-5 leading-relaxed text-[15px] md:text-base"
           style={{ color: "var(--text-secondary)" }}
@@ -21,10 +21,7 @@ function ProseSection({ title, children }: { title: string; children: React.Reac
 
 function TechCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div
-      className="border rounded-lg p-5 md:p-6"
-      style={{ borderColor: "var(--border-color)", backgroundColor: "var(--bg-secondary)" }}
-    >
+    <div className="panel p-5 md:p-6">
       <h3 className="meta-label mb-4" style={{ color: "var(--text-primary)" }}>
         {title}
       </h3>
@@ -58,10 +55,11 @@ export function AboutPortfolioContent() {
         {/* Hero Section */}
         <section className="pt-20 pb-16 md:pt-28 md:pb-20 border-b" style={{ borderColor: "var(--border-color)" }}>
           <div className="max-w-3xl">
-            <p className="meta-label mb-6" style={{ color: "var(--accent)" }}>
+            <p className="meta-label mb-8 flex items-center gap-4" style={{ color: "var(--accent)" }}>
+              <span className="session-tag">Colophon</span>
               <span className="font-jp normal-case tracking-normal">ポートフォリオについて</span>
             </p>
-            <h1 className="font-display text-4xl md:text-6xl leading-tight mb-6">About Portfolio</h1>
+            <h1 className="font-display text-5xl md:text-7xl mb-8">About Portfolio</h1>
             <p className="text-base md:text-lg" style={{ color: "var(--text-secondary)" }}>
               The technologies, design decisions, and philosophy behind this portfolio website.
             </p>
@@ -78,12 +76,12 @@ export function AboutPortfolioContent() {
                   rendering and optimal performance
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>React</strong> - JavaScript library for building
-                  user interfaces with component architecture
+                  <strong style={{ color: "var(--text-primary)" }}>React</strong> - JavaScript library for building user
+                  interfaces with component architecture
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>TypeScript</strong> - Type-safe JavaScript for
-                  better development experience
+                  <strong style={{ color: "var(--text-primary)" }}>TypeScript</strong> - Type-safe JavaScript for better
+                  development experience
                 </li>
                 <li>
                   <strong style={{ color: "var(--text-primary)" }}>Tailwind CSS</strong> - Utility-first CSS framework
@@ -132,8 +130,8 @@ export function AboutPortfolioContent() {
             <p>This portfolio was created to serve multiple purposes beyond just showcasing my work:</p>
             <ul className="space-y-4">
               <DefItem term="Professional Showcase">
-                A clean, professional presentation of my skills, experience, and projects that reflects my attention
-                to detail and design sensibility.
+                A clean, professional presentation of my skills, experience, and projects that reflects my attention to
+                detail and design sensibility.
               </DefItem>
               <DefItem term="Technical Demonstration">
                 An opportunity to demonstrate proficiency with modern web technologies and development practices in a
@@ -144,7 +142,7 @@ export function AboutPortfolioContent() {
                 controlled environment.
               </DefItem>
               <DefItem term="Design Philosophy Expression">
-                A manifestation of my belief in minimalist design, user-centric development, and the importance of
+                A manifestation of my belief in purposeful design, user-centric development, and the importance of
                 performance and accessibility.
               </DefItem>
             </ul>
@@ -152,40 +150,34 @@ export function AboutPortfolioContent() {
 
           <ProseSection title="Design Philosophy">
             <p>
-              This portfolio follows Japanese minimalist design principles, heavily inspired by designers like Keisuke
-              Watanuki. The design emphasizes clean typography, generous white space, and purposeful interactions.
+              This portfolio is styled like a retro-futurist AI design conference: 1970s space-program print graphics on
+              the light side, and a phosphor mission-control terminal after dark. It borrows the optimism of mid-century
+              visions of thinking machines, then holds it to the standards of a modern, accessible web.
             </p>
             <p className="font-medium" style={{ color: "var(--text-primary)" }}>
               Key design principles:
             </p>
             <ul className="space-y-2.5">
               <li>
-                <strong style={{ color: "var(--text-primary)" }}>
-                  Ma <span className="font-jp">(間)</span>
-                </strong>{" "}
-                - Strategic use of negative space
+                <strong style={{ color: "var(--text-primary)" }}>Signal over noise</strong> - Every flourish has to
+                carry information: session numbers, tracks, coordinates and a live readout
               </li>
               <li>
-                <strong style={{ color: "var(--text-primary)" }}>
-                  Kanso <span className="font-jp">(簡素)</span>
-                </strong>{" "}
-                - Simplicity and elimination of clutter
+                <strong style={{ color: "var(--text-primary)" }}>Instruments, not decoration</strong> - Buttons behave
+                like console keys, sections read like a programme, contact is a ticket
               </li>
               <li>
-                <strong style={{ color: "var(--text-primary)" }}>
-                  Shibui <span className="font-jp">(渋い)</span>
-                </strong>{" "}
-                - Understated elegance
+                <strong style={{ color: "var(--text-primary)" }}>Warm machines</strong> - Cream paper stock, navy ink
+                and a signal-orange sun instead of cold chrome
               </li>
               <li>
-                <strong style={{ color: "var(--text-primary)" }}>Functional Beauty</strong> - Every element serves a
-                specific purpose
+                <strong style={{ color: "var(--text-primary)" }}>Optimism by design</strong> - The future as something
+                to look forward to, not something to fear
               </li>
             </ul>
             <p>
-              The monochromatic color scheme, clean typography, and minimal interactions create a professional
-              atmosphere that puts content first while maintaining visual interest through subtle hover effects and
-              thoughtful spacing.
+              Type is set in Unbounded for display, Space Grotesk for reading and Space Mono for labels. Motion is slow
+              orbital drift and a scrolling ticker, and all of it stops for anyone who prefers reduced motion.
             </p>
           </ProseSection>
 
@@ -217,10 +209,6 @@ export function AboutPortfolioContent() {
               <DefItem term="Blog Section">
                 A dedicated space for technical articles, tutorials, and thoughts on software development and design.
               </DefItem>
-              <DefItem term="Dark Mode">
-                An elegant dark theme option that maintains the minimalist aesthetic while providing a comfortable
-                viewing experience in low-light conditions.
-              </DefItem>
               <DefItem term="Interactive Project Demos">
                 Embedded demos and detailed case studies for selected projects to provide deeper insights into the
                 development process.
@@ -250,11 +238,9 @@ export function AboutPortfolioContent() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t" style={{ borderColor: "var(--border-color)" }}>
+      <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
-            © 2024 Regee Casaña
-          </div>
+          <div className="meta-label">© 2024 Regee Casaña · End of transmission</div>
         </div>
       </footer>
     </div>

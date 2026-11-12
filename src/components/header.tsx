@@ -23,16 +23,23 @@ export function Header({ activePage }: HeaderProps) {
       className="sticky top-0 z-50 w-full border-b backdrop-blur-md"
       style={{
         borderColor: "var(--border-color)",
-        backgroundColor: "color-mix(in srgb, var(--bg-primary) 85%, transparent)",
+        backgroundColor: "color-mix(in srgb, var(--bg-primary) 88%, transparent)",
+        borderBottomWidth: "1.5px",
       }}
     >
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-5xl mx-auto px-6 h-[68px] flex items-center justify-between gap-4">
         {/* Wordmark + seal */}
-        <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <span className="hanko transition-transform duration-300 group-hover:-rotate-6" aria-hidden="true">
-            レ
+        <Link href="/" className="flex items-center gap-4 group shrink-0 pl-1">
+          <span className="hanko transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
+          <span className="hidden sm:flex flex-col leading-none gap-1">
+            <span className="font-display text-[15px]">Regee Casaña</span>
+            <span className="meta-label" style={{ fontSize: "0.5625rem" }}>
+              <span className="blink signal-text" aria-hidden="true">
+                ●
+              </span>{" "}
+              Transmitting from PH
+            </span>
           </span>
-          <span className="font-display text-lg hidden sm:block">Regee Casaña</span>
         </Link>
 
         {/* Section anchors — home only, large screens */}
@@ -42,7 +49,7 @@ export function Header({ activePage }: HeaderProps) {
               <a
                 key={link.href}
                 href={link.href}
-                className="link-underline text-sm"
+                className="link-underline meta-label"
                 style={{ color: "var(--text-secondary)" }}
               >
                 {link.label}
@@ -53,13 +60,13 @@ export function Header({ activePage }: HeaderProps) {
 
         {/* Page links + actions */}
         <div className="flex items-center gap-5">
-          <nav className="flex items-center gap-5 text-sm" aria-label="Pages">
+          <nav className="flex items-center gap-5 meta-label" aria-label="Pages">
             <Link
               href="/about-me"
               className="link-underline"
               style={{
                 color: activePage === "about-me" ? "var(--text-primary)" : "var(--text-secondary)",
-                fontWeight: activePage === "about-me" ? 500 : 400,
+                fontWeight: activePage === "about-me" ? 700 : 400,
               }}
             >
               About Me
@@ -69,7 +76,7 @@ export function Header({ activePage }: HeaderProps) {
               className="link-underline hidden md:block"
               style={{
                 color: activePage === "about-portfolio" ? "var(--text-primary)" : "var(--text-secondary)",
-                fontWeight: activePage === "about-portfolio" ? 500 : 400,
+                fontWeight: activePage === "about-portfolio" ? 700 : 400,
               }}
             >
               About Portfolio

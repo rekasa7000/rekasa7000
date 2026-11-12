@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk, JetBrains_Mono, Shippori_Mincho } from "next/font/google";
+import { Unbounded, Space_Grotesk, Space_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
@@ -7,27 +7,26 @@ import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import { GalaxyMode } from "@/components/galaxy-mode";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
+  subsets: ["latin", "latin-ext"],
 });
 
-const hankenGrotesk = Hanken_Grotesk({
-  variable: "--font-hanken",
-  subsets: ["latin"],
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-grotesk",
+  subsets: ["latin", "latin-ext"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
 });
 
-const shipporiMincho = Shippori_Mincho({
-  variable: "--font-shippori",
+const zenKaku = Zen_Kaku_Gothic_New({
+  variable: "--font-zen-kaku",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["500", "700"],
   preload: false,
 });
 
@@ -47,10 +46,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fraunces.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable} ${shipporiMincho.variable} antialiased`}
+        className={`${unbounded.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${zenKaku.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
-          <div className="paper-grain" aria-hidden="true" />
+          <div className="crt-overlay" aria-hidden="true" />
           <MultiplayerCursors />
           <GalaxyMode />
           <PageTransition>{children}</PageTransition>
