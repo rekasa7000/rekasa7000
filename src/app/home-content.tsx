@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Flower2 } from "lucide-react";
 import { Header } from "@/components/header";
@@ -337,6 +338,26 @@ export function HomeContent() {
               ))}
             </div>
           </section>
+
+          {/* The dream, illustrated */}
+          <FadeInSection>
+            <figure className="pb-24">
+              <div className="print-frame">
+                <Image
+                  src="/images/homestead.webp"
+                  alt="Storybook illustration of a flower and vegetable farm on another planet: a farmhouse with a rocking chair, a cat and a dog, a barn and windmill, giant sunflowers and tulips, with Earth and a ringed planet in the night sky"
+                  width={1568}
+                  height={826}
+                  sizes="(min-width: 1024px) 976px, 100vw"
+                  className="w-full h-auto block"
+                />
+              </div>
+              <figcaption className="flex flex-wrap justify-between gap-x-4 gap-y-2 mt-5">
+                <span className="font-display text-lg">One day, the keyboard for a watering can.</span>
+                <span className="meta-label text-right">Plate I — The homestead</span>
+              </figcaption>
+            </figure>
+          </FadeInSection>
 
           {/* Skills Section */}
           <section id="skills" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>

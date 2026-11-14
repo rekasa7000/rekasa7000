@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
@@ -73,6 +74,22 @@ export function AboutPortfolioContent() {
               How this site is built, why it exists, and where it&apos;s going. Take it apart.
             </p>
           </div>
+          <FadeInSection>
+            <figure className="mt-14">
+              <div className="print-frame">
+                <Image
+                  src="/images/shed.webp"
+                  alt="Storybook illustration of a garden shed workbench with seed packets and tools on a pegboard, seedlings in pots, and a drawing of a flowering planet under a lamp, with Earth and a ringed planet outside the window"
+                  width={1664}
+                  height={928}
+                  priority
+                  sizes="(min-width: 1024px) 976px, 100vw"
+                  className="w-full h-auto block"
+                />
+              </div>
+              <figcaption className="meta-label mt-5 text-right">Plate III — The potting shed</figcaption>
+            </figure>
+          </FadeInSection>
         </section>
 
         <section className="py-16 md:py-20 border-t" style={{ borderColor: "var(--border-color)" }}>
@@ -230,9 +247,8 @@ export function AboutPortfolioContent() {
               </ul>
               <p>
                 Type is set in Fraunces for display, Space Grotesk for reading and Space Mono for small labels. Flowers
-                grow as you scroll and sway gently; all of it stops for anyone who prefers reduced motion. One
-                illustration (the home station) was generated with Qwen-Image on Hugging Face; the rest is drawn in
-                code.
+                grow as you scroll and sway gently; all of it stops for anyone who prefers reduced motion. The three
+                storybook plates were generated with Qwen-Image on Hugging Face; everything that moves is drawn in code.
               </p>
             </ProseSection>
 
