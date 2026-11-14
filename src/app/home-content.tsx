@@ -8,7 +8,7 @@ import { ArrowUpRight, Flower2 } from "lucide-react";
 import { Header } from "@/components/header";
 import { ScrollIndicator } from "@/components/scroll-indicator";
 import { FadeInSection } from "@/components/motion-wrappers";
-import { GardenPlanet } from "@/components/showcase/garden";
+import { Planet3D } from "@/components/three/garden-3d";
 import { Starfield } from "@/components/showcase/starfield";
 import { MissionStats } from "@/components/showcase/mission-stats";
 import { Trajectory } from "@/components/showcase/trajectory";
@@ -230,7 +230,7 @@ export function HomeContent() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 >
-                  <GardenPlanet className="w-full max-w-[340px] mx-auto md:max-w-none" />
+                  <Planet3D className="w-full max-w-[360px] mx-auto md:max-w-none" />
 
                   <dl className="readout text-sm">
                     {READOUT.map((row) => (

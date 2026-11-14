@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { WORK_ENTRIES } from "@/lib/career-data";
-import { CarbonTree, FirstSprout, LanguageGarden, RainField } from "./plot-scenes";
+import { Carbon3D, Languages3D, Rain3D, Sprout3D } from "@/components/three/garden-3d";
 
 type MissionMeta = {
   codename: string;
@@ -22,7 +22,7 @@ const META: Record<string, MissionMeta> = {
       { value: "20+", label: "Languages" },
       { value: "10K+", label: "Tickets migrated" },
     ],
-    Screen: LanguageGarden,
+    Screen: Languages3D,
   },
   revearth: {
     codename: "Carbon tree",
@@ -32,7 +32,7 @@ const META: Record<string, MissionMeta> = {
       { value: "13", label: "Data models" },
       { value: "3", label: "Emission scopes" },
     ],
-    Screen: CarbonTree,
+    Screen: Carbon3D,
   },
   "kloudtech-swe": {
     codename: "Rain field",
@@ -42,7 +42,7 @@ const META: Record<string, MissionMeta> = {
       { value: "<100ms", label: "Telemetry latency" },
       { value: "8+ mo", label: "Continuous uptime" },
     ],
-    Screen: RainField,
+    Screen: Rain3D,
   },
   "kloudtech-intern": {
     codename: "First sprout",
@@ -52,7 +52,7 @@ const META: Record<string, MissionMeta> = {
       { value: "IoT", label: "Embedded systems" },
       { value: "SEC", label: "Applied cybersecurity" },
     ],
-    Screen: FirstSprout,
+    Screen: Sprout3D,
   },
 };
 
