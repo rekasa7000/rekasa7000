@@ -3,7 +3,7 @@
 import { GardenPlanet } from "@/components/showcase/garden";
 import { CarbonTree, FirstSprout, LanguageGarden, RainField } from "@/components/showcase/plot-scenes";
 import { buildPlanet } from "./planet";
-import { buildCarbon, buildLanguages, buildRain, buildSprout } from "./scenes";
+import { buildCarbon, buildLanguages, buildMusic, buildRain, buildSprout, buildWater } from "./scenes";
 import { ThreeStage, type Builder } from "./stage";
 
 /** Hero: the homestead planet in 3D. Drag sideways to spin it. Falls back to the drawn version without WebGL. */
@@ -22,7 +22,7 @@ export function Planet3D({ className = "" }: { className?: string }) {
   );
 }
 
-function Scene3D({ build, label, fallback }: { build: Builder; label: string; fallback: React.ReactNode }) {
+function Scene3D({ build, label, fallback }: { build: Builder; label: string; fallback?: React.ReactNode }) {
   return (
     <div className="plot-scene">
       <ThreeStage
@@ -48,3 +48,5 @@ export const Rain3D = () => (
 export const Sprout3D = () => (
   <Scene3D build={buildSprout} label="Where it started: the first sprout" fallback={<FirstSprout />} />
 );
+export const Water3D = () => <Scene3D build={buildWater} label="41 subbasins, mapped along one river" />;
+export const Music3D = () => <Scene3D build={buildMusic} label="Tap the card, hear the music" />;

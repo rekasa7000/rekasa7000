@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
-import { Carbon3D, Languages3D, Rain3D } from "@/components/three/garden-3d";
+import { Carbon3D, Languages3D, Music3D, Rain3D, Water3D } from "@/components/three/garden-3d";
 import { CASE_STUDIES } from "@/lib/case-studies";
 
 export function generateStaticParams() {
@@ -24,7 +24,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   if (!study) notFound();
 
   const rule = { borderColor: "var(--border-color)" };
-  const Scene = { rain: Rain3D, languages: Languages3D, carbon: Carbon3D }[study.scene];
+  const Scene = { rain: Rain3D, languages: Languages3D, carbon: Carbon3D, water: Water3D, music: Music3D }[study.scene];
 
   return (
     <div

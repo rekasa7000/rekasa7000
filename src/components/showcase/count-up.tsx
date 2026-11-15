@@ -9,11 +9,14 @@ export function CountUp({
   prefix = "",
   suffix = "",
   duration = 1.6,
+  decimals = 0,
 }: {
   to: number;
   prefix?: string;
   suffix?: string;
   duration?: number;
+  /** digits after the decimal point, e.g. 1 for 99.9 */
+  decimals?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -25,15 +28,15 @@ export function CountUp({
     const controls = animate(0, to, {
       duration: reduce ? 0 : duration,
       ease: "easeOut",
-      onUpdate: (v) => setVal(Math.round(v)),
+      onUpdate: (v) => setVal(decimals ? Number(v.toFixed(decimals)) : Math.round(v)),
     });
     return () => controls.stop();
-  }, [inView, to, duration, reduce]);
+  }, [inView, to, duration, reduce, decimals]);
 
   return (
     <span ref={ref} className="tabular-nums">
       {prefix}
-      {val.toLocaleString("en-US")}
+      {val.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}
     </span>
   );

@@ -66,11 +66,11 @@ export function SpeakerBadge() {
               Regee Casaña
             </div>
             <div className="meta-label" style={{ color: "var(--accent)" }}>
-              Software Engineer
+              Technical Lead
             </div>
             <div className="flex items-end justify-between mt-4 gap-3">
               <div className="meta-label" style={{ fontSize: "0.5625rem", lineHeight: 1.7 }}>
-                Base · Philippines
+                Base · Bataan, PH
                 <br />
                 Track · Web × IoT × AI
               </div>

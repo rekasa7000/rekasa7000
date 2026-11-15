@@ -275,7 +275,7 @@ const ROADMAP = [
   { title: "Interactive homepage", note: "Garden plots, skill orbit, growth vine", done: true },
   { title: "Blog", note: "Articles, tutorials, notes", done: false },
   { title: "Guestbook garden", note: "Visitors plant a flower", done: true },
-  { title: "Three case studies", note: "KloudTrack, Polyglot, RevEarth", done: true },
+  { title: "Five case studies", note: "One for each current and recent engagement", done: true },
   { title: "Screenshots and demos", note: "Real screens in the case studies", done: false },
   { title: "Performance tuning", note: "Load time and bundle size", done: false },
 ];

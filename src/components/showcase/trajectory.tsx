@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 
 const WAYPOINTS = [
   { t: 0.02, year: "2018", title: "STEM track", sub: "Microcity College" },
-  { t: 0.24, year: "2020", title: "BS Computer Science", sub: "BPSU" },
-  { t: 0.5, year: "2023", title: "Engineering intern", sub: "Kloudtech" },
-  { t: 0.68, year: "2024", title: "Software Engineer", sub: "Kloudtech · Cum Laude" },
-  { t: 0.88, year: "2025", title: "Software Developer", sub: "Concentrix · RevEarth" },
+  { t: 0.2, year: "2020", title: "BS Computer Science", sub: "BPSU" },
+  { t: 0.42, year: "2023", title: "Engineering intern", sub: "Kloudtech" },
+  { t: 0.57, year: "2024", title: "Software Engineer", sub: "Kloudtech · Cum Laude" },
+  { t: 0.73, year: "2025", title: "Software Developer", sub: "Concentrix · RevEarth" },
+  { t: 0.9, year: "2026", title: "Technical Lead", sub: "Concentrix · Co-founder, Kloudtech" },
 ];
 
 // Cubic bezier launch arc

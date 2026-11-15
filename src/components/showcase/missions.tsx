@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { caseStudyForJob } from "@/lib/case-studies";
 import { WORK_ENTRIES } from "@/lib/career-data";
-import { Carbon3D, Languages3D, Rain3D, Sprout3D } from "@/components/three/garden-3d";
+import { Carbon3D, Languages3D, Music3D, Rain3D, Sprout3D, Water3D } from "@/components/three/garden-3d";
 
 type MissionMeta = {
   codename: string;
@@ -18,13 +18,43 @@ type MissionMeta = {
 const META: Record<string, MissionMeta> = {
   concentrix: {
     codename: "Language garden",
-    headline: "Wiring live translation into the help desk for an international team.",
+    headline: "Leading the team that builds Zendesk integrations and services for enterprise clients.",
     metrics: [
-      { value: "100+", label: "Support agents" },
-      { value: "20+", label: "Languages" },
+      { value: "8", label: "Engineers led" },
+      { value: "10+", label: "Zendesk apps shipped" },
       { value: "10K+", label: "Tickets migrated" },
     ],
     Screen: Languages3D,
+  },
+  "kloudtech-swe": {
+    codename: "Rain field",
+    headline: "Co-founder and owner of a real-time weather network for disaster-response offices.",
+    metrics: [
+      { value: "25+", label: "Weather stations" },
+      { value: "99.9%", label: "Uptime" },
+      { value: "<100ms", label: "Telemetry latency" },
+    ],
+    Screen: Rain3D,
+  },
+  "up-ice": {
+    codename: "Watershed",
+    headline: "Turning a research team's water-footprint method into a map-based decision tool.",
+    metrics: [
+      { value: "41", label: "Subbasins" },
+      { value: "25", label: "Barangays" },
+      { value: "±2%", label: "Accuracy vs. the method" },
+    ],
+    Screen: Water3D,
+  },
+  akosi: {
+    codename: "Music card",
+    headline: "Physical NFC cards that unlock an artist's music for the person who owns the card.",
+    metrics: [
+      { value: "2", label: "Card types" },
+      { value: "0", label: "Native apps needed" },
+      { value: "Jun '27", label: "Planned launch" },
+    ],
+    Screen: Music3D,
   },
   revearth: {
     codename: "Carbon tree",
@@ -35,16 +65,6 @@ const META: Record<string, MissionMeta> = {
       { value: "3", label: "Emission scopes" },
     ],
     Screen: Carbon3D,
-  },
-  "kloudtech-swe": {
-    codename: "Rain field",
-    headline: "Leading the team behind a real-time weather network for disaster-response offices.",
-    metrics: [
-      { value: "25+", label: "Weather stations" },
-      { value: "<100ms", label: "Telemetry latency" },
-      { value: "8+ mo", label: "Continuous uptime" },
-    ],
-    Screen: Rain3D,
   },
   "kloudtech-intern": {
     codename: "First sprout",
@@ -58,7 +78,9 @@ const META: Record<string, MissionMeta> = {
   },
 };
 
-const missions = [...WORK_ENTRIES].reverse();
+// the order of the résumé: current roles first, then engagements, then where it began
+const ORDER = ["concentrix", "kloudtech-swe", "up-ice", "akosi", "revearth", "kloudtech-intern"];
+const missions = ORDER.flatMap((id) => WORK_ENTRIES.filter((e) => e.id === id));
 
 /** Experience as garden plots: three numbers and a growing scene each; full text is one tap away. */
 export function Missions() {

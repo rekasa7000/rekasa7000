@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import { CountUp } from "./count-up";
 
-const STATS = [
-  { to: 10000, suffix: "+", label: "Tickets migrated", note: "Zero data loss" },
+const STATS: { to: number; decimals?: number; prefix?: string; suffix: string; label: string; note: string }[] = [
+  { to: 10000, suffix: "+", label: "Tickets migrated", note: "Zero data loss, 80% faster" },
+  { to: 8, suffix: "", label: "Engineers led", note: "Concentrix TPS Philippines" },
+  { to: 99.9, decimals: 1, suffix: "%", label: "Uptime", note: "KloudTrack, 8+ months running" },
   { to: 25, suffix: "+", label: "Weather stations", note: "Online for DRRM offices" },
-  { to: 100, prefix: "<", suffix: "ms", label: "Telemetry latency", note: "MQTT over TLS" },
-  { to: 20, suffix: "+", label: "Languages", note: "Translated live for 100+ agents" },
-  { to: 90, suffix: "%+", label: "Cache hit rate", note: "Custom LRU cache" },
-  { to: 4, suffix: "", label: "Engineers led", note: "Across 2 platform versions" },
+  { to: 10, suffix: "+", label: "Zendesk apps shipped", note: "For enterprise clients" },
+  { to: 41, suffix: "", label: "Subbasins modelled", note: "Water footprint, ±2% accuracy" },
 ];
 
 const COLORS = ["var(--accent)", "var(--leaf)", "var(--accent)", "var(--leaf)", "var(--accent)", "var(--leaf)"];
@@ -31,7 +31,7 @@ export function MissionStats() {
             className="font-display text-[2rem] sm:text-5xl md:text-6xl mb-3"
             style={{ color: COLORS[i % COLORS.length] }}
           >
-            <CountUp to={s.to} prefix={s.prefix} suffix={s.suffix} />
+            <CountUp to={s.to} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals} />
           </div>
           <div className="font-medium text-sm md:text-base leading-snug">{s.label}</div>
           <div className="meta-label mt-1.5" style={{ letterSpacing: "0.06em" }}>

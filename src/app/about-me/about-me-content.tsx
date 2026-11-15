@@ -149,8 +149,9 @@ export function AboutMeContent() {
 
             <ProseSection title="Current Focus">
               <p>
-                Currently, I&apos;m leading a team of three developers at Kloudtech Corp, where we architect and develop
-                weather monitoring systems with real-time data collection and IoT integration. This role has taught me
+                Currently, I&apos;m a technical lead at Concentrix, leading a team of eight engineers who build
+                enterprise Zendesk integrations, while staying hands-on. I&apos;m also a co-founder and technical
+                consultant at Kloudtech, where I own KloudTrack, a real-time IoT weather platform. Leading has taught me
                 the importance of balancing technical innovation with practical constraints.
               </p>
               <p>I&apos;m particularly interested in:</p>

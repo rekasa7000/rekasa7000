@@ -1927,9 +1927,8 @@ body {
 
 .resume-head {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 2rem;
+  flex-direction: column;
+  gap: 0.6rem;
   padding-bottom: 1.25rem;
   border-bottom: 2px solid #1d2433;
 }
@@ -1979,6 +1978,33 @@ body {
   font-size: 0.7rem;
   white-space: nowrap;
   color: #4d5361;
+}
+
+.resume-role-line {
+  margin-bottom: 0.1rem;
+}
+
+.resume-role-line em {
+  font-weight: 600;
+}
+
+.resume-item ul {
+  margin-top: 0.3rem;
+}
+
+.resume-subhead {
+  margin: 1rem 0 0.6rem;
+  font-style: italic;
+  font-weight: 600;
+  color: #4d5361;
+}
+
+.resume .resume-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 1.1rem;
+  text-align: left;
+  width: 100%;
 }
 
 .resume-org {

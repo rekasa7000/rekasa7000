@@ -625,3 +625,222 @@ export const buildSprout: Builder = (ctx) => {
     (led.material as T.MeshStandardMaterial).emissiveIntensity = Math.sin(t * 4) > 0 ? 2.4 : 0.15;
   });
 };
+
+/* ── UP Diliman ICE: a river basin mapped into coloured subbasins, with barangays along the water ── */
+
+export const buildWater: Builder = (ctx) => {
+  const { THREE } = ctx;
+  const { k, on, finish } = base(ctx, { ground: PAL.leaf, far: 0x22422f, body: "sun", fireflies: 6 });
+
+  // the river winds from the hills toward the viewer
+  const riverMat = new THREE.MeshBasicMaterial({ color: 0x6fb3e0 });
+  const river = (t: number): [number, number] => [Math.sin(t * 2.4) * 1.3 + (t - 0.5) * 0.6, -6 + t * 9.5];
+  for (let i = 0; i <= 46; i++) {
+    const [x, z] = river(i / 46);
+    const seg = new THREE.Mesh(new THREE.CircleGeometry(0.42 + (i / 46) * 0.32, 14), riverMat);
+    seg.rotation.x = -Math.PI / 2;
+    on(seg, x, z, 0.035);
+  }
+  const shine = new THREE.MeshBasicMaterial({ color: 0xd8eefc, transparent: true, opacity: 0.8 });
+  const glints = [0.25, 0.45, 0.62, 0.8, 0.93].map((t) => {
+    const [x, z] = river(t);
+    const g = new THREE.Mesh(new THREE.CircleGeometry(0.1, 8), shine);
+    g.rotation.x = -Math.PI / 2;
+    g.scale.set(1.8, 0.5, 1);
+    return { g: on(g, x, z, 0.05), x, z };
+  });
+
+  // subbasins: translucent patches, pale to deep by water footprint
+  const tones = [0xd8eefc, 0x9fd0ff, 0x6fb3e0, 0x3f86c9, 0x2b55c9, 0xf5bd4a, 0xff7a45];
+  const patches: [number, number, number, number][] = [
+    [-2.9, 0.6, 1.0, 1],
+    [-2.3, -1.6, 1.2, 3],
+    [-3.4, 2.2, 0.8, 0],
+    [2.6, 0.9, 1.05, 2],
+    [2.9, -1.4, 1.2, 4],
+    [1.9, 2.4, 0.8, 5],
+    [-1.4, 2.7, 0.7, 6],
+  ];
+  const pins = patches.map(([x, z, r, tone], i) => {
+    const patch = new THREE.Mesh(
+      new THREE.CircleGeometry(r, 7),
+      new THREE.MeshBasicMaterial({ color: tones[tone], transparent: true, opacity: 0.6 }),
+    );
+    patch.rotation.x = -Math.PI / 2;
+    patch.rotation.z = i * 0.7;
+    on(patch, x, z, 0.03);
+    const outline = new THREE.Mesh(
+      new THREE.RingGeometry(r * 0.96, r, 7),
+      new THREE.MeshBasicMaterial({ color: 0xfbf7ea, transparent: true, opacity: 0.85 }),
+    );
+    outline.rotation.copy(patch.rotation);
+    on(outline, x, z, 0.04);
+    // a map pin over each subbasin
+    const pin = k.group(
+      k.m("ico", tones[tone], [0.16, 0.16, 0.16], [0, 0.62, 0]),
+      k.m("cone", tones[tone], [0.09, 0.3, 0.09], [0, 0.34, 0], [Math.PI, 0, 0]),
+    );
+    on(pin, x, z, 0.1);
+    k.grow(pin, 0.4 + i * 0.14);
+    return pin;
+  });
+
+  // barangays along the water
+  [0.2, 0.42, 0.6, 0.78, 0.95].forEach((t, i) => {
+    const [x, z] = river(t);
+    const side = i % 2 ? 1 : -1;
+    const h = k.house();
+    h.scale.setScalar(0.62);
+    h.rotation.y = side * -0.5;
+    on(h, x + side * 1.15, z);
+    k.grow(h, 0.2 + i * 0.12);
+  });
+
+  // reeds and flowers at the banks
+  const banks: [number, number, FlowerKind, number][] = [
+    [-0.9, 1.9, "lavender", 0xb9a4ee],
+    [1.5, 1.2, "daisy", PAL.cream],
+    [-1.6, -0.4, "tulip", 0xf4a3b5],
+    [1.0, 3.0, "poppy", 0xf0603a],
+  ];
+  banks.forEach(([x, z, kind, color], i) => {
+    const f = k.flower(kind, color, 0.9);
+    f.scale.setScalar(1.1);
+    const holder = k.group(k.sway(f, 0.07));
+    on(holder, x, z, 0.03);
+    k.grow(holder, 0.9 + i * 0.12);
+  });
+
+  return finish((t) => {
+    pins.forEach((p, i) => (p.rotation.y = t * 0.6 + i));
+    glints.forEach(({ g, x, z }, i) => {
+      const drift = ((t * 0.5 + i * 0.37) % 1) - 0.5;
+      g.position.x = x + drift * 0.3;
+      g.position.z = z + drift * 0.9;
+      (g.material as T.MeshBasicMaterial).opacity = 0.8 * (1 - Math.abs(drift) * 2);
+    });
+  });
+};
+
+/* ── Akosi.Music: an NFC card in the garden, a phone tapping it, and music rising ── */
+
+export const buildMusic: Builder = (ctx) => {
+  const { THREE, scene } = ctx;
+  const { k, on, ticks, finish } = base(ctx, { ground: PAL.leaf, far: 0x22422f, body: "moon", fireflies: 7 });
+
+  // the card face: a record, sound waves and a chip
+  const face = k.canvasTexture(384, 540, (c) => {
+    const g = c.createLinearGradient(0, 0, 384, 540);
+    g.addColorStop(0, "#f472b6");
+    g.addColorStop(1, "#d9552b");
+    c.fillStyle = g;
+    c.beginPath();
+    c.roundRect(0, 0, 384, 540, 44);
+    c.fill();
+    c.fillStyle = "#1d2433";
+    c.beginPath();
+    c.arc(192, 230, 120, 0, Math.PI * 2);
+    c.fill();
+    c.strokeStyle = "rgba(251,247,234,0.35)";
+    c.lineWidth = 3;
+    for (const r of [100, 80, 60]) {
+      c.beginPath();
+      c.arc(192, 230, r, 0, Math.PI * 2);
+      c.stroke();
+    }
+    c.fillStyle = "#f5bd4a";
+    c.beginPath();
+    c.arc(192, 230, 34, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = "#1d2433";
+    c.beginPath();
+    c.arc(192, 230, 8, 0, Math.PI * 2);
+    c.fill();
+    // contactless waves
+    c.strokeStyle = "#fbf7ea";
+    c.lineWidth = 12;
+    c.lineCap = "round";
+    for (const r of [28, 54, 80]) {
+      c.beginPath();
+      c.arc(84, 452, r, -Math.PI * 0.42, Math.PI * 0.02);
+      c.stroke();
+    }
+    c.fillStyle = "#fbf7ea";
+    c.beginPath();
+    c.roundRect(238, 410, 96, 72, 12);
+    c.fill();
+  });
+  const cardMat = new THREE.MeshStandardMaterial({ map: face, roughness: 0.6 });
+  const card = new THREE.Mesh(new THREE.BoxGeometry(1.55, 2.18, 0.07), [
+    k.mat(PAL.ink),
+    k.mat(PAL.ink),
+    k.mat(PAL.ink),
+    k.mat(PAL.ink),
+    cardMat,
+    k.mat(0xd9552b),
+  ]);
+  const cardHolder = k.group(card);
+  card.position.y = 1.45;
+  cardHolder.rotation.set(-0.12, -0.35, 0.06);
+  on(cardHolder, -0.6, 0.3);
+  k.grow(cardHolder, 0.3);
+  signal(k, cardHolder, 2.75, ticks, 1.5);
+
+  // a phone held up to the card
+  const phone = k.group(
+    k.m("box", PAL.ink, [0.62, 1.2, 0.07]),
+    k.m("box", 0x9fd0ff, [0.52, 1.02, 0.02], [0, 0, 0.04], undefined, 0x2b55c9),
+  );
+  phone.position.set(1.15, 1.7, 1.0);
+  phone.rotation.set(0.1, -0.7, -0.2);
+  scene.add(phone);
+  k.grow(phone, 0.7);
+
+  // notes drifting up
+  const noteTex = (glyph: string, color: string) =>
+    k.canvasTexture(96, 96, (c) => {
+      c.fillStyle = color;
+      c.font = "bold 78px serif";
+      c.textAlign = "center";
+      c.textBaseline = "middle";
+      c.fillText(glyph, 48, 52);
+    });
+  const notes = ["♪", "♫", "♪", "♬", "♫", "♪"].map((glyph, i) => {
+    const s = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: noteTex(glyph, ["#f5bd4a", "#fbf7ea", "#f4a3b5"][i % 3]),
+        transparent: true,
+        depthWrite: false,
+      }),
+    );
+    scene.add(s);
+    return { s, off: i * 0.9, x: -0.4 + ((i * 37) % 10) / 10 - 0.2 };
+  });
+
+  // a garden around it
+  const beds: [number, number, FlowerKind, number, number][] = [
+    [-2.9, 0.6, "tulip", 0xf4a3b5, 0.95],
+    [-2.1, 1.3, "daisy", PAL.cream, 1.2],
+    [2.5, 0.2, "sunflower", PAL.sun, 1.5],
+    [3.2, 1.2, "poppy", 0xf0603a, 1.0],
+    [0.4, 2.3, "lavender", 0xb9a4ee, 0.8],
+  ];
+  beds.forEach(([x, z, kind, color, h], i) => {
+    const f = k.flower(kind, color, h);
+    f.scale.setScalar(1.35);
+    const holder = k.group(k.sway(f, 0.07));
+    on(holder, x, z, 0.03);
+    k.grow(holder, 0.5 + i * 0.14);
+  });
+
+  return finish((t) => {
+    card.rotation.y = Math.sin(t * 0.7) * 0.12;
+    phone.position.y = 1.7 + Math.sin(t * 1.4) * 0.06;
+    for (const nt of notes) {
+      const p = ((t * 0.32 + nt.off) % 3) / 3;
+      nt.s.position.set(nt.x + Math.sin(p * 9 + nt.off) * 0.5, 2.6 + p * 3.2, 0.9);
+      nt.s.scale.setScalar(0.5 + p * 0.25);
+      nt.s.material.opacity = Math.min(1, p * 5) * (1 - p);
+    }
+  });
+};

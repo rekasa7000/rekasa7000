@@ -1,17 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Download } from "lucide-react";
-import { WORK_ENTRIES, homeProjects, homeSkills } from "@/lib/career-data";
+import { RESUME, type ResumeBlock } from "@/lib/resume-data";
 
 export const metadata: Metadata = {
   title: "Résumé — Regee Casaña",
-  description: "Résumé of Regee Casaña, software engineer based in the Philippines.",
+  description: "Résumé of Regee Casaña, software engineer and technical lead based in the Philippines.",
 };
 
 const PDF = "/Regee-Casana-Resume.pdf";
-const roles = [...WORK_ENTRIES].reverse();
 
-/** A print-first résumé generated from the same career data as the rest of the site. */
+function Block({ block }: { block: ResumeBlock }) {
+  return (
+    <div className="resume-item">
+      <div className="resume-item-head">
+        <h3>{block.org}</h3>
+        <span>{block.place}</span>
+      </div>
+      {block.roles.map((r) => (
+        <div key={r.title} className="resume-item-head resume-role-line">
+          <em>{r.title}</em>
+          <span>{r.period}</span>
+        </div>
+      ))}
+      <ul>
+        {block.bullets.map((b) => (
+          <li key={b}>{b}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** A print-first résumé that mirrors the owner's own document, fed by the site's career data. */
 export default function ResumePage() {
   return (
     <div className="resume-page">
@@ -26,48 +47,33 @@ export default function ResumePage() {
 
       <article className="resume">
         <header className="resume-head">
-          <div>
-            <h1>Regee Casaña</h1>
-            <p className="resume-role">Software Engineer · Full-stack Developer · Technical Architect</p>
-          </div>
+          <h1>{RESUME.name}</h1>
           <ul className="resume-contact">
-            <li>Philippines (UTC+8)</li>
+            <li>{RESUME.location}</li>
             <li>
-              <a href="mailto:regeecasana57@gmail.com">regeecasana57@gmail.com</a>
+              <a href={`mailto:${RESUME.email}`}>{RESUME.email}</a>
             </li>
-            <li>
-              <a href="https://linkedin.com/in/rekasa">linkedin.com/in/rekasa</a>
-            </li>
-            <li>
-              <a href="https://github.com/rekasa7000">github.com/rekasa7000</a>
-            </li>
+            {RESUME.links.map((l) => (
+              <li key={l.href}>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))}
           </ul>
         </header>
 
         <section>
           <h2>Summary</h2>
-          <p>
-            Software engineer building web products that people actually enjoy using, with an obsession for clean code
-            and good UX. Experience spans real-time IoT platforms, enterprise integrations and full-stack web
-            applications, including leading a team of engineers through two major platform versions.
-          </p>
+          <p>{RESUME.summary}</p>
         </section>
 
         <section>
-          <h2>Experience</h2>
-          {roles.map((r) => (
-            <div key={r.id} className="resume-item">
-              <div className="resume-item-head">
-                <h3>{r.title}</h3>
-                <span>{r.period}</span>
-              </div>
-              <p className="resume-org">{r.sub ?? r.name}</p>
-              <ul>
-                {r.homeBullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-            </div>
+          <h2>Work experience</h2>
+          {RESUME.work.map((b) => (
+            <Block key={b.org} block={b} />
+          ))}
+          <p className="resume-subhead">Freelance / Part-Time Engagements</p>
+          {RESUME.freelance.map((b) => (
+            <Block key={b.org} block={b} />
           ))}
         </section>
 
@@ -75,47 +81,34 @@ export default function ResumePage() {
           <h2>Education</h2>
           <div className="resume-item">
             <div className="resume-item-head">
-              <h3>BS Computer Science, Cum Laude</h3>
-              <span>2020 – 2024</span>
+              <h3>{RESUME.education.school}</h3>
+              <span>{RESUME.education.place}</span>
             </div>
-            <p className="resume-org">Bataan Peninsula State University · GPA 3.63 · Dean&apos;s List 2020–2024</p>
-            <ul>
-              <li>
-                Major in Software Development. Thesis: CultureConnect, a social platform with collaborative filtering.
-              </li>
-            </ul>
-          </div>
-          <div className="resume-item">
-            <div className="resume-item-head">
-              <h3>Science, Technology, Engineering and Mathematics (STEM)</h3>
-              <span>2018 – 2020</span>
+            <div className="resume-item-head resume-role-line">
+              <em>{RESUME.education.degree}</em>
+              <span>{RESUME.education.date}</span>
             </div>
-            <p className="resume-org">Microcity College of Business and Technology · Graduated with Honor</p>
           </div>
         </section>
 
         <section>
-          <h2>Selected projects</h2>
-          <ul className="resume-projects">
-            {homeProjects.map((p) => (
-              <li key={p.title}>
-                <strong>{p.title}</strong> ({p.year}). {p.description}{" "}
-                <span className="resume-tech">{p.technologies.join(" · ")}</span>
+          <h2>Skills</h2>
+          <ul>
+            {RESUME.skills.map((s) => (
+              <li key={s.category}>
+                <strong>{s.category}:</strong> {s.items}
               </li>
             ))}
           </ul>
         </section>
 
         <section>
-          <h2>Skills</h2>
-          <dl className="resume-skills">
-            {homeSkills.map((s) => (
-              <div key={s.category}>
-                <dt>{s.category}</dt>
-                <dd>{s.items.join(", ")}</dd>
-              </div>
+          <h2>Certifications</h2>
+          <ul>
+            {RESUME.certifications.map((c) => (
+              <li key={c}>{c}</li>
             ))}
-          </dl>
+          </ul>
         </section>
       </article>
     </div>

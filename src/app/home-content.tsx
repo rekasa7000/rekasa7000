@@ -16,7 +16,7 @@ import { Missions } from "@/components/showcase/missions";
 import { SkillOrbit } from "@/components/showcase/skill-orbit";
 import { ProjectPosters } from "@/components/showcase/project-posters";
 import { Guestbook } from "@/components/showcase/guestbook";
-import { TICKER_TEXT } from "@/lib/career-data";
+import { CERTIFICATIONS, TICKER_TEXT } from "@/lib/career-data";
 import { NOW } from "@/lib/now";
 
 const SOCIAL_LINKS = [
@@ -98,12 +98,12 @@ const EDUCATION = [
   {
     period: "2020 – 2024",
     degree: "BS Computer Science",
-    school: "Bataan Peninsula State University",
+    school: "Bataan Peninsula State University – Main Campus",
     seal: "CUM LAUDE · LATIN HONOR · ",
     facts: [
       { value: "3.63", label: "GPA" },
       { value: "4 yrs", label: "Dean's List" },
-      { value: "Thesis", label: "CultureConnect" },
+      { value: "Software Dev", label: "Major" },
     ],
   },
   {
@@ -172,7 +172,7 @@ export function HomeContent() {
                 transition={{ duration: 0.5 }}
               >
                 <span className="session-tag">Welcome</span>
-                <span className="meta-label">Software Engineer — Philippines</span>
+                <span className="meta-label">Technical Lead — Bataan, Philippines</span>
                 <span className="meta-label hidden sm:inline font-jp normal-case tracking-normal">
                   レジー・カサーニャ
                 </span>
@@ -197,7 +197,7 @@ export function HomeContent() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.25 }}
                   >
-                    Software Engineer · Full-stack Developer · Technical Architect
+                    Technical Lead · Software Engineer · Architect
                   </motion.p>
 
                   <motion.p
@@ -207,8 +207,8 @@ export function HomeContent() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.35 }}
                   >
-                    Based in the Philippines, building web products that people actually enjoy using — with an obsession
-                    for clean code and good UX.
+                    I design, architect and build production systems, from enterprise Zendesk integrations and cloud
+                    services to IoT platforms. I lead an eight-person team and stay hands-on.
                   </motion.p>
 
                   <motion.div
@@ -365,6 +365,26 @@ export function HomeContent() {
                 </FadeInSection>
               ))}
             </div>
+            <FadeInSection delay={0.15}>
+              <div className="stage-card p-6 md:p-8 mt-8">
+                <div className="meta-label mb-5">Certifications</div>
+                <ul className="grid sm:grid-cols-2 gap-x-10 gap-y-4">
+                  {CERTIFICATIONS.map((c) => (
+                    <li key={c.name} className="flex items-baseline justify-between gap-4 cert-row">
+                      <span>
+                        <span className="font-display text-lg block" style={{ lineHeight: 1.15 }}>
+                          {c.name}
+                        </span>
+                        <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                          {c.issuer}
+                        </span>
+                      </span>
+                      <span className="meta-label shrink-0">{c.year}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </FadeInSection>
           </section>
 
           {/* The dream, illustrated */}
