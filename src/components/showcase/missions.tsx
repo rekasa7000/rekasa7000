@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { caseStudyForJob } from "@/lib/case-studies";
-import { WORK_ENTRIES } from "@/lib/career-data";
+import { SIMPLE_TIMELINE, WORK_ENTRIES } from "@/lib/career-data";
 import { Carbon3D, Languages3D, Music3D, Rain3D, Sprout3D, Water3D } from "@/components/three/garden-3d";
 
 type MissionMeta = {
@@ -28,7 +28,9 @@ const META: Record<string, MissionMeta> = {
   },
   "kloudtech-swe": {
     codename: "Rain field",
-    headline: "Co-founder and owner of a real-time weather network for disaster-response offices.",
+    headline: SIMPLE_TIMELINE
+      ? "Owner of a real-time weather network for disaster-response offices."
+      : "Co-founder and owner of a real-time weather network for disaster-response offices.",
     metrics: [
       { value: "25+", label: "Weather stations" },
       { value: "99.9%", label: "Uptime" },
@@ -52,7 +54,7 @@ const META: Record<string, MissionMeta> = {
     metrics: [
       { value: "2", label: "Card types" },
       { value: "0", label: "Native apps needed" },
-      { value: "Jun '27", label: "Planned launch" },
+      SIMPLE_TIMELINE ? { value: "NFC", label: "NTAG 424 DNA chips" } : { value: "Jun '27", label: "Planned launch" },
     ],
     Screen: Music3D,
   },
@@ -122,7 +124,8 @@ export function Missions() {
                 {m.title}
               </h3>
               <div className="meta-label mb-5" style={{ color: "var(--accent)" }}>
-                {m.name} · {m.period}
+                {m.name}
+                {m.period ? ` · ${m.period}` : ""}
               </div>
               <p className="text-base leading-snug mb-7" style={{ color: "var(--text-secondary)" }}>
                 {meta.headline}

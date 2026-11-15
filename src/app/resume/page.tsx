@@ -20,7 +20,7 @@ function Block({ block }: { block: ResumeBlock }) {
       {block.roles.map((r) => (
         <div key={r.title} className="resume-item-head resume-role-line">
           <em>{r.title}</em>
-          <span>{r.period}</span>
+          {r.period && <span>{r.period}</span>}
         </div>
       ))}
       <ul>
@@ -71,7 +71,7 @@ export default function ResumePage() {
           {RESUME.work.map((b) => (
             <Block key={b.org} block={b} />
           ))}
-          <p className="resume-subhead">Freelance / Part-Time Engagements</p>
+          <p className="resume-subhead">{RESUME.freelanceHeading}</p>
           {RESUME.freelance.map((b) => (
             <Block key={b.org} block={b} />
           ))}

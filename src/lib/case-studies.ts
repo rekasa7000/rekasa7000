@@ -13,10 +13,11 @@ export type CaseStudy = {
   scene: "rain" | "languages" | "carbon" | "water" | "music";
   title: string;
   tagline: string;
-  facts: { label: string; value: string }[];
+  /** entries marked `detail` are left off the page while SIMPLE_TIMELINE is on */
+  facts: { label: string; value: string; detail?: boolean }[];
   need: string[];
   flow: { step: string; title: string; detail: string }[];
-  results: { value: string; label: string; note: string }[];
+  results: { value: string; label: string; note: string; detail?: boolean; onlyPublic?: boolean }[];
   role: { title: string; text: string }[];
   stack: string[];
   github?: string;
@@ -31,9 +32,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "KloudTrack",
     tagline: "A live weather network for disaster-response offices in the Philippines.",
     facts: [
-      { label: "Role", value: "Co-founder, owner of the platform" },
+      { label: "Role", value: "Owner of the platform" },
+      { label: "Capacity", value: "Co-founder; part-time technical consultant since Sep 2026", detail: true },
       { label: "Team", value: "4 developers mentored" },
-      { label: "When", value: "Jun 2024 – present" },
+      { label: "When", value: "Jun 2024 – present", detail: true },
       { label: "Where", value: "Kloudtech Corporation, Bataan" },
     ],
     need: [
@@ -157,9 +159,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline:
       "A geospatial decision support system that turns a research team's spreadsheet method into a validated engine.",
     facts: [
-      { label: "Role", value: "Full Stack Developer (project-based)" },
+      { label: "Role", value: "Full Stack Developer" },
+      { label: "Capacity", value: "Project-based", detail: true },
       { label: "With", value: "UP Diliman, Institute of Civil Engineering" },
-      { label: "When", value: "Feb 2026 – present" },
+      { label: "When", value: "Feb 2026 – present", detail: true },
       { label: "Where", value: "Quezon City, Metro Manila" },
     ],
     need: [
@@ -227,10 +230,13 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Akosi.Music",
     tagline: "Physical NFC music cards that unlock an artist's music for the card's registered owner.",
     facts: [
-      { label: "Role", value: "Software Engineer & Architect (part-time)" },
-      { label: "Stage", value: "Architecture, heading to build" },
-      { label: "When", value: "Oct 2026 – present" },
-      { label: "Launch", value: "Planned for June 2027" },
+      { label: "Role", value: "Software Engineer & Architect" },
+      { label: "Capacity", value: "Part-time", detail: true },
+      { label: "Stage", value: "Architecture" },
+      { label: "When", value: "Oct 2026 – present", detail: true },
+      { label: "Launch", value: "Planned for June 2027", detail: true },
+      { label: "Hardware", value: "NTAG 424 DNA chips" },
+      { label: "Platforms", value: "iOS and Android" },
     ],
     need: [
       "A card you can hold that plays an artist's catalog or a single release.",
@@ -254,7 +260,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     results: [
       { value: "2", label: "Card types", note: "Artist and release" },
       { value: "0", label: "Native apps", note: "One link for iOS and Android" },
-      { value: "Jun '27", label: "Planned launch", note: "From concept through launch" },
+      { value: "Jun '27", label: "Planned launch", note: "From concept through launch", detail: true },
+      { value: "1", label: "NFC link", note: "Bound to the card's owner", onlyPublic: true },
     ],
     role: [
       {
@@ -279,9 +286,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "RevEarth",
     tagline: "A carbon-footprint tracker for Philippine organizations, built on published emission science.",
     facts: [
-      { label: "Role", value: "Full-stack Developer (project-based)" },
+      { label: "Role", value: "Full-stack Developer" },
+      { label: "Capacity", value: "Project-based", detail: true },
       { label: "Client", value: "RevEarth GHG Emissions Tracking" },
-      { label: "When", value: "Aug – Dec 2025" },
+      { label: "When", value: "Aug – Dec 2025", detail: true },
       { label: "Where", value: "Balanga City, Bataan" },
     ],
     need: [
@@ -326,6 +334,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
   },
 ];
+
+import { SIMPLE_TIMELINE } from "./career-data";
+
+/** the facts and results a visitor sees */
+export const visibleFacts = (c: CaseStudy) => c.facts.filter((f) => !(SIMPLE_TIMELINE && f.detail));
+export const visibleResults = (c: CaseStudy) => c.results.filter((r) => (SIMPLE_TIMELINE ? !r.detail : !r.onlyPublic));
 
 export const caseStudyFor = (projectTitle: string) => CASE_STUDIES.find((c) => c.project === projectTitle);
 

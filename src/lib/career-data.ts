@@ -20,35 +20,35 @@ export type TechSatellite = {
 export type CareerEntry = {
   id: string;
   kind: BodyKind;
-  shortName?: string;   // abbreviated label used in galaxy views
+  shortName?: string; // abbreviated label used in galaxy views
 
   // ── Textual content ───────────────────────────────────────────────────────
-  name: string;         // display name (planet label)
-  title: string;        // role / degree / tagline
-  sub?: string;         // org + location (2-D info card sub-title)
+  name: string; // display name (planet label)
+  title: string; // role / degree / tagline
+  sub?: string; // org + location (2-D info card sub-title)
   period?: string;
-  shortDesc: string[];  // 3–6 bullet lines → galaxy info panels
-  homeTitle?: string;   // title override for homepage projects list
-  homeDesc: string;     // single prose line → homepage projects list
-  homeBullets: string[];// detailed paragraphs → homepage experience timeline
+  shortDesc: string[]; // 3–6 bullet lines → galaxy info panels
+  homeTitle?: string; // title override for homepage projects list
+  homeDesc: string; // single prose line → homepage projects list
+  homeBullets: string[]; // detailed paragraphs → homepage experience timeline
   showOnHome?: boolean; // false = galaxy only, not shown on homepage
   github?: string;
   technologies: string[];
 
   // ── Texture ───────────────────────────────────────────────────────────────
-  tex: string;          // e.g. "/planets/2k_mars.jpg"
-  ringTex?: string;     // ring-plane texture (BPSU only)
+  tex: string; // e.g. "/planets/2k_mars.jpg"
+  ringTex?: string; // ring-plane texture (BPSU only)
 
   // ── 2-D canvas visual ─────────────────────────────────────────────────────
   worldX: number;
   worldY: number;
-  color: string;        // CSS hex "#rrggbb"
-  radius: number;       // canvas pixels
+  color: string; // CSS hex "#rrggbb"
+  radius: number; // canvas pixels
   hasRing?: boolean;
   satellites: TechSatellite[];
 
   // ── 3-D Three.js visual ───────────────────────────────────────────────────
-  color3d: number;      // Three.js hex, e.g. 0x4a90e2
+  color3d: number; // Three.js hex, e.g. 0x4a90e2
   emissive: number;
   size3d: number;
   orbitRadius: number;
@@ -59,8 +59,7 @@ export type CareerEntry = {
 
 // ── Master entry list ─────────────────────────────────────────────────────────
 
-export const ENTRIES: CareerEntry[] = [
-
+const ALL_ENTRIES: CareerEntry[] = [
   // ── Work ──────────────────────────────────────────────────────────────────
 
   {
@@ -85,16 +84,23 @@ export const ENTRIES: CareerEntry[] = [
     ],
     github: undefined,
     technologies: ["TypeScript", "React", "IoT", "Cybersecurity"],
-    worldX: 3500, worldY: -80,
-    color: "#5a9060", radius: 65,
+    worldX: 3500,
+    worldY: -80,
+    color: "#5a9060",
+    radius: 65,
     satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 96,  speed: 0.44, offset: 0.0 },
-      { label: "React",      color: "#61dafb", orbitR: 108, speed: 0.36, offset: 1.5 },
-      { label: "AWS",        color: "#ff9900", orbitR: 120, speed: 0.28, offset: 3.0 },
-      { label: "Docker",     color: "#2496ed", orbitR: 82,  speed: 0.52, offset: 2.0 },
+      { label: "TypeScript", color: "#3b82f6", orbitR: 96, speed: 0.44, offset: 0.0 },
+      { label: "React", color: "#61dafb", orbitR: 108, speed: 0.36, offset: 1.5 },
+      { label: "AWS", color: "#ff9900", orbitR: 120, speed: 0.28, offset: 3.0 },
+      { label: "Docker", color: "#2496ed", orbitR: 82, speed: 0.52, offset: 2.0 },
     ],
-    color3d: 0x8fbc5a, emissive: 0x3a6010,
-    size3d: 1.2, orbitRadius: 10, speed3d: 0.005, inc: 0.18, rotY: 0.0,
+    color3d: 0x8fbc5a,
+    emissive: 0x3a6010,
+    size3d: 1.2,
+    orbitRadius: 10,
+    speed3d: 0.005,
+    inc: 0.18,
+    rotY: 0.0,
   },
 
   {
@@ -114,7 +120,8 @@ export const ENTRIES: CareerEntry[] = [
       "90%+ LRU cache hit rate · <100ms MQTT latency",
       "25+ weather stations · runtime errors cut by 70%",
     ],
-    homeDesc: "Co-founder and owner of KloudTrack, a real-time IoT weather platform for DRRM offices in the Philippines.",
+    homeDesc:
+      "Co-founder and owner of KloudTrack, a real-time IoT weather platform for DRRM offices in the Philippines.",
     homeBullets: [
       "Own KloudTrack, the company's flagship real-time IoT weather platform for DRRM offices in the Philippines, end to end: architecture, device firmware integration, backend, frontend, cloud infrastructure, deployment, and ongoing upgrades.",
       "Led the platform through two major versions, from a Coolify-managed VPS to production-grade AWS (EC2, Docker, GitHub Actions CI/CD), mentoring 4 developers and sustaining 8+ months of continuous operation at 99.9% uptime with zero-downtime deployments and automated migrations.",
@@ -124,22 +131,42 @@ export const ENTRIES: CareerEntry[] = [
       "Resolved critical V1 security and performance issues (CORS misconfiguration, SQL injection risk, N+1 queries) and added JWT with refresh tokens and multi-tier rate limiting, cutting runtime errors by 70%.",
     ],
     github: undefined,
-    technologies: ["TypeScript", "React", "MQTT", "AWS", "Docker", "Socket.IO", "TanStack", "Tailwind", "Radix UI", "Mapbox GL", "ESP32", "Coolify"],
-    worldX: 6500, worldY: 70,
-    color: "#4a90e2", radius: 90,
-    satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 120, speed: 0.42, offset: 0.0  },
-      { label: "React 19",   color: "#61dafb", orbitR: 134, speed: 0.34, offset: 1.2  },
-      { label: "MQTT",       color: "#f97316", orbitR: 148, speed: 0.27, offset: 2.4  },
-      { label: "AWS",        color: "#ff9900", orbitR: 162, speed: 0.21, offset: 0.8  },
-      { label: "Docker",     color: "#2496ed", orbitR: 127, speed: 0.38, offset: 3.6  },
-      { label: "Socket.IO",  color: "#25c2a0", orbitR: 141, speed: 0.29, offset: 1.6  },
-      { label: "TanStack",   color: "#f59e0b", orbitR: 155, speed: 0.23, offset: 4.8  },
-      { label: "Tailwind",   color: "#06b6d4", orbitR: 113, speed: 0.48, offset: 2.0  },
-      { label: "Mapbox GL",  color: "#4264fb", orbitR: 176, speed: 0.18, offset: 5.5  },
+    technologies: [
+      "TypeScript",
+      "React",
+      "MQTT",
+      "AWS",
+      "Docker",
+      "Socket.IO",
+      "TanStack",
+      "Tailwind",
+      "Radix UI",
+      "Mapbox GL",
+      "ESP32",
+      "Coolify",
     ],
-    color3d: 0x4a90e2, emissive: 0x183060,
-    size3d: 2.0, orbitRadius: 24, speed3d: 0.002, inc: 0.12, rotY: 1.8,
+    worldX: 6500,
+    worldY: 70,
+    color: "#4a90e2",
+    radius: 90,
+    satellites: [
+      { label: "TypeScript", color: "#3b82f6", orbitR: 120, speed: 0.42, offset: 0.0 },
+      { label: "React 19", color: "#61dafb", orbitR: 134, speed: 0.34, offset: 1.2 },
+      { label: "MQTT", color: "#f97316", orbitR: 148, speed: 0.27, offset: 2.4 },
+      { label: "AWS", color: "#ff9900", orbitR: 162, speed: 0.21, offset: 0.8 },
+      { label: "Docker", color: "#2496ed", orbitR: 127, speed: 0.38, offset: 3.6 },
+      { label: "Socket.IO", color: "#25c2a0", orbitR: 141, speed: 0.29, offset: 1.6 },
+      { label: "TanStack", color: "#f59e0b", orbitR: 155, speed: 0.23, offset: 4.8 },
+      { label: "Tailwind", color: "#06b6d4", orbitR: 113, speed: 0.48, offset: 2.0 },
+      { label: "Mapbox GL", color: "#4264fb", orbitR: 176, speed: 0.18, offset: 5.5 },
+    ],
+    color3d: 0x4a90e2,
+    emissive: 0x183060,
+    size3d: 2.0,
+    orbitRadius: 24,
+    speed3d: 0.002,
+    inc: 0.12,
+    rotY: 1.8,
   },
 
   {
@@ -156,27 +183,45 @@ export const ENTRIES: CareerEntry[] = [
       "Scope 1, 2, 3 engine: EPA / IPCC AR5 / PH DOE 2024",
       "Automated PDF & Excel reports · Better-Auth security",
     ],
-    homeDesc: "Carbon footprint tracking application for Philippine organizations with scientifically-backed GHG calculations.",
+    homeDesc:
+      "Carbon footprint tracking application for Philippine organizations with scientifically-backed GHG calculations.",
     homeBullets: [
       "Built and deployed a carbon footprint tracking platform for Philippine organizations on Next.js 15, React 19, TypeScript, Prisma, and Supabase PostgreSQL, hosted on Vercel, with 21 API endpoints and 13 data models.",
       "Engineered an emissions calculation engine for Scope 1, 2, and 3 using EPA, IPCC AR5, and Philippine DOE 2024 emission factors, with automated PDF/Excel reports and Recharts breakdowns by scope, category, and period.",
       "Secured the app with Better-Auth (OAuth 2.0, email verification), rate limiting, and security headers.",
     ],
     github: undefined,
-    technologies: ["Next.js", "React", "TypeScript", "Prisma", "Supabase", "PostgreSQL", "Better-Auth", "Recharts", "Vercel"],
-    worldX: 9800, worldY: -55,
-    color: "#22c55e", radius: 70,
-    satellites: [
-      { label: "Next.js 15",   color: "#eeeeee", orbitR: 105, speed: 0.48, offset: 0.0  },
-      { label: "React 19",     color: "#61dafb", orbitR: 116, speed: 0.40, offset: 1.3  },
-      { label: "PostgreSQL",   color: "#4169e1", orbitR: 128, speed: 0.32, offset: 2.6  },
-      { label: "TypeScript",   color: "#3b82f6", orbitR: 110, speed: 0.44, offset: 0.7  },
-      { label: "Prisma ORM",   color: "#7c3aed", orbitR: 122, speed: 0.36, offset: 3.8  },
-      { label: "Better-Auth",  color: "#ec4899", orbitR: 134, speed: 0.28, offset: 5.1  },
-      { label: "Supabase",     color: "#3ecf8e", orbitR: 100, speed: 0.55, offset: 1.0  },
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Prisma",
+      "Supabase",
+      "PostgreSQL",
+      "Better-Auth",
+      "Recharts",
+      "Vercel",
     ],
-    color3d: 0x4ae27a, emissive: 0x1a7030,
-    size3d: 1.6, orbitRadius: 16, speed3d: 0.003, inc: 0.22, rotY: 0.9,
+    worldX: 9800,
+    worldY: -55,
+    color: "#22c55e",
+    radius: 70,
+    satellites: [
+      { label: "Next.js 15", color: "#eeeeee", orbitR: 105, speed: 0.48, offset: 0.0 },
+      { label: "React 19", color: "#61dafb", orbitR: 116, speed: 0.4, offset: 1.3 },
+      { label: "PostgreSQL", color: "#4169e1", orbitR: 128, speed: 0.32, offset: 2.6 },
+      { label: "TypeScript", color: "#3b82f6", orbitR: 110, speed: 0.44, offset: 0.7 },
+      { label: "Prisma ORM", color: "#7c3aed", orbitR: 122, speed: 0.36, offset: 3.8 },
+      { label: "Better-Auth", color: "#ec4899", orbitR: 134, speed: 0.28, offset: 5.1 },
+      { label: "Supabase", color: "#3ecf8e", orbitR: 100, speed: 0.55, offset: 1.0 },
+    ],
+    color3d: 0x4ae27a,
+    emissive: 0x1a7030,
+    size3d: 1.6,
+    orbitRadius: 16,
+    speed3d: 0.003,
+    inc: 0.22,
+    rotY: 0.9,
   },
 
   {
@@ -195,7 +240,8 @@ export const ENTRIES: CareerEntry[] = [
       "10+ private Zendesk apps shipped for enterprise clients",
       "Python CLI: 10K+ tickets migrated, 80% time saved",
     ],
-    homeDesc: "Technical lead for an eight-person team building enterprise Zendesk integrations, middleware and serverless services.",
+    homeDesc:
+      "Technical lead for an eight-person team building enterprise Zendesk integrations, middleware and serverless services.",
     homeBullets: [
       "Lead a team of 8, myself plus 7 software developers, owning architecture decisions, code quality, and technical mentorship for the Concentrix TPS Philippines team.",
       "Spearheading a new product initiative for Concentrix TPS Manila, driving conceptualization, architecture, and hands-on engineering from the ground up (currently in the conceptualization phase).",
@@ -207,20 +253,37 @@ export const ENTRIES: CareerEntry[] = [
       "Migrated a legacy JavaScript e-commerce platform to TypeScript with Domain-Driven Design and Prisma ORM, including an 800+ item migration checklist and an 18-state return/refund state machine.",
     ],
     github: undefined,
-    technologies: ["TypeScript", "Zendesk", "OAuth 2.0", "Azure AD B2C", "SignalR", "AWS Lambda", "Python", "Sunshine Conversations", "Render"],
-    worldX: 13200, worldY: 70,
-    color: "#e2a84a", radius: 78,
-    satellites: [
-      { label: "TypeScript",  color: "#3b82f6", orbitR: 112, speed: 0.46, offset: 0.0  },
-      { label: "OAuth 2.0",   color: "#ef4444", orbitR: 124, speed: 0.38, offset: 1.1  },
-      { label: "Azure AD",    color: "#0078d4", orbitR: 136, speed: 0.30, offset: 2.3  },
-      { label: "Python",      color: "#ffd43b", orbitR: 118, speed: 0.42, offset: 3.5  },
-      { label: "AWS Lambda",  color: "#ff9900", orbitR: 130, speed: 0.35, offset: 0.5  },
-      { label: "SignalR",     color: "#84cc16", orbitR: 142, speed: 0.26, offset: 4.7  },
-      { label: "Prisma ORM",  color: "#7c3aed", orbitR: 108, speed: 0.52, offset: 1.9  },
+    technologies: [
+      "TypeScript",
+      "Zendesk",
+      "OAuth 2.0",
+      "Azure AD B2C",
+      "SignalR",
+      "AWS Lambda",
+      "Python",
+      "Sunshine Conversations",
+      "Render",
     ],
-    color3d: 0xe2a84a, emissive: 0x704010,
-    size3d: 2.4, orbitRadius: 33, speed3d: 0.0015, inc: 0.28, rotY: 0.5,
+    worldX: 13200,
+    worldY: 70,
+    color: "#e2a84a",
+    radius: 78,
+    satellites: [
+      { label: "TypeScript", color: "#3b82f6", orbitR: 112, speed: 0.46, offset: 0.0 },
+      { label: "OAuth 2.0", color: "#ef4444", orbitR: 124, speed: 0.38, offset: 1.1 },
+      { label: "Azure AD", color: "#0078d4", orbitR: 136, speed: 0.3, offset: 2.3 },
+      { label: "Python", color: "#ffd43b", orbitR: 118, speed: 0.42, offset: 3.5 },
+      { label: "AWS Lambda", color: "#ff9900", orbitR: 130, speed: 0.35, offset: 0.5 },
+      { label: "SignalR", color: "#84cc16", orbitR: 142, speed: 0.26, offset: 4.7 },
+      { label: "Prisma ORM", color: "#7c3aed", orbitR: 108, speed: 0.52, offset: 1.9 },
+    ],
+    color3d: 0xe2a84a,
+    emissive: 0x704010,
+    size3d: 2.4,
+    orbitRadius: 33,
+    speed3d: 0.0015,
+    inc: 0.28,
+    rotY: 0.5,
   },
 
   {
@@ -239,7 +302,8 @@ export const ENTRIES: CareerEntry[] = [
       "Next.js 14 · FastAPI · PostGIS · Neon",
       "MCDA engine ranking interventions for water quality",
     ],
-    homeDesc: "A geospatial decision support system that computes water footprint assessments for a university research team.",
+    homeDesc:
+      "A geospatial decision support system that computes water footprint assessments for a university research team.",
     homeBullets: [
       "Architected a geospatial Decision Support System (Next.js 14, FastAPI, PostGIS) computing Water Footprint Assessments for 41 subbasins and 25 barangays, translating a research team's Excel methodology into a validated engine (±2% accuracy).",
       "Designed a dual-geography compute pipeline with PostGIS area-weighted apportionment, versioned/immutable runs for scenario comparison, and an MCDA recommendation engine ranking interventions against water-quality hotspots.",
@@ -248,18 +312,35 @@ export const ENTRIES: CareerEntry[] = [
       "Designed and built the public UP-ICE Wiser Cities website, including project/research profiles and interactive data displays.",
     ],
     github: undefined,
-    technologies: ["Next.js", "FastAPI", "PostGIS", "TypeScript", "Python", "GeoPandas", "Neon", "MapLibre GL", "GitHub Actions"],
-    worldX: 15400, worldY: -60,
-    color: "#38bdf8", radius: 62,
-    satellites: [
-      { label: "Next.js 14", color: "#eeeeee", orbitR: 92,  speed: 0.46, offset: 0.0 },
-      { label: "FastAPI",    color: "#10b981", orbitR: 104, speed: 0.38, offset: 1.4 },
-      { label: "PostGIS",    color: "#4169e1", orbitR: 116, speed: 0.30, offset: 2.8 },
-      { label: "GeoPandas",  color: "#a78bfa", orbitR: 98,  speed: 0.42, offset: 4.0 },
-      { label: "Neon",       color: "#34d399", orbitR: 110, speed: 0.34, offset: 5.2 },
+    technologies: [
+      "Next.js",
+      "FastAPI",
+      "PostGIS",
+      "TypeScript",
+      "Python",
+      "GeoPandas",
+      "Neon",
+      "MapLibre GL",
+      "GitHub Actions",
     ],
-    color3d: 0x38bdf8, emissive: 0x0c4a6e,
-    size3d: 1.5, orbitRadius: 38, speed3d: 0.0013, inc: 0.2, rotY: 2.4,
+    worldX: 15400,
+    worldY: -60,
+    color: "#38bdf8",
+    radius: 62,
+    satellites: [
+      { label: "Next.js 14", color: "#eeeeee", orbitR: 92, speed: 0.46, offset: 0.0 },
+      { label: "FastAPI", color: "#10b981", orbitR: 104, speed: 0.38, offset: 1.4 },
+      { label: "PostGIS", color: "#4169e1", orbitR: 116, speed: 0.3, offset: 2.8 },
+      { label: "GeoPandas", color: "#a78bfa", orbitR: 98, speed: 0.42, offset: 4.0 },
+      { label: "Neon", color: "#34d399", orbitR: 110, speed: 0.34, offset: 5.2 },
+    ],
+    color3d: 0x38bdf8,
+    emissive: 0x0c4a6e,
+    size3d: 1.5,
+    orbitRadius: 38,
+    speed3d: 0.0013,
+    inc: 0.2,
+    rotY: 2.4,
   },
 
   {
@@ -278,7 +359,8 @@ export const ENTRIES: CareerEntry[] = [
       "Signed-URL streaming on S3 / CloudFront",
       "Planned launch: June 2027",
     ],
-    homeDesc: "A web platform for physical NFC music cards that unlock an artist's catalog for the card's registered owner.",
+    homeDesc:
+      "A web platform for physical NFC music cards that unlock an artist's catalog for the card's registered owner.",
     homeBullets: [
       "Architecting a web platform for physical NFC music cards that unlock an artist's catalog or a single release exclusively for the card's registered owner, from concept through a planned June 2027 launch.",
       "Designed ownership-bound playback using NTAG 424 DNA chips with Secure Dynamic Messaging, so a single NFC link works on both iOS and Android without a native app.",
@@ -286,18 +368,34 @@ export const ENTRIES: CareerEntry[] = [
       "Delivered the full architecture package: system diagrams, client pitch deck, page inventory, and a phased timeline.",
     ],
     github: undefined,
-    technologies: ["Next.js", "Node.js", "Fastify", "PostgreSQL", "Prisma", "NFC (NTAG 424 DNA)", "AWS S3", "CloudFront"],
-    worldX: 17200, worldY: 65,
-    color: "#f472b6", radius: 55,
+    technologies: [
+      "Next.js",
+      "Node.js",
+      "Fastify",
+      "PostgreSQL",
+      "Prisma",
+      "NFC (NTAG 424 DNA)",
+      "AWS S3",
+      "CloudFront",
+    ],
+    worldX: 17200,
+    worldY: 65,
+    color: "#f472b6",
+    radius: 55,
     satellites: [
-      { label: "Next.js",    color: "#eeeeee", orbitR: 84,  speed: 0.48, offset: 0.0 },
-      { label: "Fastify",    color: "#f59e0b", orbitR: 96,  speed: 0.40, offset: 1.6 },
+      { label: "Next.js", color: "#eeeeee", orbitR: 84, speed: 0.48, offset: 0.0 },
+      { label: "Fastify", color: "#f59e0b", orbitR: 96, speed: 0.4, offset: 1.6 },
       { label: "PostgreSQL", color: "#4169e1", orbitR: 108, speed: 0.32, offset: 3.1 },
-      { label: "NFC",        color: "#f472b6", orbitR: 90,  speed: 0.44, offset: 4.4 },
+      { label: "NFC", color: "#f472b6", orbitR: 90, speed: 0.44, offset: 4.4 },
       { label: "CloudFront", color: "#ff9900", orbitR: 102, speed: 0.36, offset: 5.6 },
     ],
-    color3d: 0xf472b6, emissive: 0x701a48,
-    size3d: 1.3, orbitRadius: 41, speed3d: 0.0012, inc: 0.34, rotY: 3.4,
+    color3d: 0xf472b6,
+    emissive: 0x701a48,
+    size3d: 1.3,
+    orbitRadius: 41,
+    speed3d: 0.0012,
+    inc: 0.34,
+    rotY: 3.4,
   },
 
   // ── Education ──────────────────────────────────────────────────────────────
@@ -319,23 +417,31 @@ export const ENTRIES: CareerEntry[] = [
       "Thesis: CultureConnect — social media with collaborative filtering",
       "Coursework: Software Engineering, DSA, AI, OS, App Dev",
     ],
-    homeDesc: "Bachelor of Science in Computer Science, graduated Cum Laude with GPA 3.63, specializing in software engineering and system design.",
+    homeDesc:
+      "Bachelor of Science in Computer Science, graduated Cum Laude with GPA 3.63, specializing in software engineering and system design.",
     homeBullets: [
       "Graduated Cum Laude with latin honor, specializing in software engineering, algorithms, and system design. Developed strong foundation in programming languages, database management, and software development methodologies.",
     ],
     github: undefined,
     technologies: ["Software Eng", "Algorithms", "AI / ML", "Networking", "OS & Systems"],
-    worldX: 19000, worldY: 45,
-    color: "#facc15", radius: 100,
+    worldX: 19000,
+    worldY: 45,
+    color: "#facc15",
+    radius: 100,
     satellites: [
-      { label: "Software Eng",   color: "#60a5fa", orbitR: 138, speed: 0.30, offset: 0.0, size: 3.5 },
-      { label: "Algorithms",     color: "#f97316", orbitR: 152, speed: 0.25, offset: 1.5, size: 3.5 },
-      { label: "AI / ML",        color: "#a78bfa", orbitR: 166, speed: 0.20, offset: 3.0, size: 3.5 },
-      { label: "Networking",     color: "#34d399", orbitR: 130, speed: 0.36, offset: 4.5, size: 3.5 },
-      { label: "OS & Systems",   color: "#fb923c", orbitR: 180, speed: 0.16, offset: 0.8, size: 3.5 },
+      { label: "Software Eng", color: "#60a5fa", orbitR: 138, speed: 0.3, offset: 0.0, size: 3.5 },
+      { label: "Algorithms", color: "#f97316", orbitR: 152, speed: 0.25, offset: 1.5, size: 3.5 },
+      { label: "AI / ML", color: "#a78bfa", orbitR: 166, speed: 0.2, offset: 3.0, size: 3.5 },
+      { label: "Networking", color: "#34d399", orbitR: 130, speed: 0.36, offset: 4.5, size: 3.5 },
+      { label: "OS & Systems", color: "#fb923c", orbitR: 180, speed: 0.16, offset: 0.8, size: 3.5 },
     ],
-    color3d: 0xf5c842, emissive: 0x7a5800,
-    size3d: 1.9, orbitRadius: 44, speed3d: 0.0011, inc: 0.48, rotY: 1.2,
+    color3d: 0xf5c842,
+    emissive: 0x7a5800,
+    size3d: 1.9,
+    orbitRadius: 44,
+    speed3d: 0.0011,
+    inc: 0.48,
+    rotY: 1.2,
   },
 
   // ── Projects ───────────────────────────────────────────────────────────────
@@ -343,7 +449,7 @@ export const ENTRIES: CareerEntry[] = [
   {
     id: "cultureconnect",
     kind: "project",
-    showOnHome: false,   // thesis project — galaxy only
+    showOnHome: false, // thesis project — galaxy only
     name: "CultureConnect",
     title: "Thesis — Social Media Platform",
     period: "2024",
@@ -353,24 +459,32 @@ export const ENTRIES: CareerEntry[] = [
       "Led team of developers for thesis project",
       "TypeScript · React · PostgreSQL · Express · Node.js",
     ],
-    homeDesc: "Led team developing social media platform with collaborative filtering algorithms for content recommendation.",
+    homeDesc:
+      "Led team developing social media platform with collaborative filtering algorithms for content recommendation.",
     homeBullets: [
       "Led team developing social media platform with collaborative filtering algorithms for content recommendation.",
       "TypeScript · React · PostgreSQL · Express · Node.js",
     ],
     github: "https://github.com/rekasa7000/cultureconnect",
     technologies: ["TypeScript", "React", "PostgreSQL", "Express", "Node.js"],
-    worldX: 23500, worldY: -70,
-    color: "#a78bfa", radius: 60,
+    worldX: 23500,
+    worldY: -70,
+    color: "#a78bfa",
+    radius: 60,
     satellites: [
-      { label: "TypeScript", color: "#3b82f6", orbitR: 90,  speed: 0.52, offset: 0.0,  size: 3 },
-      { label: "React",      color: "#61dafb", orbitR: 102, speed: 0.44, offset: 1.2,  size: 3 },
-      { label: "PostgreSQL", color: "#4169e1", orbitR: 96,  speed: 0.48, offset: 2.4,  size: 3 },
-      { label: "Express",    color: "#aaaaaa", orbitR: 110, speed: 0.38, offset: 3.6,  size: 3 },
-      { label: "Node.js",    color: "#68a063", orbitR: 118, speed: 0.33, offset: 5.0,  size: 3 },
+      { label: "TypeScript", color: "#3b82f6", orbitR: 90, speed: 0.52, offset: 0.0, size: 3 },
+      { label: "React", color: "#61dafb", orbitR: 102, speed: 0.44, offset: 1.2, size: 3 },
+      { label: "PostgreSQL", color: "#4169e1", orbitR: 96, speed: 0.48, offset: 2.4, size: 3 },
+      { label: "Express", color: "#aaaaaa", orbitR: 110, speed: 0.38, offset: 3.6, size: 3 },
+      { label: "Node.js", color: "#68a063", orbitR: 118, speed: 0.33, offset: 5.0, size: 3 },
     ],
-    color3d: 0xa78bfa, emissive: 0x3a1080,
-    size3d: 1.1, orbitRadius: 60, speed3d: 0.00085, inc: 0.42, rotY: 0.3,
+    color3d: 0xa78bfa,
+    emissive: 0x3a1080,
+    size3d: 1.1,
+    orbitRadius: 60,
+    speed3d: 0.00085,
+    inc: 0.42,
+    rotY: 0.3,
   },
 
   {
@@ -386,22 +500,30 @@ export const ENTRIES: CareerEntry[] = [
       "Web dashboard for DRRM government offices",
       "React · TypeScript · Node.js · PostgreSQL · AWS",
     ],
-    homeDesc: "A comprehensive weather monitoring system with real-time data collection from hardware stations and web dashboard for government officials and citizens.",
+    homeDesc:
+      "A comprehensive weather monitoring system with real-time data collection from hardware stations and web dashboard for government officials and citizens.",
     homeBullets: [
       "A comprehensive weather monitoring system with real-time data collection from hardware stations and web dashboard for government officials and citizens.",
       "React · TypeScript · Node.js · PostgreSQL · AWS",
     ],
     github: "https://github.com/rekasa7000/kloudtrack",
     technologies: ["React", "TypeScript", "Node.js", "PostgreSQL", "AWS"],
-    worldX: 27000, worldY: 80,
-    color: "#60a5fa", radius: 52,
+    worldX: 27000,
+    worldY: 80,
+    color: "#60a5fa",
+    radius: 52,
     satellites: [
-      { label: "React",     color: "#61dafb", orbitR: 82,  speed: 0.52, offset: 0.0, size: 3 },
-      { label: "Node.js",   color: "#68a063", orbitR: 96,  speed: 0.44, offset: 2.0, size: 3 },
-      { label: "AWS",       color: "#ff9900", orbitR: 88,  speed: 0.48, offset: 4.0, size: 3 },
+      { label: "React", color: "#61dafb", orbitR: 82, speed: 0.52, offset: 0.0, size: 3 },
+      { label: "Node.js", color: "#68a063", orbitR: 96, speed: 0.44, offset: 2.0, size: 3 },
+      { label: "AWS", color: "#ff9900", orbitR: 88, speed: 0.48, offset: 4.0, size: 3 },
     ],
-    color3d: 0x4fc3f7, emissive: 0x0d4a70,
-    size3d: 1.0, orbitRadius: 67, speed3d: 0.00078, inc: 0.32, rotY: 0.6,
+    color3d: 0x4fc3f7,
+    emissive: 0x0d4a70,
+    size3d: 1.0,
+    orbitRadius: 67,
+    speed3d: 0.00078,
+    inc: 0.32,
+    rotY: 0.6,
   },
 
   {
@@ -411,10 +533,7 @@ export const ENTRIES: CareerEntry[] = [
     title: "Time Tracker for Interns",
     period: "2024",
     tex: "/planets/2k_haumea_fictional.jpg",
-    shortDesc: [
-      "Simple and modern time tracking for interns & OJTs",
-      "React · TypeScript · TanStack · Go · Fiber",
-    ],
+    shortDesc: ["Simple and modern time tracking for interns & OJTs", "React · TypeScript · TanStack · Go · Fiber"],
     homeDesc: "A simple and modern time tracking app for interns and OJTs, built with Go and React.",
     homeBullets: [
       "Simple and modern time tracking app for interns & OJTs.",
@@ -422,14 +541,21 @@ export const ENTRIES: CareerEntry[] = [
     ],
     github: "https://github.com/rekasa7000/logcha",
     technologies: ["Go", "React", "TypeScript", "TanStack", "Fiber"],
-    worldX: 30500, worldY: -60,
-    color: "#34d399", radius: 45,
+    worldX: 30500,
+    worldY: -60,
+    color: "#34d399",
+    radius: 45,
     satellites: [
-      { label: "Go",     color: "#00acd7", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
-      { label: "React",  color: "#61dafb", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
+      { label: "Go", color: "#00acd7", orbitR: 75, speed: 0.56, offset: 0.0, size: 3 },
+      { label: "React", color: "#61dafb", orbitR: 88, speed: 0.46, offset: 2.1, size: 3 },
     ],
-    color3d: 0x80cbc4, emissive: 0x1a5a55,
-    size3d: 0.85, orbitRadius: 73, speed3d: 0.00072, inc: 0.58, rotY: 2.2,
+    color3d: 0x80cbc4,
+    emissive: 0x1a5a55,
+    size3d: 0.85,
+    orbitRadius: 73,
+    speed3d: 0.00072,
+    inc: 0.58,
+    rotY: 2.2,
   },
 
   {
@@ -445,20 +571,24 @@ export const ENTRIES: CareerEntry[] = [
       "Python · Google Gemini",
     ],
     homeDesc: "AI agent inspired by Hanan, the Tagalog goddess of morning, for your breakfast.",
-    homeBullets: [
-      "AI agent inspired by Hanan, the Tagalog goddess of morning.",
-      "Python · Google Gemini",
-    ],
+    homeBullets: ["AI agent inspired by Hanan, the Tagalog goddess of morning.", "Python · Google Gemini"],
     github: "https://github.com/rekasa7000/hananai",
     technologies: ["Python", "AI/ML", "Google Gemini"],
-    worldX: 33500, worldY: 75,
-    color: "#fb923c", radius: 45,
+    worldX: 33500,
+    worldY: 75,
+    color: "#fb923c",
+    radius: 45,
     satellites: [
-      { label: "Python", color: "#ffd43b", orbitR: 75,  speed: 0.56, offset: 0.0, size: 3 },
-      { label: "Gemini", color: "#4285f4", orbitR: 88,  speed: 0.46, offset: 2.1, size: 3 },
+      { label: "Python", color: "#ffd43b", orbitR: 75, speed: 0.56, offset: 0.0, size: 3 },
+      { label: "Gemini", color: "#4285f4", orbitR: 88, speed: 0.46, offset: 2.1, size: 3 },
     ],
-    color3d: 0xf48fb1, emissive: 0x6a1040,
-    size3d: 0.85, orbitRadius: 79, speed3d: 0.00065, inc: 0.7, rotY: 3.0,
+    color3d: 0xf48fb1,
+    emissive: 0x6a1040,
+    size3d: 0.85,
+    orbitRadius: 79,
+    speed3d: 0.00065,
+    inc: 0.7,
+    rotY: 3.0,
   },
 
   {
@@ -473,22 +603,30 @@ export const ENTRIES: CareerEntry[] = [
       "Scheduler, progress tracker, background notifications",
       "C# · .NET · MySQL",
     ],
-    homeDesc: "A student scheduler and progress tracker that runs in the background for real-time notification and alerts. Developed using C#, .NET, MySQL, and Apache Server.",
+    homeDesc:
+      "A student scheduler and progress tracker that runs in the background for real-time notification and alerts. Developed using C#, .NET, MySQL, and Apache Server.",
     homeBullets: [
       "Led team creating desktop time management application with scheduler, progress tracker, and background notifications.",
       "C# · .NET · MySQL · Apache",
     ],
     github: "https://github.com/rekasa7000/databox",
     technologies: ["C#", ".NET", "MySQL", "Apache"],
-    worldX: 37000, worldY: -60,
-    color: "#c084fc", radius: 50,
+    worldX: 37000,
+    worldY: -60,
+    color: "#c084fc",
+    radius: 50,
     satellites: [
-      { label: "C#",    color: "#9b4993", orbitR: 78,  speed: 0.54, offset: 0.0, size: 3 },
-      { label: ".NET",  color: "#512bd4", orbitR: 92,  speed: 0.46, offset: 1.6, size: 3 },
-      { label: "MySQL", color: "#4479a1", orbitR: 84,  speed: 0.50, offset: 3.2, size: 3 },
+      { label: "C#", color: "#9b4993", orbitR: 78, speed: 0.54, offset: 0.0, size: 3 },
+      { label: ".NET", color: "#512bd4", orbitR: 92, speed: 0.46, offset: 1.6, size: 3 },
+      { label: "MySQL", color: "#4479a1", orbitR: 84, speed: 0.5, offset: 3.2, size: 3 },
     ],
-    color3d: 0xce93d8, emissive: 0x4a0070,
-    size3d: 0.8, orbitRadius: 85, speed3d: 0.0006, inc: 0.36, rotY: 2.5,
+    color3d: 0xce93d8,
+    emissive: 0x4a0070,
+    size3d: 0.8,
+    orbitRadius: 85,
+    speed3d: 0.0006,
+    inc: 0.36,
+    rotY: 2.5,
   },
 
   {
@@ -503,22 +641,30 @@ export const ENTRIES: CareerEntry[] = [
       "ML models and sentiment analysis",
       "Python · Flask · Firebase",
     ],
-    homeDesc: "Advanced article summarization tool with AI-powered sentiment analysis, built using Python Flask and Firebase for secure content processing and management.",
+    homeDesc:
+      "Advanced article summarization tool with AI-powered sentiment analysis, built using Python Flask and Firebase for secure content processing and management.",
     homeBullets: [
       "Led team building article summarization web application with ML models and sentiment analysis.",
       "Python · Flask · Firebase · HTML/CSS",
     ],
     github: "https://github.com/rekasa7000/knowt",
     technologies: ["Python", "Flask", "Firebase", "HTML/CSS"],
-    worldX: 40500, worldY: 65,
-    color: "#86efac", radius: 50,
+    worldX: 40500,
+    worldY: 65,
+    color: "#86efac",
+    radius: 50,
     satellites: [
-      { label: "Python",   color: "#ffd43b", orbitR: 78,  speed: 0.55, offset: 0.0, size: 3 },
-      { label: "Flask",    color: "#aaaaaa", orbitR: 92,  speed: 0.46, offset: 1.5, size: 3 },
-      { label: "Firebase", color: "#ffca28", orbitR: 84,  speed: 0.50, offset: 3.0, size: 3 },
+      { label: "Python", color: "#ffd43b", orbitR: 78, speed: 0.55, offset: 0.0, size: 3 },
+      { label: "Flask", color: "#aaaaaa", orbitR: 92, speed: 0.46, offset: 1.5, size: 3 },
+      { label: "Firebase", color: "#ffca28", orbitR: 84, speed: 0.5, offset: 3.0, size: 3 },
     ],
-    color3d: 0xa5d6a7, emissive: 0x1a5a20,
-    size3d: 0.8, orbitRadius: 90, speed3d: 0.00055, inc: 0.5, rotY: 1.6,
+    color3d: 0xa5d6a7,
+    emissive: 0x1a5a20,
+    size3d: 0.8,
+    orbitRadius: 90,
+    speed3d: 0.00055,
+    inc: 0.5,
+    rotY: 1.6,
   },
 
   {
@@ -533,55 +679,161 @@ export const ENTRIES: CareerEntry[] = [
       "Track applications, manage statuses & search",
       "Rust · GTK4",
     ],
-    homeDesc: "Desktop job application tracker with intuitive GUI for tracking applications, managing statuses, and monitoring job search progress. Built for GNOME desktop.",
+    homeDesc:
+      "Desktop job application tracker with intuitive GUI for tracking applications, managing statuses, and monitoring job search progress. Built for GNOME desktop.",
     homeBullets: [
       "Desktop job application tracker with intuitive GNOME GUI for tracking applications, managing statuses, and monitoring progress.",
       "Rust · GTK4 · Desktop",
     ],
     github: "https://github.com/rekasa7000/jobowl",
     technologies: ["Rust", "GTK4", "Desktop"],
-    worldX: 44000, worldY: -65,
-    color: "#fca5a5", radius: 45,
+    worldX: 44000,
+    worldY: -65,
+    color: "#fca5a5",
+    radius: 45,
     satellites: [
-      { label: "Rust",  color: "#f97316", orbitR: 75, speed: 0.54, offset: 0.0, size: 3 },
-      { label: "GTK4",  color: "#4a9a4a", orbitR: 88, speed: 0.44, offset: 2.2, size: 3 },
+      { label: "Rust", color: "#f97316", orbitR: 75, speed: 0.54, offset: 0.0, size: 3 },
+      { label: "GTK4", color: "#4a9a4a", orbitR: 88, speed: 0.44, offset: 2.2, size: 3 },
     ],
-    color3d: 0xef9a9a, emissive: 0x6a1010,
-    size3d: 0.75, orbitRadius: 95, speed3d: 0.0005, inc: 0.44, rotY: 1.4,
+    color3d: 0xef9a9a,
+    emissive: 0x6a1010,
+    size3d: 0.75,
+    orbitRadius: 95,
+    speed3d: 0.0005,
+    inc: 0.44,
+    rotY: 1.4,
   },
 ];
 
+// ── What the public site shows ───────────────────────────────────────────────
+
+/**
+ * Display switch. When on, some entries are presented in a simpler form on the public
+ * pages (role and work, without the finer timeline details). Nothing is deleted and no
+ * date is altered: the full record stays in ALL_ENTRIES above. Set to false to show
+ * every entry exactly as written.
+ */
+export const SIMPLE_TIMELINE = true;
+
+const PUBLIC_VIEW: Record<string, Partial<CareerEntry>> = {
+  "kloudtech-swe": {
+    title: "Software Engineer",
+    period: undefined,
+    homeDesc: "Owner of KloudTrack, a real-time IoT weather platform for DRRM offices in the Philippines.",
+    shortDesc: [
+      "Software Engineer",
+      "Own KloudTrack end to end: firmware to cloud to dashboard",
+      "V1→V2 on AWS · 99.9% uptime · zero-downtime deploys",
+      "90%+ LRU cache hit rate · <100ms MQTT latency",
+      "25+ weather stations · runtime errors cut by 70%",
+    ],
+  },
+  "up-ice": {
+    title: "Full Stack Developer",
+    period: undefined,
+    shortDesc: [
+      "Full Stack Developer",
+      "Geospatial Decision Support System for water footprint",
+      "41 subbasins · 25 barangays · ±2% accuracy",
+      "Next.js 14 · FastAPI · PostGIS · Neon",
+      "MCDA engine ranking interventions for water quality",
+    ],
+  },
+  akosi: {
+    title: "Software Engineer & Architect",
+    period: undefined,
+    shortDesc: [
+      "Software Engineer & Architect",
+      "Physical NFC cards that unlock an artist's music",
+      "NTAG 424 DNA · Secure Dynamic Messaging",
+      "Signed-URL streaming on S3 / CloudFront",
+    ],
+  },
+  revearth: {
+    title: "Full-Stack Developer",
+    period: undefined,
+  },
+};
+
+/** bullet wording that is shortened in the simple view */
+const PUBLIC_BULLET_EDITS: [string, string][] = [
+  [", from concept through a planned June 2027 launch.", ", from concept to launch plan."],
+];
+
+const publicBullet = (b: string) => PUBLIC_BULLET_EDITS.reduce((text, [from, to]) => text.replace(from, to), b);
+
+export const ENTRIES: CareerEntry[] = SIMPLE_TIMELINE
+  ? ALL_ENTRIES.map((e) =>
+      PUBLIC_VIEW[e.id] ? { ...e, ...PUBLIC_VIEW[e.id], homeBullets: e.homeBullets.map(publicBullet) } : e,
+    )
+  : ALL_ENTRIES;
+
 // ── Convenience slices ────────────────────────────────────────────────────────
 
-export const WORK_ENTRIES    = ENTRIES.filter(e => e.kind === "work");
-export const EDU_ENTRIES     = ENTRIES.filter(e => e.kind === "education");
-export const PROJECT_ENTRIES = ENTRIES.filter(e => e.kind === "project");
+export const WORK_ENTRIES = ENTRIES.filter((e) => e.kind === "work");
+export const EDU_ENTRIES = ENTRIES.filter((e) => e.kind === "education");
+export const PROJECT_ENTRIES = ENTRIES.filter((e) => e.kind === "project");
 
 // ── Skills list (shared by 2-D asteroid belt + 3-D belt) ─────────────────────
 
 export const SKILLS = [
-  "TypeScript", "JavaScript", "Python", "Go", "C#", "Rust", "PHP", "Java", "C/C++", "SQL",
-  "React", "Next.js", "Vue", "Nuxt", "Tailwind CSS", "Angular", "Svelte", "shadcn/ui",
-  "Node.js", "Express", "FastAPI", "Flask", "Fiber", ".NET", "Fastify",
-  "PostgreSQL", "PostGIS", "MongoDB", "MySQL", "Redis", "Prisma", "Firebase", "Supabase",
-  "AWS", "Docker", "GitHub Actions", "Vercel", "Coolify", "MQTT", "Zendesk", "Figma", "Git",
+  "TypeScript",
+  "JavaScript",
+  "Python",
+  "Go",
+  "C#",
+  "Rust",
+  "PHP",
+  "Java",
+  "C/C++",
+  "SQL",
+  "React",
+  "Next.js",
+  "Vue",
+  "Nuxt",
+  "Tailwind CSS",
+  "Angular",
+  "Svelte",
+  "shadcn/ui",
+  "Node.js",
+  "Express",
+  "FastAPI",
+  "Flask",
+  "Fiber",
+  ".NET",
+  "Fastify",
+  "PostgreSQL",
+  "PostGIS",
+  "MongoDB",
+  "MySQL",
+  "Redis",
+  "Prisma",
+  "Firebase",
+  "Supabase",
+  "AWS",
+  "Docker",
+  "GitHub Actions",
+  "Vercel",
+  "Coolify",
+  "MQTT",
+  "Zendesk",
+  "Figma",
+  "Git",
 ];
 
 // ── Homepage helpers ──────────────────────────────────────────────────────────
 
 /** Projects list for the homepage "Selected Works" section */
-export const homeProjects = PROJECT_ENTRIES
-  .filter(e => e.showOnHome !== false)
-  .map(e => ({
-    title: e.homeTitle ?? e.name,
-    description: e.homeDesc,
-    githubUrl: e.github ?? "",
-    technologies: e.technologies,
-    year: e.period ?? "",
-  }));
+export const homeProjects = PROJECT_ENTRIES.filter((e) => e.showOnHome !== false).map((e) => ({
+  title: e.homeTitle ?? e.name,
+  description: e.homeDesc,
+  githubUrl: e.github ?? "",
+  technologies: e.technologies,
+  year: e.period ?? "",
+}));
 
 /** Experience timeline entries for the homepage (reverse-chronological) */
-export const homeExperience = [...WORK_ENTRIES].reverse().map(e => ({
+export const homeExperience = [...WORK_ENTRIES].reverse().map((e) => ({
   period: e.period ?? "",
   title: e.title,
   organization: e.sub ?? e.name,
@@ -608,13 +860,42 @@ export const homeEducation = [
 
 /** Skills categories for the homepage Skills section */
 export const homeSkills = [
-  { category: "Languages",      items: ["JavaScript/TypeScript", "Java", "C#", "C/C++", "Python", "PHP", "SQL", "Go", "Rust"] },
-  { category: "Frameworks",     items: ["React", "Vue", "Nuxt", "Next.js", "Node.js", "Express", ".NET", "Flask", "Fiber", "Angular", "Svelte"] },
-  { category: "Databases",      items: ["PostgreSQL", "Supabase", "MySQL", "MongoDB", "Prisma ORM"] },
-  { category: "Backend / Data", items: ["FastAPI", "GeoPandas", "Shapely", "Rasterio", "pyproj", "Alembic", "PostGIS"] },
-  { category: "Frontend",       items: ["MapLibre GL JS", "Apache ECharts", "shadcn/ui", "Tailwind CSS"] },
-  { category: "Infrastructure", items: ["AWS (S3, IoT Core, EC2, Lambda, DynamoDB, API Gateway, Parameter Store, IAM)", "Neon", "Railway", "Cloudflare R2", "Bun/Turborepo", "Docker", "Coolify", "GitHub Actions", "Vercel", "Firebase", "MQTT", "WebSocket", "Serverless Framework"] },
-  { category: "Other",          items: ["Zendesk", "NiCE Cognigy", "OAuth 2.0", "Azure AD B2C", "Domain-Driven Design", "Figma", "Mermaid.js"] },
+  {
+    category: "Languages",
+    items: ["JavaScript/TypeScript", "Java", "C#", "C/C++", "Python", "PHP", "SQL", "Go", "Rust"],
+  },
+  {
+    category: "Frameworks",
+    items: ["React", "Vue", "Nuxt", "Next.js", "Node.js", "Express", ".NET", "Flask", "Fiber", "Angular", "Svelte"],
+  },
+  { category: "Databases", items: ["PostgreSQL", "Supabase", "MySQL", "MongoDB", "Prisma ORM"] },
+  {
+    category: "Backend / Data",
+    items: ["FastAPI", "GeoPandas", "Shapely", "Rasterio", "pyproj", "Alembic", "PostGIS"],
+  },
+  { category: "Frontend", items: ["MapLibre GL JS", "Apache ECharts", "shadcn/ui", "Tailwind CSS"] },
+  {
+    category: "Infrastructure",
+    items: [
+      "AWS (S3, IoT Core, EC2, Lambda, DynamoDB, API Gateway, Parameter Store, IAM)",
+      "Neon",
+      "Railway",
+      "Cloudflare R2",
+      "Bun/Turborepo",
+      "Docker",
+      "Coolify",
+      "GitHub Actions",
+      "Vercel",
+      "Firebase",
+      "MQTT",
+      "WebSocket",
+      "Serverless Framework",
+    ],
+  },
+  {
+    category: "Other",
+    items: ["Zendesk", "NiCE Cognigy", "OAuth 2.0", "Azure AD B2C", "Domain-Driven Design", "Figma", "Mermaid.js"],
+  },
 ];
 
 /** Certifications, as listed on the résumé */
@@ -628,46 +909,46 @@ export const CERTIFICATIONS = [
 
 /** Skill icon definitions for the homepage tech grid */
 export const SKILL_ICONS: Array<{ id: string; label: string; category: string }> = [
-  { id: "nextjs",     label: "Next.js",    category: "frontend"  },
-  { id: "react",      label: "React",      category: "frontend"  },
-  { id: "vue",        label: "Vue.js",     category: "frontend"  },
-  { id: "nuxtjs",     label: "Nuxt.js",    category: "frontend"  },
-  { id: "angular",    label: "Angular",    category: "frontend"  },
-  { id: "svelte",     label: "Svelte",     category: "frontend"  },
-  { id: "tailwind",   label: "Tailwind",   category: "frontend"  },
-  { id: "ts",         label: "TypeScript", category: "language"  },
-  { id: "js",         label: "JavaScript", category: "language"  },
-  { id: "python",     label: "Python",     category: "language"  },
-  { id: "go",         label: "Go",         category: "language"  },
-  { id: "php",        label: "PHP",        category: "language"  },
-  { id: "rust",       label: "Rust",       category: "language"  },
-  { id: "cs",         label: "C#",         category: "language"  },
-  { id: "cpp",        label: "C++",        category: "language"  },
-  { id: "java",       label: "Java",       category: "language"  },
-  { id: "nodejs",     label: "Node.js",    category: "backend"   },
-  { id: "express",    label: "Express",    category: "backend"   },
-  { id: "flask",      label: "Flask",      category: "backend"   },
-  { id: "fastapi",    label: "FastAPI",    category: "backend"   },
-  { id: "postgresql", label: "PostgreSQL", category: "database"  },
-  { id: "mongodb",    label: "MongoDB",    category: "database"  },
-  { id: "mysql",      label: "MySQL",      category: "database"  },
-  { id: "firebase",   label: "Firebase",   category: "database"  },
-  { id: "supabase",   label: "Supabase",   category: "database"  },
-  { id: "aws",        label: "AWS",        category: "cloud"     },
-  { id: "vercel",     label: "Vercel",     category: "cloud"     },
-  { id: "heroku",     label: "Heroku",     category: "cloud"     },
-  { id: "docker",     label: "Docker",     category: "cloud"     },
-  { id: "git",        label: "Git",        category: "tool"      },
-  { id: "github",     label: "GitHub",     category: "tool"      },
-  { id: "postman",    label: "Postman",    category: "tool"      },
-  { id: "vscode",     label: "VS Code",    category: "tool"      },
-  { id: "figma",      label: "Figma",      category: "tool"      },
-  { id: "unity",      label: "Unity",      category: "tool"      },
-  { id: "dotnet",     label: ".NET",       category: "backend"   },
-  { id: "prisma",     label: "Prisma",     category: "database"  },
-  { id: "cloudflare", label: "Cloudflare", category: "cloud"     },
+  { id: "nextjs", label: "Next.js", category: "frontend" },
+  { id: "react", label: "React", category: "frontend" },
+  { id: "vue", label: "Vue.js", category: "frontend" },
+  { id: "nuxtjs", label: "Nuxt.js", category: "frontend" },
+  { id: "angular", label: "Angular", category: "frontend" },
+  { id: "svelte", label: "Svelte", category: "frontend" },
+  { id: "tailwind", label: "Tailwind", category: "frontend" },
+  { id: "ts", label: "TypeScript", category: "language" },
+  { id: "js", label: "JavaScript", category: "language" },
+  { id: "python", label: "Python", category: "language" },
+  { id: "go", label: "Go", category: "language" },
+  { id: "php", label: "PHP", category: "language" },
+  { id: "rust", label: "Rust", category: "language" },
+  { id: "cs", label: "C#", category: "language" },
+  { id: "cpp", label: "C++", category: "language" },
+  { id: "java", label: "Java", category: "language" },
+  { id: "nodejs", label: "Node.js", category: "backend" },
+  { id: "express", label: "Express", category: "backend" },
+  { id: "flask", label: "Flask", category: "backend" },
+  { id: "fastapi", label: "FastAPI", category: "backend" },
+  { id: "postgresql", label: "PostgreSQL", category: "database" },
+  { id: "mongodb", label: "MongoDB", category: "database" },
+  { id: "mysql", label: "MySQL", category: "database" },
+  { id: "firebase", label: "Firebase", category: "database" },
+  { id: "supabase", label: "Supabase", category: "database" },
+  { id: "aws", label: "AWS", category: "cloud" },
+  { id: "vercel", label: "Vercel", category: "cloud" },
+  { id: "heroku", label: "Heroku", category: "cloud" },
+  { id: "docker", label: "Docker", category: "cloud" },
+  { id: "git", label: "Git", category: "tool" },
+  { id: "github", label: "GitHub", category: "tool" },
+  { id: "postman", label: "Postman", category: "tool" },
+  { id: "vscode", label: "VS Code", category: "tool" },
+  { id: "figma", label: "Figma", category: "tool" },
+  { id: "unity", label: "Unity", category: "tool" },
+  { id: "dotnet", label: ".NET", category: "backend" },
+  { id: "prisma", label: "Prisma", category: "database" },
+  { id: "cloudflare", label: "Cloudflare", category: "cloud" },
   { id: "githubactions", label: "GitHub Actions", category: "cloud" },
-  { id: "bun",        label: "Bun",        category: "tool"      },
+  { id: "bun", label: "Bun", category: "tool" },
 ];
 
 export const TICKER_TEXT =

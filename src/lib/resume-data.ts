@@ -1,4 +1,4 @@
-import { CERTIFICATIONS, ENTRIES } from "./career-data";
+import { CERTIFICATIONS, ENTRIES, SIMPLE_TIMELINE } from "./career-data";
 
 /**
  * The résumé, mirroring the owner's own document. Bullets come from career-data so the
@@ -11,6 +11,96 @@ const bullets = (id: string, count?: number) => {
   return count ? entry.homeBullets.slice(0, count) : entry.homeBullets;
 };
 
+type Role = { title: string; period: string; detail?: boolean; publicTitle?: string };
+type Block = { org: string; place: string; roles: Role[]; bullets: string[] };
+
+/**
+ * With SIMPLE_TIMELINE on, roles marked `detail` are shown by title only and the second
+ * section is headed as projects. The complete record is still written out below.
+ */
+const shown = (roles: Role[]) =>
+  SIMPLE_TIMELINE
+    ? roles
+        .filter((r) => !r.detail || r.publicTitle)
+        .map((r) => (r.detail ? { title: r.publicTitle as string, period: "" } : { title: r.title, period: r.period }))
+    : roles.map((r) => ({ title: r.title, period: r.period }));
+
+const WORK: Block[] = [
+  {
+    org: "Concentrix",
+    place: "Quezon City, Metro Manila",
+    roles: [
+      { title: "Technical Lead, Software Engineering", period: "July 2026 – Present" },
+      { title: "Software Developer", period: "August 2025 – July 2026" },
+    ],
+    // the résumé lists the first seven; the site's full story keeps one more
+    bullets: bullets("concentrix", 7),
+  },
+  {
+    org: "Kloudtech Corporation",
+    place: "Balanga City, Bataan",
+    roles: [
+      {
+        title: "Co-Founder, Software Engineering & Architecture Technical Consultant (Part-time)",
+        period: "September 2026 – Present",
+        detail: true,
+      },
+      {
+        title: "Software Engineer",
+        period: "June 2024 – August 2026",
+        detail: true,
+        publicTitle: "Software Engineer",
+      },
+      { title: "Software Engineering Intern", period: "October 2023 – June 2024" },
+    ],
+    bullets: bullets("kloudtech-swe"),
+  },
+];
+
+const FREELANCE: Block[] = [
+  {
+    org: "University of the Philippines – Diliman, Institute of Civil Engineering",
+    place: "Quezon City, Metro Manila",
+    roles: [
+      {
+        title: "Full Stack Developer (Project-Based)",
+        period: "February 2026 – Present",
+        detail: true,
+        publicTitle: "Full Stack Developer",
+      },
+    ],
+    bullets: bullets("up-ice"),
+  },
+  {
+    org: "Akosi.Music (NFC Music Cards Platform)",
+    place: "",
+    roles: [
+      {
+        title: "Software Engineer & Architect (Part-time)",
+        period: "October 2026 – Present",
+        detail: true,
+        publicTitle: "Software Engineer & Architect",
+      },
+    ],
+    bullets: bullets("akosi"),
+  },
+  {
+    org: "RevEarth (GHG Emissions Tracking)",
+    place: "Balanga City, Bataan",
+    roles: [
+      {
+        title: "Full-Stack Developer (Project-Based)",
+        period: "August 2025 – December 2025",
+        detail: true,
+        publicTitle: "Full-Stack Developer",
+      },
+    ],
+    bullets: bullets("revearth"),
+  },
+];
+
+const view = (b: Block) => ({ ...b, roles: shown(b.roles) });
+
 export const RESUME = {
   name: "Regee Casaña",
   location: "Bataan, Philippines",
@@ -21,51 +111,9 @@ export const RESUME = {
   ],
   summary:
     "Software engineer and technical lead who designs, architects, and builds production systems, from enterprise Zendesk integrations and cloud services to IoT platforms. Currently lead an eight-person engineering team while staying hands-on, taking products from concept through deployment. Adaptable across stacks and domains, with experience in customer experience, healthcare, government, and disaster risk reduction, and focused on delivering reliable, secure, and maintainable software.",
-  work: [
-    {
-      org: "Concentrix",
-      place: "Quezon City, Metro Manila",
-      roles: [
-        { title: "Technical Lead, Software Engineering", period: "July 2026 – Present" },
-        { title: "Software Developer", period: "August 2025 – July 2026" },
-      ],
-      // the résumé lists the first seven; the site's full story keeps one more
-      bullets: bullets("concentrix", 7),
-    },
-    {
-      org: "Kloudtech Corporation",
-      place: "Balanga City, Bataan",
-      roles: [
-        {
-          title: "Co-Founder, Software Engineering & Architecture Technical Consultant (Part-time)",
-          period: "September 2026 – Present",
-        },
-        { title: "Software Engineer", period: "June 2024 – August 2026" },
-        { title: "Software Engineering Intern", period: "October 2023 – June 2024" },
-      ],
-      bullets: bullets("kloudtech-swe"),
-    },
-  ],
-  freelance: [
-    {
-      org: "University of the Philippines – Diliman, Institute of Civil Engineering",
-      place: "Quezon City, Metro Manila",
-      roles: [{ title: "Full Stack Developer (Project-Based)", period: "February 2026 – Present" }],
-      bullets: bullets("up-ice"),
-    },
-    {
-      org: "Akosi.Music (NFC Music Cards Platform)",
-      place: "",
-      roles: [{ title: "Software Engineer & Architect (Part-time)", period: "October 2026 – Present" }],
-      bullets: bullets("akosi"),
-    },
-    {
-      org: "RevEarth (GHG Emissions Tracking)",
-      place: "Balanga City, Bataan",
-      roles: [{ title: "Full-Stack Developer (Project-Based)", period: "August 2025 – December 2025" }],
-      bullets: bullets("revearth"),
-    },
-  ],
+  work: WORK.map(view),
+  freelance: FREELANCE.map(view),
+  freelanceHeading: SIMPLE_TIMELINE ? "Selected Projects" : "Freelance / Part-Time Engagements",
   education: {
     school: "Bataan Peninsula State University – Main Campus",
     place: "Balanga City, Bataan",

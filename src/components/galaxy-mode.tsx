@@ -1496,7 +1496,8 @@ export function GalaxyMode() {
                       {selected.role}
                     </p>
                     <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
-                      {selected.name} · {selected.period}
+                      {selected.name}
+                      {selected.period ? ` · ${selected.period}` : ""}
                     </p>
                   </>
                 )}

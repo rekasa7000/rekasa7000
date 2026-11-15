@@ -6,7 +6,7 @@ import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
 import { Carbon3D, Languages3D, Music3D, Rain3D, Water3D } from "@/components/three/garden-3d";
-import { CASE_STUDIES } from "@/lib/case-studies";
+import { CASE_STUDIES, visibleFacts, visibleResults } from "@/lib/case-studies";
 
 export function generateStaticParams() {
   return CASE_STUDIES.map((c) => ({ slug: c.slug }));
@@ -50,7 +50,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                 {study.tagline}
               </p>
               <dl className="grid grid-cols-2 gap-x-6 gap-y-4">
-                {study.facts.map((f) => (
+                {visibleFacts(study).map((f) => (
                   <div key={f.label}>
                     <dt className="meta-label mb-1">{f.label}</dt>
                     <dd className="font-medium text-[15px]">{f.value}</dd>
@@ -97,7 +97,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         <section className="py-16 md:py-20 border-t" style={rule}>
           <BlockHeading tag="03" title="What it achieved" note="Results" />
           <div className={`grid grid-cols-2 md:grid-cols-3 stat-grid`}>
-            {study.results.map((r) => (
+            {visibleResults(study).map((r) => (
               <div key={r.label} className="stat-cell p-5 md:p-8">
                 <div className="font-display text-3xl sm:text-4xl md:text-5xl mb-3" style={{ color: "var(--accent)" }}>
                   {r.value}
