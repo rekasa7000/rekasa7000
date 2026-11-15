@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { homeProjects } from "@/lib/career-data";
+import { caseStudyFor } from "@/lib/case-studies";
 import { Fireflies, Flower, GardenSvg, Grass, Orb, Stars, type FlowerKind } from "./garden";
 
 const CREAM = "#f4eedd";
@@ -125,42 +126,45 @@ function Cover({ variant }: { variant: number }) {
 export function ProjectPosters() {
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10">
-      {homeProjects.map((p, i) => (
-        <motion.a
-          key={p.title}
-          href={p.githubUrl || undefined}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="poster group block"
-          initial={{ opacity: 0, y: 30, rotate: i % 2 ? 1.5 : -1.5 }}
-          whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: "easeOut" }}
-        >
-          <div className="relative">
-            <Cover variant={i} />
-            <span className="session-tag absolute top-3 left-3">{p.year}</span>
-            <span className="poster-arrow" aria-hidden="true">
-              <ArrowUpRight className="w-4 h-4" />
-            </span>
-          </div>
-          <div className="p-5">
-            <h3 className="font-display text-xl mb-2.5" style={{ lineHeight: 1.15 }}>
-              {p.title}
-            </h3>
-            <p className="text-sm leading-snug mb-4 line-clamp-2" style={{ color: "var(--text-secondary)" }}>
-              {p.description}
-            </p>
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
-              {p.technologies.slice(0, 4).map((t) => (
-                <span key={t} className="meta-label" style={{ letterSpacing: "0.06em" }}>
-                  {t}
-                </span>
-              ))}
+      {homeProjects.map((p, i) => {
+        const study = caseStudyFor(p.title);
+        return (
+          <motion.a
+            key={p.title}
+            href={study ? `/works/${study.slug}` : p.githubUrl || undefined}
+            target={study ? undefined : "_blank"}
+            rel={study ? undefined : "noopener noreferrer"}
+            className="poster group block"
+            initial={{ opacity: 0, y: 30, rotate: i % 2 ? 1.5 : -1.5 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: "easeOut" }}
+          >
+            <div className="relative">
+              <Cover variant={i} />
+              <span className="session-tag absolute top-3 left-3">{study ? `${p.year} · Case study` : p.year}</span>
+              <span className="poster-arrow" aria-hidden="true">
+                <ArrowUpRight className="w-4 h-4" />
+              </span>
             </div>
-          </div>
-        </motion.a>
-      ))}
+            <div className="p-5">
+              <h3 className="font-display text-xl mb-2.5" style={{ lineHeight: 1.15 }}>
+                {p.title}
+              </h3>
+              <p className="text-sm leading-snug mb-4 line-clamp-2" style={{ color: "var(--text-secondary)" }}>
+                {p.description}
+              </p>
+              <div className="flex flex-wrap gap-x-3 gap-y-1">
+                {p.technologies.slice(0, 4).map((t) => (
+                  <span key={t} className="meta-label" style={{ letterSpacing: "0.06em" }}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.a>
+        );
+      })}
     </div>
   );
 }

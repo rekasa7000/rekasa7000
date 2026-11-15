@@ -7,7 +7,7 @@ import { motion, useScroll } from "framer-motion";
 import { DarkModeToggle } from "@/components/dark-mode-toggle";
 
 interface HeaderProps {
-  activePage: "home" | "about-me" | "about-portfolio";
+  activePage: "home" | "about-me" | "about-portfolio" | "other";
 }
 
 const SECTION_LINKS = [

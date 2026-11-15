@@ -269,7 +269,9 @@ const ROADMAP = [
   { title: "Dark mode", note: "The garden at night", done: true },
   { title: "Interactive homepage", note: "Garden plots, skill orbit, growth vine", done: true },
   { title: "Blog", note: "Articles, tutorials, notes", done: false },
-  { title: "Project case studies", note: "Embedded demos and deep dives", done: false },
+  { title: "First case study", note: "KloudTrack, start to finish", done: true },
+  { title: "Guestbook garden", note: "Visitors plant a flower", done: true },
+  { title: "More case studies", note: "With screenshots and demos", done: false },
   { title: "Performance tuning", note: "Load time and bundle size", done: false },
 ];
 

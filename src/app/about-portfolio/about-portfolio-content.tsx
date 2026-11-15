@@ -312,7 +312,7 @@ export function AboutPortfolioContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="meta-label">© 2024 Regee Casaña · Grown with care</div>
+          <div className="meta-label">© {new Date().getFullYear()} Regee Casaña · Grown with care</div>
         </div>
       </footer>
     </div>

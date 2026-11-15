@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Flower2 } from "lucide-react";
+import { ArrowUpRight, FileText, Flower2 } from "lucide-react";
 import { Header } from "@/components/header";
 import { ScrollIndicator } from "@/components/scroll-indicator";
 import { FadeInSection } from "@/components/motion-wrappers";
@@ -15,6 +15,7 @@ import { Trajectory } from "@/components/showcase/trajectory";
 import { Missions } from "@/components/showcase/missions";
 import { SkillOrbit } from "@/components/showcase/skill-orbit";
 import { ProjectPosters } from "@/components/showcase/project-posters";
+import { Guestbook } from "@/components/showcase/guestbook";
 import { TICKER_TEXT } from "@/lib/career-data";
 
 const SOCIAL_LINKS = [
@@ -221,6 +222,9 @@ export function HomeContent() {
                     <Link href="/about-portfolio" className="btn-ghost">
                       About Portfolio
                     </Link>
+                    <Link href="/resume" className="btn-ghost">
+                      <FileText className="w-4 h-4" /> Résumé
+                    </Link>
                   </motion.div>
                 </div>
 
@@ -371,9 +375,15 @@ export function HomeContent() {
             <ProjectPosters />
           </section>
 
+          {/* Guestbook Section */}
+          <section id="guestbook" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
+            <SectionHeading index="05" title="Plant a flower" track="The visitors' field" />
+            <Guestbook />
+          </section>
+
           {/* Contact Section */}
           <section id="contact" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="05" title="Contact" track="Come say hello" />
+            <SectionHeading index="06" title="Contact" track="Come say hello" />
             <FadeInSection delay={0.1}>
               <div className="ticket grid md:grid-cols-12">
                 <div className="md:col-span-7 p-7 md:p-10">
@@ -391,6 +401,9 @@ export function HomeContent() {
                   <a href="mailto:regeecasana57@gmail.com" className="btn-ink">
                     Say hello <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>
+                  <Link href="/resume" className="btn-ghost ml-3 mt-3 sm:mt-0">
+                    <FileText className="w-4 h-4" /> Résumé
+                  </Link>
                 </div>
                 <div className="ticket-stub md:col-span-5 p-7 md:p-10 space-y-5">
                   {[
@@ -421,7 +434,7 @@ export function HomeContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-4">
-          <div className="meta-label">© 2024 Regee Casaña · Grown with care</div>
+          <div className="meta-label">© {new Date().getFullYear()} Regee Casaña · Grown with care</div>
           <div className="flex items-center gap-5">
             <span className="meta-label">Playground</span>
             {["piano", "matrix", "snake", "farm"].map((slug) => (
