@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
-import { Rain3D } from "@/components/three/garden-3d";
+import { Carbon3D, Languages3D, Rain3D } from "@/components/three/garden-3d";
 import { CASE_STUDIES } from "@/lib/case-studies";
 
 export function generateStaticParams() {
@@ -24,6 +24,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   if (!study) notFound();
 
   const rule = { borderColor: "var(--border-color)" };
+  const Scene = { rain: Rain3D, languages: Languages3D, carbon: Carbon3D }[study.scene];
 
   return (
     <div
@@ -58,7 +59,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               </dl>
             </div>
             <div className="md:col-span-6 h-[320px] md:h-[440px]">
-              <Rain3D />
+              <Scene />
             </div>
           </div>
         </section>
@@ -95,7 +96,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
         <section className="py-16 md:py-20 border-t" style={rule}>
           <BlockHeading tag="03" title="What it achieved" note="Results" />
-          <div className="grid grid-cols-2 md:grid-cols-3 stat-grid">
+          <div className={`grid grid-cols-2 md:grid-cols-3 stat-grid`}>
             {study.results.map((r) => (
               <div key={r.label} className="stat-cell p-5 md:p-8">
                 <div className="font-display text-3xl sm:text-4xl md:text-5xl mb-3" style={{ color: "var(--accent)" }}>

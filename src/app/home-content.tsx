@@ -17,6 +17,7 @@ import { SkillOrbit } from "@/components/showcase/skill-orbit";
 import { ProjectPosters } from "@/components/showcase/project-posters";
 import { Guestbook } from "@/components/showcase/guestbook";
 import { TICKER_TEXT } from "@/lib/career-data";
+import { NOW } from "@/lib/now";
 
 const SOCIAL_LINKS = [
   { label: "GitHub", href: "https://github.com/rekasa7000" },
@@ -288,6 +289,29 @@ export function HomeContent() {
             </div>
           </FadeInSection>
           <MissionStats />
+        </div>
+
+        {/* This season */}
+        <div className="max-w-5xl mx-auto px-6 pt-16">
+          <FadeInSection>
+            <div className="section-rule mb-8">
+              <span className="session-tag">This season</span>
+              <span className="rule-line" aria-hidden="true" />
+              <span className="meta-label">Updated {NOW.updated}</span>
+            </div>
+            <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {NOW.items.map((n) => (
+                <div key={n.label} className="stage-card p-5">
+                  <dt className="meta-label mb-3" style={{ color: "var(--accent)" }}>
+                    {n.label}
+                  </dt>
+                  <dd className="font-display text-lg" style={{ lineHeight: 1.2 }}>
+                    {n.text}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </FadeInSection>
         </div>
 
         <div className="max-w-5xl mx-auto px-6">

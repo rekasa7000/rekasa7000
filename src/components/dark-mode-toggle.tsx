@@ -19,7 +19,13 @@ export function DarkModeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={() => {
+        // the visitor has chosen: stop following Manila's time of day
+        try {
+          localStorage.setItem("theme-auto", "off");
+        } catch {}
+        setTheme(isDark ? "light" : "dark");
+      }}
       className="icon-btn"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}

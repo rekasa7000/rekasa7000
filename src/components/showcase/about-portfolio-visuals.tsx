@@ -229,7 +229,12 @@ export function DesignSpecimen() {
           <button
             className="lever"
             data-dark={dark}
-            onClick={() => setTheme(dark ? "light" : "dark")}
+            onClick={() => {
+              try {
+                localStorage.setItem("theme-auto", "off");
+              } catch {}
+              setTheme(dark ? "light" : "dark");
+            }}
             aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           >
             <span className="lever-side">
@@ -241,7 +246,7 @@ export function DesignSpecimen() {
             <span className="lever-thumb" aria-hidden="true" />
           </button>
           <p className="text-sm mt-5" style={{ color: "var(--text-secondary)" }}>
-            Flip it. The sun sets on the whole garden.
+            Flip it. The sun sets on the whole garden. Left alone, the site follows the real time of day in Manila.
           </p>
         </motion.div>
 
@@ -269,9 +274,9 @@ const ROADMAP = [
   { title: "Dark mode", note: "The garden at night", done: true },
   { title: "Interactive homepage", note: "Garden plots, skill orbit, growth vine", done: true },
   { title: "Blog", note: "Articles, tutorials, notes", done: false },
-  { title: "First case study", note: "KloudTrack, start to finish", done: true },
   { title: "Guestbook garden", note: "Visitors plant a flower", done: true },
-  { title: "More case studies", note: "With screenshots and demos", done: false },
+  { title: "Three case studies", note: "KloudTrack, Polyglot, RevEarth", done: true },
+  { title: "Screenshots and demos", note: "Real screens in the case studies", done: false },
   { title: "Performance tuning", note: "Load time and bundle size", done: false },
 ];
 

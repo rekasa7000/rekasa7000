@@ -19,6 +19,8 @@ export type StageApi = {
   update: (t: number, dt: number) => void;
   /** horizontal field of view to hold as the panel changes shape (degrees) */
   hfov?: number;
+  /** called when the scene is torn down */
+  dispose?: () => void;
   /** called while the visitor drags across the canvas */
   drag?: (dx: number, dy: number) => void;
 };
@@ -155,6 +157,7 @@ export function ThreeStage({
 
         teardown = () => {
           teardown = null;
+          api.dispose?.();
           cancelAnimationFrame(raf);
           ro.disconnect();
           canvas.removeEventListener("webglcontextlost", onLost);

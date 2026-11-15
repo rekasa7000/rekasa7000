@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flower, GardenSvg } from "./garden";
 
 const WAYPOINTS = [
   { t: 0.02, year: "2018", title: "STEM track", sub: "Microcity College" },
@@ -35,7 +34,12 @@ export function Trajectory() {
 
   return (
     <div className="trajectory-scroll -mx-6 px-6 overflow-x-auto">
-      <GardenSvg viewBox="0 0 1000 420" className="min-w-[760px] w-full" label="Career growth from 2018 to today">
+      <svg
+        viewBox="0 0 1000 420"
+        className="min-w-[760px] w-full"
+        role="img"
+        aria-label="Career growth from 2018 to today"
+      >
         {/* altitude grid */}
         <g stroke="var(--text-tertiary)" strokeOpacity="0.3" strokeDasharray="2 8">
           {[60, 140, 220, 300].map((y) => (
@@ -100,8 +104,24 @@ export function Trajectory() {
         })}
 
         {/* the bloom at the tip */}
-        <g transform={`translate(${ex} ${ey + 2})`}>
-          <Flower kind="sunflower" h={2} delay={DRAW - 0.8} scale={1.7} />
+        <g transform={`translate(${ex} ${ey})`}>
+          <motion.g
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ type: "spring", stiffness: 160, damping: 11, delay: DRAW - 0.3 }}
+          >
+            {Array.from({ length: 16 }).map((_, i) => (
+              <path
+                key={i}
+                d="M0 0 C-6 -11 -5 -27 0 -36 C5 -27 6 -11 0 0Z"
+                fill={i % 2 ? "#d9902a" : "var(--accent-3)"}
+                transform={`rotate(${i * 22.5})`}
+              />
+            ))}
+            <circle r="13" fill="#4a2f1b" />
+            <circle r="7.5" fill="#6b4526" />
+          </motion.g>
         </g>
         <motion.text
           x={ex - 30}
@@ -116,7 +136,7 @@ export function Trajectory() {
         >
           Now
         </motion.text>
-      </GardenSvg>
+      </svg>
     </div>
   );
 }

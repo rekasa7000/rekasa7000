@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { SKILL_ICONS } from "@/lib/career-data";
 import { MiniPlanet } from "./garden";
+import { buildEmblem } from "@/components/three/minis";
+import { SharedStage } from "@/components/three/shared-stage";
 
 const RINGS = [
   { id: "backend", label: "Backend", size: 28, speed: 38 },
@@ -57,7 +59,11 @@ export function SkillOrbit() {
             </div>
           ))}
           <div className="skill-core">
-            <MiniPlanet className="w-full h-full" />
+            <SharedStage
+              build={buildEmblem}
+              className="block w-full h-full"
+              fallback={<MiniPlanet className="w-full h-full" />}
+            />
           </div>
         </div>
       </div>

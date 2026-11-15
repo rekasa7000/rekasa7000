@@ -320,6 +320,31 @@ export const buildPlanet: Builder = ({ THREE, scene, camera }) => {
   greenhouse.add(inside);
   place(greenhouse, 52, -176, 0);
 
+  // flowers planted by visitors in the guestbook grow in a ring between the fields and the homestead
+  let alive = true;
+  const KINDS: FlowerKind[] = ["daisy", "sunflower", "tulip", "lavender", "poppy"];
+  fetch("/api/guestbook")
+    .then((r) => (r.ok ? r.json() : { flowers: [] }))
+    .then((d: { flowers?: { id: string; kind: string; color: string }[] }) => {
+      if (!alive) return;
+      (d.flowers ?? []).slice(0, 30).forEach((g, i) => {
+        if (!KINDS.includes(g.kind as FlowerKind) || !/^#[0-9a-f]{6}$/i.test(g.color)) return;
+        let h = 7;
+        for (const ch of g.id) h = (h * 31 + ch.charCodeAt(0)) % 3600;
+        const f = k.flower(
+          g.kind as FlowerKind,
+          g.kind === "sunflower" ? PAL.sun : parseInt(g.color.slice(1), 16),
+          0.5 + (h % 5) * 0.05,
+        );
+        f.scale.setScalar(0.5);
+        const holder = k.group(k.sway(f, 0.07));
+        place(holder, 46.5 + (h % 7) * 0.5, h / 10, i);
+        guestGrow.push({ holder, at: -1, delay: i * 0.08 });
+      });
+    })
+    .catch(() => {});
+  const guestGrow: { holder: T.Object3D; at: number; delay: number }[] = [];
+
   /* ── sky around the planet ── */
   const air = new THREE.Mesh(
     new THREE.SphereGeometry(R * 1.09, 40, 28),
@@ -390,12 +415,20 @@ export const buildPlanet: Builder = ({ THREE, scene, camera }) => {
   let vel = 0;
   return {
     hfov: 42,
+    dispose: () => {
+      alive = false;
+    },
     drag: (dx) => {
       spin += dx * 0.008;
       vel = dx * 0.25;
     },
     update: (t, dt) => {
       k.updateGrowth(t);
+      for (const g of guestGrow) {
+        if (g.at < 0) g.at = t;
+        const p = Math.min(1, Math.max(0, (t - g.at - g.delay) / 0.8));
+        g.holder.scale.setScalar(Math.max(0.0001, p * (2 - p)));
+      }
       k.updateSway(t);
       spin += (0.1 + vel) * dt;
       vel *= Math.pow(0.05, dt);

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { caseStudyForJob } from "@/lib/case-studies";
 import { WORK_ENTRIES } from "@/lib/career-data";
 import { Carbon3D, Languages3D, Rain3D, Sprout3D } from "@/components/three/garden-3d";
 
@@ -70,6 +72,7 @@ export function Missions() {
         const isOpen = open === m.id;
         const live = m.period?.includes("Present");
         const Screen = meta.Screen;
+        const study = caseStudyForJob(m.id);
         return (
           <motion.article
             key={m.id}
@@ -121,6 +124,12 @@ export function Missions() {
                   </span>
                 ))}
               </div>
+
+              {study && (
+                <Link href={`/works/${study.slug}`} className="btn-ghost self-start mb-4">
+                  Read the case study <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              )}
 
               <button
                 className="mt-auto self-start flex items-center gap-2 meta-label cursor-pointer py-2"

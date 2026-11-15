@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
 import { MultiplayerCursors } from "@/components/multiplayer-cursors";
 import { GalaxyMode } from "@/components/galaxy-mode";
+import { ManilaDaylight } from "@/components/manila-daylight";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -51,6 +52,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <div className="crt-overlay" aria-hidden="true" />
+          <ManilaDaylight />
           <MultiplayerCursors />
           <GalaxyMode />
           <PageTransition>{children}</PageTransition>

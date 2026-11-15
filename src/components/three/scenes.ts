@@ -9,7 +9,10 @@ const gy = (x: number, z: number) => Math.sqrt(GR * GR - x * x - z * z) - GR;
 
 type Tick = (t: number, dt: number) => void;
 
-function base(ctx: StageCtx, opts: { ground: number; far: number; body: "sun" | "moon" | "dawn"; fireflies?: number }) {
+export function base(
+  ctx: StageCtx,
+  opts: { ground: number; far: number; body: "sun" | "moon" | "dawn"; fireflies?: number },
+) {
   const { THREE, scene, camera } = ctx;
   const k = makeKit(THREE);
   const ticks: Tick[] = [];

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { homeProjects } from "@/lib/career-data";
 import { caseStudyFor } from "@/lib/case-studies";
+import { coverBuilders } from "@/components/three/minis";
+import { SharedStage } from "@/components/three/shared-stage";
 import { Fireflies, Flower, GardenSvg, Grass, Orb, Stars, type FlowerKind } from "./garden";
 
 const CREAM = "#f4eedd";
@@ -141,7 +143,11 @@ export function ProjectPosters() {
             transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: "easeOut" }}
           >
             <div className="relative">
-              <Cover variant={i} />
+              <SharedStage
+                build={coverBuilders[i % coverBuilders.length]}
+                className="block w-full aspect-[5/3]"
+                fallback={<Cover variant={i} />}
+              />
               <span className="session-tag absolute top-3 left-3">{study ? `${p.year} · Case study` : p.year}</span>
               <span className="poster-arrow" aria-hidden="true">
                 <ArrowUpRight className="w-4 h-4" />
