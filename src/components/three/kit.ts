@@ -9,12 +9,12 @@ export const PAL = {
   leafDeep: 0x2a5c3d,
   soil: 0x7a4a2b,
   soilLight: 0xb9683f,
-  clay: 0xd9552b,
+  clay: 0xff6a1f,
   sun: 0xf5bd4a,
   petal: 0xe58aa0,
   lilac: 0x9a86d6,
-  cream: 0xfbf7ea,
-  ink: 0x1d2433,
+  cream: 0xf3ebdd,
+  ink: 0x012624,
   wood: 0x6b4526,
   water: 0x6fb3e0,
   wheat: 0xe3b54f,
@@ -285,14 +285,14 @@ export function makeKit(THREE: Three) {
   /** a wooden garden marker with a short label */
   const sign = (text: string, w = 0.42) => {
     const tex = canvasTexture(192, 96, (c) => {
-      c.fillStyle = "#fbf7ea";
-      c.strokeStyle = "#1d2433";
+      c.fillStyle = "#f3ebdd";
+      c.strokeStyle = "#013230";
       c.lineWidth = 8;
       c.beginPath();
       c.roundRect(6, 6, 180, 84, 16);
       c.fill();
       c.stroke();
-      c.fillStyle = "#1d2433";
+      c.fillStyle = "#013230";
       c.font = `bold ${text.length > 3 ? 34 : 52}px ui-monospace, Menlo, monospace`;
       c.textAlign = "center";
       c.textBaseline = "middle";

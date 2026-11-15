@@ -11,7 +11,7 @@ const LABEL: Record<GuestKind, string> = {
   lavender: "Lavender",
   poppy: "Poppy",
 };
-const COLOR_NAME = ["Pink", "Terracotta", "Cream", "Lilac", "Peach"];
+const COLOR_NAME = ["Pink", "Orange", "Cream", "Lilac", "Peach"];
 
 // stable pseudo-random number from a flower's id
 const hash = (s: string, salt: number) => {
@@ -97,9 +97,9 @@ export function Guestbook() {
           >
             <defs>
               <linearGradient id="gb-sky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0f1530" />
-                <stop offset="65%" stopColor="#1b2440" />
-                <stop offset="100%" stopColor="#3a3a6a" />
+                <stop offset="0%" stopColor="#011f1e" />
+                <stop offset="65%" stopColor="#013230" />
+                <stop offset="100%" stopColor="#0b4f4a" />
               </linearGradient>
             </defs>
             <rect width="1000" height="360" fill="url(#gb-sky)" />
@@ -121,7 +121,7 @@ export function Guestbook() {
                 />
               </g>
             ))}
-            <ellipse cx="500" cy="590" rx="820" ry="360" fill="#3d7f56" stroke="#12182b" strokeWidth="2" />
+            <ellipse cx="500" cy="590" rx="820" ry="360" fill="#3d7f56" stroke="#012624" strokeWidth="2" />
             <ellipse
               cx="500"
               cy="612"

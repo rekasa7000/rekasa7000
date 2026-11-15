@@ -154,21 +154,26 @@ export function IconTiles({ tiles }: { tiles: Tile[] }) {
 /* ── Live design specimen: palette, type, and a working theme switch ── */
 
 const SWATCHES = [
-  { name: "Paper", v: "--bg-primary" },
-  { name: "Ink", v: "--text-primary" },
-  { name: "Clay", v: "--accent" },
+  { name: "Deep Teal", v: "--brand-teal" },
+  { name: "Cream", v: "--brand-cream" },
+  { name: "Orange", v: "--brand-orange" },
   { name: "Leaf", v: "--leaf" },
   { name: "Sun", v: "--accent-3" },
   { name: "Petal", v: "--petal" },
 ];
 
 const TYPE = [
-  { name: "Fraunces", use: "Display", stack: "var(--stack-display)", weight: 600 },
-  { name: "Space Grotesk", use: "Reading", stack: "var(--stack-sans)", weight: 500 },
-  { name: "Space Mono", use: "Labels", stack: "var(--stack-mono)", weight: 400 },
+  { name: "Anton", use: "Headlines", stack: "var(--stack-display)", weight: 400, upper: true, italic: false },
+  { name: "Fraunces Italic", use: "Accents", stack: "var(--stack-accent)", weight: 400, upper: false, italic: true },
+  { name: "Space Grotesk", use: "Reading", stack: "var(--stack-sans)", weight: 500, upper: false, italic: false },
 ];
 
-const DESIGN_RULES = ["Flowers first, tech as the soil", "Everything grows", "Warm, never cold", "Room to breathe"];
+const DESIGN_RULES = [
+  "Three colours, off the colour wheel",
+  "Loud headlines, quiet details",
+  "Orange for the one thing that matters",
+  "The garden stays",
+];
 
 export function DesignSpecimen() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -190,7 +195,7 @@ export function DesignSpecimen() {
   return (
     <div className="grid lg:grid-cols-12 gap-6">
       <motion.div {...rise} transition={{ duration: 0.45 }} className="lg:col-span-7 stage-card p-6 md:p-8">
-        <div className="meta-label mb-5">Palette · {dark ? "Garden at night" : "Seed catalogue"}</div>
+        <div className="meta-label mb-5">Palette · {dark ? "Teal ground" : "Cream paper"}</div>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-9">
           {SWATCHES.map((s) => (
             <div key={s.v}>
@@ -212,7 +217,8 @@ export function DesignSpecimen() {
                 style={{
                   fontFamily: t.stack,
                   fontWeight: t.weight,
-                  letterSpacing: t.name === "Fraunces" ? "-0.025em" : undefined,
+                  textTransform: t.upper ? "uppercase" : undefined,
+                  fontStyle: t.italic ? "italic" : undefined,
                 }}
               >
                 {t.name}

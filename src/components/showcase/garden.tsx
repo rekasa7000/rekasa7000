@@ -20,7 +20,7 @@ export type FlowerKind = "daisy" | "sunflower" | "tulip" | "lavender" | "poppy" 
 export const n = (v: number) => +v.toFixed(2);
 /** CSS delay variable for grow-in elements */
 export const d = (s: number) => ({ ["--d" as string]: `${n(s)}s` }) as React.CSSProperties;
-const shade = (c: string, pct: number) => `color-mix(in srgb, ${c} ${pct}%, #1d2433)`;
+const shade = (c: string, pct: number) => `color-mix(in srgb, ${c} ${pct}%, #013230)`;
 const tint = (c: string, pct: number) => `color-mix(in srgb, ${c} ${pct}%, #fff8ec)`;
 
 /** An <svg> whose contents grow in the first time it scrolls into view. */
@@ -180,7 +180,7 @@ function Head({ kind, color, delay }: { kind: FlowerKind; color: string; delay: 
           </g>
         ))}
         <g className="g-grow" style={d(delay + 0.4)}>
-          <circle r="4.6" fill="#1d2433" />
+          <circle r="4.6" fill="#013230" />
           {Array.from({ length: 10 }).map((_, i) => (
             <circle
               key={i}
@@ -362,7 +362,7 @@ const STARS = (() => {
 
 /** Twinkling stars spread over a w × h box. Every fifth one is a four-point sparkle. */
 export function Stars({
-  color = "#f4eedd",
+  color = "#f3ebdd",
   count = 30,
   w = 400,
   h = 240,
@@ -400,7 +400,7 @@ export function Stars({
 
 /** A glowing sun or moon: three stacked halos, a shaded disc, and rimmed craters for the moon. */
 export function Orb({ x, y, r, kind = "sun" }: { x: number; y: number; r: number; kind?: "sun" | "moon" }) {
-  const c = kind === "sun" ? "#f5bd4a" : "#f4eedd";
+  const c = kind === "sun" ? "#f5bd4a" : "#f3ebdd";
   return (
     <g transform={`translate(${x} ${y})`}>
       <circle r={r * 2.3} fill={c} opacity="0.05" />
@@ -503,7 +503,7 @@ const HERO_FLOWERS: { a: number; kind: FlowerKind; h: number; color: string }[] 
   { a: -52, kind: "daisy", h: 60, color: "var(--petal)" },
   { a: -40, kind: "tulip", h: 50, color: "var(--accent)" },
   { a: -27, kind: "sunflower", h: 92, color: "" },
-  { a: 31, kind: "daisy", h: 62, color: "#fbf7ea" },
+  { a: 31, kind: "daisy", h: 62, color: "#f3ebdd" },
   { a: 42, kind: "tulip", h: 78, color: "var(--petal)" },
   { a: 53, kind: "poppy", h: 48, color: "var(--petal)" },
   { a: 64, kind: "lavender", h: 44, color: "var(--lilac)" },
@@ -544,7 +544,7 @@ export function GardenPlanet({ className = "" }: { className?: string }) {
       <g transform="translate(70 122) rotate(-22)">
         <ellipse rx="34" ry="8" fill="none" stroke="var(--text-primary)" strokeWidth="1.6" opacity="0.5" />
         <circle r="17" fill="var(--petal)" />
-        <path d="M-17 0 A17 17 0 0 0 17 0 A17 9 0 0 1 -17 0Z" fill="#1d2433" opacity="0.18" />
+        <path d="M-17 0 A17 17 0 0 0 17 0 A17 9 0 0 1 -17 0Z" fill="#013230" opacity="0.18" />
         <path d="M-15 -5 Q0 -1 15 -6 M-16 3 Q0 8 16 2" stroke="#fff8ec" strokeWidth="1.4" fill="none" opacity="0.6" />
         <path d="M-34 0 A34 8 0 0 0 34 0" fill="none" stroke="var(--text-primary)" strokeWidth="1.8" />
       </g>
@@ -633,7 +633,7 @@ export function GardenPlanet({ className = "" }: { className?: string }) {
       <OnPlanet a={-90}>
         <path
           d="M-7 2 L-4 -36 L4 -36 L7 2Z"
-          fill="#fbf7ea"
+          fill="#f3ebdd"
           stroke="var(--text-primary)"
           strokeWidth="1.4"
           strokeLinejoin="round"
@@ -672,9 +672,9 @@ export function GardenPlanet({ className = "" }: { className?: string }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-        <rect x="-6" y="-12" width="12" height="14" fill="#fbf7ea" stroke="var(--text-primary)" strokeWidth="1.1" />
+        <rect x="-6" y="-12" width="12" height="14" fill="#f3ebdd" stroke="var(--text-primary)" strokeWidth="1.1" />
         <path d="M-6 -12 L6 2 M6 -12 L-6 2" stroke="var(--text-primary)" strokeWidth="1" />
-        <rect x="-3" y="-21" width="6" height="5" fill="#1d2433" />
+        <rect x="-3" y="-21" width="6" height="5" fill="#013230" />
       </OnPlanet>
 
       {/* farmhouse with porch, rocking chair and chimney smoke */}
@@ -685,7 +685,7 @@ export function GardenPlanet({ className = "" }: { className?: string }) {
           <circle cx="10" cy="-69" r="5" style={{ animationDelay: "-2.4s" }} />
         </g>
         <rect x="8" y="-48" width="6" height="12" fill="#b9683f" stroke="var(--text-primary)" strokeWidth="1.2" />
-        <rect x="-19" y="-26" width="38" height="28" fill="#fbf7ea" stroke="var(--text-primary)" strokeWidth="1.5" />
+        <rect x="-19" y="-26" width="38" height="28" fill="#f3ebdd" stroke="var(--text-primary)" strokeWidth="1.5" />
         <path d="M-19 -18 h38 M-19 -10 h38 M-19 -2 h38" stroke="var(--text-primary)" strokeWidth="0.5" opacity="0.35" />
         <path
           d="M-25 -25 L0 -46 L25 -25Z"
@@ -754,7 +754,7 @@ export function GardenPlanet({ className = "" }: { className?: string }) {
       {/* fence along the near horizon */}
       {Array.from({ length: 9 }).map((_, i) => (
         <OnPlanet key={i} a={-22 + i * 2.6 + (i > 3 ? 13 : -6)}>
-          <rect x="-0.9" y="-7" width="1.8" height="8" fill="#fbf7ea" stroke="var(--text-primary)" strokeWidth="0.5" />
+          <rect x="-0.9" y="-7" width="1.8" height="8" fill="#f3ebdd" stroke="var(--text-primary)" strokeWidth="0.5" />
         </OnPlanet>
       ))}
 

@@ -8,7 +8,7 @@ import { coverBuilders } from "@/components/three/minis";
 import { SharedStage } from "@/components/three/shared-stage";
 import { Fireflies, Flower, GardenSvg, Grass, Orb, Stars, type FlowerKind } from "./garden";
 
-const CREAM = "#f4eedd";
+const CREAM = "#f3ebdd";
 
 const COVERS: { ground: string; body: "sun" | "ring" | "moon"; kinds: FlowerKind[]; colors: string[] }[] = [
   { ground: "#3d7f56", body: "sun", kinds: ["daisy", "sunflower", "daisy"], colors: ["#f4a3b5", "", CREAM] },
@@ -35,9 +35,9 @@ function Cover({ variant }: { variant: number }) {
     <GardenSvg viewBox="0 0 400 240" className="w-full h-auto block">
       <defs>
         <linearGradient id="pc-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0f1530" />
-          <stop offset="70%" stopColor="#1b2440" />
-          <stop offset="100%" stopColor="#3a3a6a" />
+          <stop offset="0%" stopColor="#011f1e" />
+          <stop offset="70%" stopColor="#013230" />
+          <stop offset="100%" stopColor="#0b4f4a" />
         </linearGradient>
       </defs>
       <rect width="400" height="240" fill="url(#pc-sky)" />
@@ -48,7 +48,7 @@ function Cover({ variant }: { variant: number }) {
         <g transform="translate(318 62) rotate(-20)">
           <ellipse rx="44" ry="10" fill="none" stroke={CREAM} strokeWidth="2.4" opacity="0.5" />
           <circle r="22" fill="#f4a3b5" />
-          <path d="M-22 0 A22 22 0 0 0 22 0 A22 12 0 0 1 -22 0Z" fill="#1d2433" opacity="0.2" />
+          <path d="M-22 0 A22 22 0 0 0 22 0 A22 12 0 0 1 -22 0Z" fill="#013230" opacity="0.2" />
           <path
             d="M-19 -7 Q0 -2 19 -8 M-21 4 Q0 10 21 3"
             stroke="#fff8ec"
@@ -79,7 +79,7 @@ function Cover({ variant }: { variant: number }) {
       {[70, 268, 330].map((x, i) => (
         <Flower key={x} x={x} y={cg(x) + 3} h={16 + i * 4} kind="sprout" scale={0.7} delay={0.5 + i * 0.1} />
       ))}
-      <ellipse cx="200" cy="330" rx="300" ry="160" fill={c.ground} stroke="#12182b" strokeWidth="2" />
+      <ellipse cx="200" cy="330" rx="300" ry="160" fill={c.ground} stroke="#012624" strokeWidth="2" />
       <path
         d={`M40 ${cg(40) + 4} Q200 ${cg(200) - 5} 360 ${cg(360) + 4}`}
         fill="none"

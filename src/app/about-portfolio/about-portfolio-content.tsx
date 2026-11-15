@@ -162,7 +162,7 @@ export function AboutPortfolioContent() {
 
                 <TechCard title="Design & Assets">
                   <li>
-                    <strong style={{ color: "var(--text-primary)" }}>Fraunces, Space Grotesk, Space Mono</strong> -
+                    <strong style={{ color: "var(--text-primary)" }}>Anton, Fraunces Italic, Space Grotesk</strong> -
                     Display, reading and label typefaces
                   </li>
                   <li>
@@ -221,34 +221,36 @@ export function AboutPortfolioContent() {
 
             <ProseSection title="Design Philosophy">
               <p>
-                This portfolio is drawn as a small homestead on a small planet: flowers, farm plots and a farmhouse, out
-                among the stars. It is the two halves of me in one picture. I build software, and one day I want to
-                trade the keyboard for a watering can.
+                The brand is three colours taken straight off the colour wheel: deep teal, its opposite orange, and a
+                warm cream to sit between them. Teal is the ground, cream is the type, and orange is saved for the one
+                thing on each screen that matters most.
               </p>
               <p className="font-medium" style={{ color: "var(--text-primary)" }}>
                 Key design principles:
               </p>
               <ul className="space-y-2.5">
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Flowers first, tech as the soil</strong> - Space and
-                  technology are the setting; the garden is the subject
+                  <strong style={{ color: "var(--text-primary)" }}>Three colours, off the colour wheel</strong> - Deep
+                  teal (#013230), cream (#F3EBDD) and orange (#FF6A1F); complementary, so they push each other forward
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Everything grows</strong> - Careers, skills and
-                  projects are shown as things that were planted and tended
+                  <strong style={{ color: "var(--text-primary)" }}>Loud headlines, quiet details</strong> - Heavy
+                  condensed capitals for the big statements, a small italic serif beside them, wide-tracked caps for
+                  labels
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Warm, never cold</strong> - Cream paper, terracotta,
-                  leaf green and petal pink instead of chrome and neon
+                  <strong style={{ color: "var(--text-primary)" }}>Orange for the one thing that matters</strong> - A
+                  single diagonal band, a key word, a number
                 </li>
                 <li>
-                  <strong style={{ color: "var(--text-primary)" }}>Room to breathe</strong> - Fewer words, more pictures
+                  <strong style={{ color: "var(--text-primary)" }}>The garden stays</strong> - The homestead planet and
+                  the 3D scenes are still the subject; the brand is the frame around them
                 </li>
               </ul>
               <p>
-                Type is set in Fraunces for display, Space Grotesk for reading and Space Mono for small labels. Flowers
-                grow as you scroll and sway gently; all of it stops for anyone who prefers reduced motion. The three
-                storybook plates were generated with Qwen-Image on Hugging Face; everything that moves is drawn in code.
+                Headlines are set in Anton, accents in Fraunces Italic, and reading text in Space Grotesk. The 3D scenes
+                are built with three.js and stop moving for anyone who prefers reduced motion. The three storybook
+                plates were generated with Qwen-Image on Hugging Face.
               </p>
             </ProseSection>
 

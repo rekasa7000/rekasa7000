@@ -33,7 +33,9 @@ function SectionHeading({ index, title, track }: { index: string; title: string;
         <div className="section-rule mb-5">
           <span className="session-tag">Field {index}</span>
           <span className="rule-line" aria-hidden="true" />
-          <span className="meta-label">{track}</span>
+          <span className="font-accent text-base" style={{ color: "var(--text-secondary)" }}>
+            {track}
+          </span>
         </div>
         <h2 className="font-display text-4xl md:text-6xl">{title}</h2>
       </div>
@@ -160,8 +162,15 @@ export function HomeContent() {
 
       {/* Main Content */}
       <main className="relative z-10">
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <Starfield className="absolute inset-0 w-full h-full" />
+          <div className="hero-band" aria-hidden="true" />
+          <span className="hero-side left" aria-hidden="true">
+            Technical Lead
+          </span>
+          <span className="hero-side right" aria-hidden="true">
+            Bataan · Philippines
+          </span>
           <div className="max-w-5xl mx-auto px-6 relative">
             {/* Hero Section — the homestead planet */}
             <section className="relative pt-16 pb-20 md:pt-24 md:pb-28">
@@ -181,18 +190,23 @@ export function HomeContent() {
               <div className="grid md:grid-cols-12 gap-10 md:gap-6 items-center">
                 <div className="md:col-span-7">
                   <motion.h1
-                    className="font-display text-[3.4rem] sm:text-7xl md:text-[5.5rem] lg:text-8xl mb-8"
+                    className="font-display hero-name mb-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   >
                     Regee
+                    <span className="font-accent hero-between">
+                      builds things
+                      <br />
+                      that grow
+                    </span>
                     <br />
-                    Casaña<span style={{ color: "var(--accent)" }}>.</span>
+                    <span className="accent">Casaña</span>
                   </motion.h1>
 
                   <motion.p
-                    className="text-lg md:text-xl mb-5 font-medium"
+                    className="font-accent text-xl md:text-2xl mb-5"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.25 }}

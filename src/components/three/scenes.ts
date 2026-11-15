@@ -18,14 +18,14 @@ export function base(
   const ticks: Tick[] = [];
 
   scene.background = k.sky([
-    [0, "#0d1330"],
-    [0.55, "#1b2440"],
-    [1, opts.body === "dawn" ? "#6a4a6a" : "#3a3a6a"],
+    [0, "#011f1e"],
+    [0.55, "#013230"],
+    [1, opts.body === "dawn" ? "#7a4a2a" : "#0b4f4a"],
   ]);
-  scene.fog = new THREE.Fog(0x252c55, 16, 52);
+  scene.fog = new THREE.Fog(0x063f3b, 16, 52);
   camera.position.set(0, 2.2, 9.6);
 
-  const hemi = new THREE.HemisphereLight(0xd6e0ff, 0x2a3350, 1.7);
+  const hemi = new THREE.HemisphereLight(0xe6f0e8, 0x1c403c, 1.7);
   scene.add(hemi);
   const key = new THREE.DirectionalLight(0xfff0d0, 2.6);
   key.position.set(-3, 6, 5);
@@ -521,7 +521,7 @@ export const buildCarbon: Builder = (ctx) => {
     [-3.3, 2.4, 2.8],
     [3.4, 2.6, 0.7],
   ].map(([x, y, off]) => {
-    const s = k.bubble("CO₂", "#f4eedd", 0.95);
+    const s = k.bubble("CO₂", "#f3ebdd", 0.95);
     scene.add(s);
     return { s, x, y, off };
   });
@@ -737,7 +737,7 @@ export const buildMusic: Builder = (ctx) => {
     c.beginPath();
     c.roundRect(0, 0, 384, 540, 44);
     c.fill();
-    c.fillStyle = "#1d2433";
+    c.fillStyle = "#013230";
     c.beginPath();
     c.arc(192, 230, 120, 0, Math.PI * 2);
     c.fill();
@@ -752,12 +752,12 @@ export const buildMusic: Builder = (ctx) => {
     c.beginPath();
     c.arc(192, 230, 34, 0, Math.PI * 2);
     c.fill();
-    c.fillStyle = "#1d2433";
+    c.fillStyle = "#013230";
     c.beginPath();
     c.arc(192, 230, 8, 0, Math.PI * 2);
     c.fill();
     // contactless waves
-    c.strokeStyle = "#fbf7ea";
+    c.strokeStyle = "#f3ebdd";
     c.lineWidth = 12;
     c.lineCap = "round";
     for (const r of [28, 54, 80]) {
@@ -765,7 +765,7 @@ export const buildMusic: Builder = (ctx) => {
       c.arc(84, 452, r, -Math.PI * 0.42, Math.PI * 0.02);
       c.stroke();
     }
-    c.fillStyle = "#fbf7ea";
+    c.fillStyle = "#f3ebdd";
     c.beginPath();
     c.roundRect(238, 410, 96, 72, 12);
     c.fill();
@@ -808,7 +808,7 @@ export const buildMusic: Builder = (ctx) => {
   const notes = ["♪", "♫", "♪", "♬", "♫", "♪"].map((glyph, i) => {
     const s = new THREE.Sprite(
       new THREE.SpriteMaterial({
-        map: noteTex(glyph, ["#f5bd4a", "#fbf7ea", "#f4a3b5"][i % 3]),
+        map: noteTex(glyph, ["#f5bd4a", "#f3ebdd", "#f4a3b5"][i % 3]),
         transparent: true,
         depthWrite: false,
       }),

@@ -17,7 +17,7 @@ export function Planet3D({ className = "" }: { className?: string }) {
         label="A small planet with a farmhouse, a barn, a windmill, tidy fields and tall flowers. Drag to spin it."
         fallback={<GardenPlanet className="w-full h-full" />}
       />
-      <p className="meta-label text-center -mt-2">Drag to spin the planet</p>
+      <p className="meta-label planet-hint">Drag to spin the planet</p>
     </div>
   );
 }

@@ -224,7 +224,7 @@ export function FocusChannels() {
                   strokeWidth="1.5"
                   strokeLinejoin="round"
                 />
-                <path d="M70 100 l-4 30 h8 l5 -30z" fill="#1d2433" opacity="0.14" />
+                <path d="M70 100 l-4 30 h8 l5 -30z" fill="#013230" opacity="0.14" />
                 <path d="M42 104 l3 22" stroke="#fff8ec" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
                 <rect
                   x="31"

@@ -4,8 +4,8 @@ import { d, Fireflies, Flower, GardenSvg, Grass, n, Orb, Stars, type FlowerKind 
 
 /* One illustrated garden scene per job. Each is a picture of the work, drawn as something growing. */
 
-const CREAM = "#f4eedd";
-const INK = "#12182b";
+const CREAM = "#f3ebdd";
+const INK = "#012624";
 
 // Height of the curved horizon at a given x
 const ground = (x: number) => +(430 - 200 * Math.sqrt(1 - ((x - 200) / 340) ** 2)).toFixed(1);
@@ -42,9 +42,9 @@ function Scene({
       >
         <defs>
           <linearGradient id="ps-sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0f1530" />
-            <stop offset="60%" stopColor="#1b2440" />
-            <stop offset="100%" stopColor="#3a3a6a" />
+            <stop offset="0%" stopColor="#011f1e" />
+            <stop offset="60%" stopColor="#013230" />
+            <stop offset="100%" stopColor="#0b4f4a" />
           </linearGradient>
         </defs>
         <rect y="-90" width="400" height="390" fill="url(#ps-sky)" />
@@ -59,7 +59,7 @@ function Scene({
         <path d={far} fill={palette.far} />
         {[36, 92, 150, 262, 318, 368].map((x, i) => (
           <g key={x} transform={`translate(${x} ${hill(x) + 2}) scale(${i % 2 ? 1 : 0.75})`} fill={palette.far}>
-            <path d="M0 -16 L6 0 H-6Z M0 -10 L7 6 H-7Z" stroke="#0f1530" strokeOpacity="0.35" strokeWidth="0.6" />
+            <path d="M0 -16 L6 0 H-6Z M0 -10 L7 6 H-7Z" stroke="#011f1e" strokeOpacity="0.35" strokeWidth="0.6" />
           </g>
         ))}
 
@@ -224,7 +224,7 @@ export function CarbonTree() {
             cx={x}
             cy={y}
             r="15"
-            fill="#1b2440"
+            fill="#013230"
             fillOpacity="0.5"
             stroke={CREAM}
             strokeOpacity="0.75"
@@ -533,7 +533,7 @@ export function FirstSprout() {
       <g transform={`translate(272 ${ground(272) + 4})`}>
         <path d="M0 0 V-30" stroke={CREAM} strokeWidth="2.6" strokeLinecap="round" />
         <rect x="-15" y="-52" width="30" height="24" rx="3" fill="#22422f" stroke={INK} strokeWidth="1.4" />
-        <rect x="-8" y="-46" width="16" height="12" rx="1.5" fill="#12182b" />
+        <rect x="-8" y="-46" width="16" height="12" rx="1.5" fill="#012624" />
         <path
           d="M-15 -47 h-4 M-15 -41 h-4 M-15 -35 h-4 M15 -47 h4 M15 -41 h4 M15 -35 h4"
           stroke="#f5bd4a"

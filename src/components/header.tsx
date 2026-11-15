@@ -42,7 +42,7 @@ export function Header({ activePage }: HeaderProps) {
             className="brand-logo transition-transform duration-300 group-hover:-rotate-6"
           />
           <span className="hidden sm:flex flex-col leading-none gap-1">
-            <span className="font-display text-[15px]">Regee Casaña</span>
+            <span className="font-display text-xl">Regee Casaña</span>
             <span className="meta-label" style={{ fontSize: "0.5625rem" }}>
               <span className="blink signal-text" aria-hidden="true">
                 ●
@@ -59,7 +59,7 @@ export function Header({ activePage }: HeaderProps) {
               <a
                 key={link.href}
                 href={link.href}
-                className="link-underline meta-label"
+                className="link-underline nav-accent"
                 style={{ color: "var(--text-secondary)" }}
               >
                 {link.label}
@@ -70,7 +70,7 @@ export function Header({ activePage }: HeaderProps) {
 
         {/* Page links + actions */}
         <div className="flex items-center gap-5">
-          <nav className="flex items-center gap-5 meta-label" aria-label="Pages">
+          <nav className="flex items-center gap-5 nav-accent" aria-label="Pages">
             <Link
               href="/about-me"
               className="link-underline"

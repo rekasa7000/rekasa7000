@@ -4,7 +4,7 @@
 
 @theme inline {
   --font-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
   --font-mono: var(--font-space-mono), ui-monospace, monospace;
   --font-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
 }
@@ -15,63 +15,69 @@
  */
 body {
   --stack-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
-  --stack-display: var(--font-fraunces), Georgia, serif;
+  --stack-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
+  --stack-accent: var(--font-fraunces), Georgia, serif;
   --stack-mono: var(--font-space-mono), ui-monospace, monospace;
   --stack-jp: var(--font-zen-kaku), var(--font-grotesk), sans-serif;
 }
 
 /*
- * Homestead — a small farm on a small planet.
- * Light: a seed-catalogue print. Cream stock, navy ink, terracotta, leaf green, sun yellow, petal pink.
- * Dark: the same garden at night, under the stars.
- * Space and tech are the setting; the flowers are the subject.
+ * Brand: deep teal, cream and orange, straight off the colour wheel (orange sits opposite teal).
+ * Heavy condensed headlines, small italic serif accents, wide-tracked caps for labels.
+ * Dark is the signature look: teal ground, cream type, orange for the one thing that matters.
+ * Light inverts it: cream paper, teal ink.
  */
 :root {
-  --bg-primary: #f4eedd;
-  --bg-secondary: #fbf7ea;
-  --bg-hover: rgba(29, 36, 51, 0.045);
-  --text-primary: #1d2433;
-  --text-secondary: #4d5361;
-  --text-tertiary: #8a8778;
-  --border-color: #ddd3ba;
-  --border-strong: #1d2433;
-  --accent: #d9552b;
-  --accent-soft: rgba(217, 85, 43, 0.1);
-  --accent-2: #3d7f56;
-  --accent-3: #efb23a;
-  --signal: #3d7f56;
+  --brand-teal: #013230;
+  --brand-cream: #f3ebdd;
+  --brand-orange: #ff6a1f;
+  --bg-primary: #f3ebdd;
+  --bg-secondary: #fbf6ec;
+  --bg-hover: rgba(1, 50, 48, 0.05);
+  --text-primary: #013230;
+  --text-secondary: #2f5552;
+  --text-tertiary: #6f8a85;
+  --border-color: #dccfb9;
+  --border-strong: #013230;
+  --accent: #e8540f;
+  --accent-soft: rgba(255, 106, 31, 0.12);
+  --accent-2: #0d5c57;
+  --accent-3: #f0a431;
+  --signal: #1f7a55;
+  --on-accent: #013230;
   --leaf: #3d7f56;
   --leaf-2: #6fae7f;
   --leaf-deep: #2a5c3d;
   --soil: #7a4a2b;
   --petal: #e58aa0;
   --lilac: #9a86d6;
-  --shadow-hard: #1d2433;
-  --grid-dot: rgba(29, 36, 51, 0.07);
+  --shadow-hard: #013230;
+  --stripe: rgba(1, 50, 48, 0.035);
 }
 
 .dark {
-  --bg-primary: #0d111c;
-  --bg-secondary: #151a28;
-  --bg-hover: rgba(239, 233, 216, 0.05);
-  --text-primary: #efe9d8;
-  --text-secondary: #aaa794;
-  --text-tertiary: #717064;
-  --border-color: #262c3d;
-  --border-strong: #4b5368;
-  --accent: #ff7a45;
-  --accent-soft: rgba(255, 122, 69, 0.12);
-  --accent-2: #86cf9a;
-  --accent-3: #f5bd4a;
-  --signal: #86cf9a;
+  --bg-primary: #013230;
+  --bg-secondary: #06403d;
+  --bg-hover: rgba(243, 235, 221, 0.06);
+  --text-primary: #f3ebdd;
+  --text-secondary: #b9c7bb;
+  --text-tertiary: #7f9a94;
+  --border-color: #0f4d49;
+  --border-strong: #3d7a74;
+  --accent: #ff6a1f;
+  --accent-soft: rgba(255, 106, 31, 0.16);
+  --accent-2: #f3ebdd;
+  --accent-3: #ffb347;
+  --signal: #9be0b5;
+  --on-accent: #013230;
   --leaf: #5fae77;
   --leaf-2: #9bdcab;
   --leaf-deep: #2f6a46;
   --soil: #5a3a22;
   --petal: #f4a3b5;
   --lilac: #b9a4ee;
-  --shadow-hard: #ff7a45;
-  --grid-dot: rgba(239, 233, 216, 0.05);
+  --shadow-hard: #ff6a1f;
+  --stripe: rgba(243, 235, 221, 0.028);
 }
 
 /* ── Base ── */
@@ -83,8 +89,7 @@ html {
 body {
   font-family: var(--stack-sans);
   background-color: var(--bg-primary);
-  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1.2px);
-  background-size: 22px 22px;
+  background-image: repeating-linear-gradient(90deg, var(--stripe) 0 2px, transparent 2px 16px);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -124,10 +129,19 @@ body {
 
 .font-display {
   font-family: var(--stack-display);
-  font-weight: 600;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  letter-spacing: -0.025em;
-  line-height: 1;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+}
+
+/* small italic serif accent, used beside the heavy caps */
+.font-accent {
+  font-family: var(--stack-accent);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .font-jp {
@@ -140,10 +154,11 @@ body {
 
 /* Mono uppercase label — section indices, dates, tags, readouts */
 .meta-label {
-  font-family: var(--stack-mono);
+  font-family: var(--stack-sans);
   font-size: 0.6875rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   color: var(--text-tertiary);
 }
 
@@ -248,7 +263,7 @@ body {
 
 .dark .btn-ink {
   border-color: var(--accent);
-  color: #0c0e13;
+  color: #012624;
   box-shadow: 4px 4px 0 rgba(255, 107, 44, 0.35);
 }
 
@@ -387,7 +402,7 @@ body {
   min-width: 2rem;
   height: 6px;
   align-self: center;
-  background-image: radial-gradient(circle, var(--leaf) 1.5px, transparent 2px);
+  background-image: radial-gradient(circle, var(--accent) 1.5px, transparent 2px);
   background-size: 12px 6px;
   opacity: 0.35;
 }
@@ -396,21 +411,17 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--stack-mono);
+  font-family: var(--stack-sans);
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  background: var(--leaf);
-  color: #fbf7ea;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
-.dark .session-tag {
-  background: var(--leaf-2);
-  color: #0d111c;
-}
 
 /* Owner's logo mark: dark tile, so it gets a hard shadow on paper and a soft ring in the dark */
 .brand-logo {
@@ -491,17 +502,12 @@ body {
 
 .marquee {
   overflow: hidden;
-  border-block: 1.5px solid var(--text-primary);
-  background: var(--leaf-deep);
-  color: #fbf7ea;
+  border-block: 0;
+  background: var(--accent);
+  color: var(--on-accent);
   mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
-.dark .marquee {
-  background: transparent;
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-}
 
 .marquee-track {
   display: flex;
@@ -1013,7 +1019,7 @@ body {
 }
 
 .dark .stage-icon {
-  color: #0c0e13;
+  color: #012624;
 }
 
 /* Lanyard badge */
@@ -1092,7 +1098,7 @@ body {
 
 .dark .badge-head {
   background: var(--accent);
-  color: #0c0e13;
+  color: #012624;
 }
 
 .badge-photo {
@@ -1288,7 +1294,7 @@ body {
 }
 
 .dark .planet {
-  border-color: #0c0e13;
+  border-color: #012624;
   box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
@@ -1458,7 +1464,7 @@ body {
 }
 
 .dark .lever[data-dark="true"] .lever-side:nth-child(2) {
-  color: #0c0e13;
+  color: #012624;
 }
 
 /* Roadmap */
@@ -1540,8 +1546,8 @@ body {
   min-height: 280px;
   border-radius: 14px;
   overflow: hidden;
-  background: #1b2440;
-  box-shadow: inset 0 0 0 1.5px #12182b;
+  background: #013230;
+  box-shadow: inset 0 0 0 1.5px #012624;
 }
 
 .plot-scene > svg {
@@ -1555,12 +1561,12 @@ body {
   top: 0.8rem;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  background: #f4eedd;
-  color: #1d2433;
+  background: #f3ebdd;
+  color: #013230;
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.2;
-  border: 1.5px solid #12182b;
+  border: 1.5px solid #012624;
   max-width: calc(100% - 1.8rem);
 }
 
@@ -1569,7 +1575,7 @@ body {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  fill: #1d2433;
+  fill: #013230;
 }
 
 .co2 {
@@ -1619,13 +1625,13 @@ body {
   border: 1.5px solid var(--text-primary);
   border-radius: 14px;
   background: var(--bg-secondary);
-  box-shadow: 5px 5px 0 var(--leaf);
+  box-shadow: 5px 5px 0 var(--accent);
   overflow: hidden;
 }
 
 .dark .pot-card {
   border-color: var(--border-strong);
-  box-shadow: 5px 5px 0 color-mix(in srgb, var(--leaf) 45%, transparent);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1902,17 +1908,16 @@ body {
   margin: 0 auto;
   padding: 2.5rem clamp(1.25rem, 5vw, 3rem);
   background: #fffdf7;
-  color: #1d2433;
-  border: 1.5px solid #1d2433;
+  color: #013230;
+  border: 1.5px solid #013230;
   border-radius: 12px;
-  box-shadow: 8px 8px 0 var(--leaf);
+  box-shadow: 8px 8px 0 var(--accent);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .resume h1 {
   font-family: var(--stack-display);
-  font-variation-settings: "SOFT" 100, "WONK" 1;
   font-weight: 600;
   font-size: 2.4rem;
   line-height: 1;
@@ -1921,7 +1926,7 @@ body {
 
 .resume-role {
   margin-top: 0.5rem;
-  color: #3d7f56;
+  color: #e8540f;
   font-weight: 600;
 }
 
@@ -1930,7 +1935,7 @@ body {
   flex-direction: column;
   gap: 0.6rem;
   padding-bottom: 1.25rem;
-  border-bottom: 2px solid #1d2433;
+  border-bottom: 2px solid #013230;
 }
 
 .resume .resume-contact {
@@ -1952,7 +1957,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #d9552b;
+  color: #e8540f;
   margin-bottom: 0.6rem;
 }
 
@@ -1977,7 +1982,7 @@ body {
   font-family: var(--stack-mono);
   font-size: 0.7rem;
   white-space: nowrap;
-  color: #4d5361;
+  color: #2f5552;
 }
 
 .resume-role-line {
@@ -1996,7 +2001,7 @@ body {
   margin: 1rem 0 0.6rem;
   font-style: italic;
   font-weight: 600;
-  color: #4d5361;
+  color: #2f5552;
 }
 
 .resume .resume-contact {
@@ -2008,7 +2013,7 @@ body {
 }
 
 .resume-org {
-  color: #4d5361;
+  color: #2f5552;
   margin-bottom: 0.35rem;
 }
 
@@ -2028,7 +2033,7 @@ body {
 .resume-tech {
   font-family: var(--stack-mono);
   font-size: 0.68rem;
-  color: #4d5361;
+  color: #2f5552;
 }
 
 .resume-skills > div {
@@ -2115,7 +2120,7 @@ body {
   border: 1.5px solid var(--text-primary);
   border-radius: 14px;
   background: var(--bg-secondary);
-  box-shadow: 5px 5px 0 var(--leaf);
+  box-shadow: 5px 5px 0 var(--accent);
 }
 
 .dark .flow-step {
@@ -2148,8 +2153,8 @@ body {
   height: clamp(240px, 40vw, 400px);
   border-radius: 14px;
   overflow: hidden;
-  background: #1b2440;
-  box-shadow: inset 0 0 0 1.5px #12182b;
+  background: #013230;
+  box-shadow: inset 0 0 0 1.5px #012624;
 }
 
 .guest-field > svg {
@@ -2164,7 +2169,7 @@ body {
   place-items: center;
   padding: 1rem;
   text-align: center;
-  color: #f4eedd;
+  color: #f3ebdd;
   font-family: var(--stack-display);
   font-size: 1.15rem;
 }
@@ -2204,4 +2209,168 @@ body {
   margin-right: 0.15rem;
   border-radius: 999px;
   border: 1px solid var(--text-primary);
+}
+
+/* ══ Brand layer: teal, cream, orange ══ */
+
+/* Primary button: a cream pill on teal (teal on cream in the light theme), orange shadow */
+.btn-ink,
+.dark .btn-ink {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+  box-shadow: 4px 4px 0 var(--accent);
+}
+
+.btn-ink:hover,
+.dark .btn-ink:hover {
+  box-shadow: 6px 6px 0 var(--accent);
+}
+
+.btn-ink:active {
+  box-shadow: 1px 1px 0 var(--accent);
+}
+
+.btn-ghost,
+.dark .btn-ghost {
+  background: transparent;
+  border-color: var(--text-primary);
+}
+
+.btn-ghost:hover {
+  box-shadow: 4px 4px 0 var(--accent);
+}
+
+.chip[data-active="true"] {
+  color: var(--on-accent);
+}
+
+.stage-icon,
+.dark .stage-icon,
+.flow-num {
+  color: var(--on-accent);
+}
+
+/* Hero: a diagonal orange band behind the planet, and vertical side labels */
+.hero-band {
+  position: absolute;
+  z-index: 0;
+  left: 54%;
+  right: -12%;
+  top: 30%;
+  height: 46%;
+  transform: rotate(-14deg);
+  transform-origin: center;
+  background: var(--accent);
+  background-image: repeating-linear-gradient(90deg, rgba(1, 50, 48, 0.12) 0 2px, transparent 2px 16px);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .hero-band {
+    left: -20%;
+    right: -20%;
+    top: auto;
+    bottom: 17%;
+    height: 21%;
+    transform: rotate(-9deg);
+  }
+}
+
+.hero-side {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: none;
+  writing-mode: vertical-rl;
+  font-family: var(--stack-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.hero-side.left {
+  left: 1.1rem;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.hero-side.right {
+  right: 1.1rem;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 1180px) {
+  .hero-side {
+    display: block;
+  }
+}
+
+.hero-name {
+  font-size: clamp(4.6rem, 19.5vw, 9rem);
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.hero-name .accent {
+  display: inline-block;
+  margin-top: 0.26em;
+  color: var(--accent);
+}
+
+.planet-hint {
+  display: table;
+  margin: 0.25rem auto 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-between {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.18em;
+  font-size: 0.2em;
+  line-height: 1.05;
+  color: var(--text-primary);
+}
+
+/* nav links in the italic serif, like a masthead */
+.nav-accent {
+  font-family: var(--stack-accent);
+  font-style: italic;
+  font-size: 1.02rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+
+/* the readout sits on the band, so it needs a solid ground */
+.readout {
+  position: relative;
+  z-index: 1;
+}
+
+/* résumé document in brand ink */
+.resume h1 {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 3rem;
+}
+
+.traj-title {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 15px;
+}
+
+.guest-empty {
+  text-transform: uppercase;
 }

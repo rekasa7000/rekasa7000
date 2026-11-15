@@ -81,7 +81,7 @@ export const buildPlanet: Builder = ({ THREE, scene, camera }) => {
       c.fill();
     }
     // wildflowers
-    const dots = ["#fbf7ea", "#f4a3b5", "#f5bd4a", "#b9a4ee"];
+    const dots = ["#f3ebdd", "#f4a3b5", "#f5bd4a", "#b9a4ee"];
     for (let i = 0; i < 1500; i++) {
       c.fillStyle = dots[i % 4];
       c.beginPath();

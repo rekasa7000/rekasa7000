@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Space_Grotesk, Space_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
+import { Anton, Fraunces, Space_Grotesk, Space_Mono, Zen_Kaku_Gothic_New } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PageTransition } from "@/components/page-transition";
@@ -8,10 +8,16 @@ import { GalaxyMode } from "@/components/galaxy-mode";
 import { ManilaDaylight } from "@/components/manila-daylight";
 import "./globals.css";
 
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+});
+
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin", "latin-ext"],
-  axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -48,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fraunces.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${zenKaku.variable} antialiased`}
+        className={`${anton.variable} ${fraunces.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${zenKaku.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <div className="crt-overlay" aria-hidden="true" />
