@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Galaxy2D } from "./galaxy-2d";
+import Link from "next/link";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { ENTRIES, SKILLS as CAREER_SKILLS } from "@/lib/career-data";
+import { caseStudyForJob } from "@/lib/case-studies";
 
 // ── Planet / education / project data derived from career-data.ts ─────────────
 
@@ -85,6 +88,8 @@ type SceneHandle = {
   ) => () => void;
   stopAnimation: () => void;
   setCamMode: (m: CamMode) => void;
+  /** fly the camera to a body by id, or back out with null */
+  focus: (id: string | null) => void;
   detach: (container: HTMLElement) => void;
   destroy: () => void;
 };
@@ -111,7 +116,7 @@ async function buildScene(): Promise<SceneHandle> {
   // ── Renderer ───────────────────────────────────────────────────────────
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "default" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x00000c, 1);
+  renderer.setClearColor(0x011a19, 1);
 
   const gl = renderer.getContext();
   if (!gl) {
@@ -123,7 +128,7 @@ async function buildScene(): Promise<SceneHandle> {
 
   // ── Scene ──────────────────────────────────────────────────────────────
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x00000c, 0.0018);
+  scene.fog = new THREE.FogExp2(0x011a19, 0.0018);
 
   // ── Camera ─────────────────────────────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1200);
@@ -139,22 +144,46 @@ async function buildScene(): Promise<SceneHandle> {
   controls.autoRotateSpeed = 0.3;
 
   // ── Helpers ────────────────────────────────────────────────────────────
+  const headlineFont = getComputedStyle(document.body).getPropertyValue("--font-anton").trim() || "Impact, sans-serif";
+  try {
+    await document.fonts.load(`48px ${headlineFont}`);
+  } catch {
+    // the label still draws in the fallback face
+  }
+
+  /** a label that always faces the camera: cream capitals on a teal pill, with the body's colour as a dot */
   function makeSprite(text: string, hexColor: string, fontSize = 22, scaleMult = 1) {
     const cv = document.createElement("canvas");
-    cv.width = 320;
-    cv.height = 80;
+    cv.width = 512;
+    cv.height = 128;
     const ctx = cv.getContext("2d")!;
-    ctx.clearRect(0, 0, 320, 80);
-    ctx.font = `bold ${fontSize}px monospace`;
+    const label = text.replace(/^✦\s*/, "").toUpperCase();
+    const px = Math.round(fontSize * 2.6);
+    ctx.font = `${px}px ${headlineFont}`;
+    const tw = Math.min(430, ctx.measureText(label).width);
+    const w = tw + 78;
+    const h = px + 34;
+    const x = (512 - w) / 2;
+    const y = (128 - h) / 2;
+    ctx.fillStyle = "rgba(1,38,36,0.86)";
+    ctx.strokeStyle = "rgba(243,235,221,0.35)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, h / 2);
+    ctx.fill();
+    ctx.stroke();
     ctx.fillStyle = hexColor;
-    ctx.textAlign = "center";
+    ctx.beginPath();
+    ctx.arc(x + 26, 64, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#f3ebdd";
+    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.shadowColor = hexColor;
-    ctx.shadowBlur = 10;
-    ctx.fillText(text, 160, 40);
+    ctx.fillText(label, x + 46, 66, 430);
     const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
-    sprite.scale.set(5 * scaleMult, 1.25 * scaleMult, 1);
+    sprite.scale.set(10 * scaleMult, 2.5 * scaleMult, 1);
     return sprite;
   }
 
@@ -183,17 +212,17 @@ async function buildScene(): Promise<SceneHandle> {
       pos[i * 3 + 2] = (Math.random() - 0.5) * 1100;
       const r = Math.random();
       if (r < 0.15) {
-        col[i * 3] = 0.6;
-        col[i * 3 + 1] = 0.7;
-        col[i * 3 + 2] = 1;
+        col[i * 3] = 0.62;
+        col[i * 3 + 1] = 0.9;
+        col[i * 3 + 2] = 0.82;
       } else if (r < 0.3) {
         col[i * 3] = 1;
         col[i * 3 + 1] = 0.9;
         col[i * 3 + 2] = 0.5;
       } else {
-        col[i * 3] = 1;
-        col[i * 3 + 1] = 1;
-        col[i * 3 + 2] = 1;
+        col[i * 3] = 0.95;
+        col[i * 3 + 1] = 0.92;
+        col[i * 3 + 2] = 0.86;
       }
     }
     const geo = new THREE.BufferGeometry();
@@ -214,17 +243,18 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Nebula clouds ──────────────────────────────────────────────────────
+  // brand nebulae: teal haze with a few warm orange and cream clouds
   const nebulaConfigs = [
-    { r: 30, g: 10, b: 80 },
-    { r: 10, g: 20, b: 60 },
-    { r: 50, g: 5, b: 40 },
-    { r: 5, g: 40, b: 30 },
-    { r: 20, g: 5, b: 60 },
-    { r: 60, g: 10, b: 20 },
-    { r: 10, g: 30, b: 50 },
-    { r: 40, g: 15, b: 60 },
-    { r: 15, g: 50, b: 20 },
-    { r: 35, g: 8, b: 55 },
+    { r: 6, g: 70, b: 64 },
+    { r: 10, g: 90, b: 80 },
+    { r: 90, g: 36, b: 8 },
+    { r: 4, g: 56, b: 52 },
+    { r: 70, g: 60, b: 44 },
+    { r: 110, g: 44, b: 10 },
+    { r: 8, g: 80, b: 70 },
+    { r: 14, g: 100, b: 88 },
+    { r: 60, g: 28, b: 6 },
+    { r: 6, g: 64, b: 58 },
   ];
   for (const nc of nebulaConfigs) {
     const cv = document.createElement("canvas");
@@ -232,7 +262,7 @@ async function buildScene(): Promise<SceneHandle> {
     cv.height = 128;
     const ctx = cv.getContext("2d")!;
     const grd = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grd.addColorStop(0, `rgba(${nc.r},${nc.g},${nc.b},0.3)`);
+    grd.addColorStop(0, `rgba(${nc.r},${nc.g},${nc.b},0.2)`);
     grd.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, 128, 128);
@@ -251,7 +281,7 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Lighting ───────────────────────────────────────────────────────────
-  scene.add(new THREE.AmbientLight(0x223355, 4.5));
+  scene.add(new THREE.AmbientLight(0x2a5550, 4.5));
   // decay=0 disables inverse-square falloff so all planets get equal sunlight
   scene.add(new THREE.PointLight(0xffdd88, 6, 0, 0));
 
@@ -285,7 +315,7 @@ async function buildScene(): Promise<SceneHandle> {
   sunGlow.scale.set(22, 22, 1);
   scene.add(sunGlow);
 
-  const sunLabel = makeSprite("✦ REGEE", "#ffcc44", 26, 1.15);
+  const sunLabel = makeSprite("REGEE", "#ff6a1f", 26, 1.15);
   sunLabel.position.set(0, 7.5, 0);
   scene.add(sunLabel);
 
@@ -311,7 +341,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < PLANET_DATA.length; i++) {
     const p = PLANET_DATA[i];
     const hexStr = "#" + p.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(p.orbitRadius, 0x223344, 0.45, p.inc, p.rotY));
+    scene.add(makeOrbitRing(p.orbitRadius, 0xf3ebdd, 0.16, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 32, 32),
       new THREE.MeshStandardMaterial({
@@ -354,7 +384,7 @@ async function buildScene(): Promise<SceneHandle> {
     scene.add(mesh);
     let label: InstanceType<typeof THREE.Sprite> | null = null;
     if (i < CAREER_SKILLS.length) {
-      label = makeSprite(CAREER_SKILLS[i], "#7799cc", 16, 0.65);
+      label = makeSprite(CAREER_SKILLS[i], "#f3ebdd", 15, 0.6);
       scene.add(label);
     }
     asteroids.push({ mesh, label, angle, radius, speed: 0.0007 + Math.random() * 0.001, y });
@@ -368,7 +398,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < EDUCATION_DATA.length; i++) {
     const e = EDUCATION_DATA[i];
     const hexStr = "#" + e.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(e.orbitRadius, 0x443322, 0.35, e.inc, e.rotY));
+    scene.add(makeOrbitRing(e.orbitRadius, 0xff6a1f, 0.3, e.inc, e.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(e.size, 32, 32),
       new THREE.MeshStandardMaterial({
@@ -421,7 +451,7 @@ async function buildScene(): Promise<SceneHandle> {
   for (let i = 0; i < PROJECT_DATA.length; i++) {
     const p = PROJECT_DATA[i];
     const hexStr = "#" + p.color.toString(16).padStart(6, "0");
-    scene.add(makeOrbitRing(p.orbitRadius, 0x221133, 0.28, p.inc, p.rotY));
+    scene.add(makeOrbitRing(p.orbitRadius, 0xf3ebdd, 0.09, p.inc, p.rotY));
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(p.size, 28, 28),
       new THREE.MeshStandardMaterial({
@@ -513,6 +543,50 @@ async function buildScene(): Promise<SceneHandle> {
   }
 
   // ── Raycaster ──────────────────────────────────────────────────────────
+  // ── Focus: the camera flies to a chosen body and a ring marks it ──
+  const focusRing = (() => {
+    const cv = document.createElement("canvas");
+    cv.width = 256;
+    cv.height = 256;
+    const ctx = cv.getContext("2d")!;
+    ctx.strokeStyle = "#ff6a1f";
+    ctx.lineWidth = 9;
+    ctx.setLineDash([26, 16]);
+    ctx.beginPath();
+    ctx.arc(128, 128, 112, 0, Math.PI * 2);
+    ctx.stroke();
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false, depthTest: false }),
+    );
+    sprite.visible = false;
+    scene.add(sprite);
+    return sprite;
+  })();
+  let focusId: string | null = null;
+  let focusStart = 0;
+  const _focusDir = new THREE.Vector3();
+  const _focusWant = new THREE.Vector3();
+  const _focusAim = new THREE.Vector3();
+  const ORIGIN = new THREE.Vector3(0, 0, 0);
+
+  function focusTarget(): { mesh: InstanceType<typeof THREE.Mesh>; size: number } | null {
+    if (!focusId) return null;
+    let i = PLANET_DATA.findIndex((b) => b.id === focusId);
+    if (i >= 0) return { mesh: planetMeshes[i], size: PLANET_DATA[i].size };
+    i = EDUCATION_DATA.findIndex((b) => b.id === focusId);
+    if (i >= 0) return { mesh: eduMeshes[i], size: EDUCATION_DATA[i].size };
+    i = PROJECT_DATA.findIndex((b) => b.id === focusId);
+    if (i >= 0) return { mesh: projMeshes[i], size: PROJECT_DATA[i].size };
+    return null;
+  }
+
+  function focus(id: string | null) {
+    if (id === focusId) return;
+    focusId = id;
+    focusStart = performance.now();
+    controls.autoRotate = !id;
+  }
+
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const clickableMeshes = [...planetMeshes, ...eduMeshes, ...projMeshes];
@@ -750,10 +824,10 @@ async function buildScene(): Promise<SceneHandle> {
         else if (bodyKind === "education") body = EDUCATION_DATA[bodyIndex];
         else if (bodyKind === "project") body = PROJECT_DATA[bodyIndex];
         onSelect(body);
-        if (mode === "explore") controls.autoRotate = false;
+        if (mode === "explore") focus(body?.id ?? null);
       } else {
         onSelect(null);
-        if (mode === "explore") controls.autoRotate = true;
+        if (mode === "explore") focus(null);
         if (mode === "ship" && !pointerLocked) canvas.requestPointerLock();
       }
     };
@@ -905,7 +979,7 @@ async function buildScene(): Promise<SceneHandle> {
         const { x, y, z } = orbitPos(p.orbitRadius, planetAngles[i], p.inc, p.rotY);
         planetMeshes[i].position.set(x, y, z);
         planetMeshes[i].rotation.y += 0.009;
-        planetLabels[i].position.set(x, y + p.size + 1.6, z);
+        planetLabels[i].position.set(x, y + p.size + 2.1, z);
       }
 
       // ── Asteroids ────────────────────────────────────────────────────
@@ -926,7 +1000,7 @@ async function buildScene(): Promise<SceneHandle> {
         const { x, y, z } = orbitPos(e.orbitRadius, eduAngles[i], e.inc, e.rotY);
         eduMeshes[i].position.set(x, y, z);
         eduMeshes[i].rotation.y += 0.007;
-        eduLabels[i].position.set(x, y + e.size + 1.8, z);
+        eduLabels[i].position.set(x, y + e.size + 2.4, z);
       }
 
       // ── Projects ─────────────────────────────────────────────────────
@@ -936,7 +1010,7 @@ async function buildScene(): Promise<SceneHandle> {
         const { x, y, z } = orbitPos(p.orbitRadius, projAngles[i], p.inc, p.rotY);
         projMeshes[i].position.set(x, y, z);
         projMeshes[i].rotation.y += 0.011;
-        projLabels[i].position.set(x, y + p.size + 1.5, z);
+        projLabels[i].position.set(x, y + p.size + 2.0, z);
       }
 
       // ── Comets ───────────────────────────────────────────────────────
@@ -959,7 +1033,38 @@ async function buildScene(): Promise<SceneHandle> {
         }
       }
 
-      if (mode === "explore") controls.update();
+      if (mode === "explore") {
+        const f = focusTarget();
+        const sinceFocus = (performance.now() - focusStart) / 1000;
+        if (f) {
+          // keep looking at the body; dolly in only for the first moments so the visitor can still zoom
+          const portrait = container.clientHeight > container.clientWidth;
+          _focusAim.copy(f.mesh.position);
+          if (portrait) _focusAim.y -= (f.size * 5 + 9) * 0.34;
+          controls.target.lerp(_focusAim, 0.12);
+          if (sinceFocus < 2.2) {
+            _focusDir.copy(camera.position).sub(controls.target).normalize();
+            _focusWant.copy(controls.target).addScaledVector(_focusDir, f.size * 5 + 9);
+            camera.position.lerp(_focusWant, 0.06);
+          }
+          focusRing.visible = true;
+          focusRing.position.copy(f.mesh.position);
+          const s = f.size * 3.4 * (1 + Math.sin(now * 3) * 0.05);
+          focusRing.scale.set(s, s, 1);
+          focusRing.material.rotation = now * 0.4;
+        } else {
+          focusRing.visible = false;
+          controls.target.lerp(ORIGIN, 0.05);
+          if (sinceFocus < 2.2 && camera.position.length() < 80) {
+            _focusDir.copy(camera.position).normalize();
+            _focusWant.copy(_focusDir).multiplyScalar(118);
+            camera.position.lerp(_focusWant, 0.04);
+          }
+        }
+        controls.update();
+      } else {
+        focusRing.visible = false;
+      }
       renderer.render(scene, camera);
     };
     tick();
@@ -998,7 +1103,7 @@ async function buildScene(): Promise<SceneHandle> {
     renderer.dispose();
   }
 
-  return { canvas, startAnimation, stopAnimation, setCamMode, detach, destroy };
+  return { canvas, startAnimation, stopAnimation, setCamMode, focus, detach, destroy };
 }
 
 // ── Window-level singleton ────────────────────────────────────────────────────
@@ -1031,6 +1136,21 @@ async function getScene(): Promise<SceneHandle | null> {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+/** every body, in the order the tour visits them */
+const WORK_ORDER = ["concentrix", "kloudtech-swe", "up-ice", "akosi", "revearth", "kloudtech-intern"];
+const WORK_SORTED = [...PLANET_DATA].sort((a, b) => WORK_ORDER.indexOf(a.id) - WORK_ORDER.indexOf(b.id));
+const ALL_BODIES: AnyBody[] = [...WORK_SORTED, ...EDUCATION_DATA, ...PROJECT_DATA];
+
+const DIRECTORY: { title: string; bodies: AnyBody[] }[] = [
+  { title: "Work", bodies: WORK_SORTED },
+  { title: "Education", bodies: EDUCATION_DATA },
+  { title: "Projects", bodies: PROJECT_DATA },
+];
+
+const bodyLabel = (b: AnyBody) =>
+  b.kind === "education" ? b.short : b.kind === "work" && /intern/i.test(b.role) ? `${b.name} · Intern` : b.name;
+const bodyColor = (b: AnyBody) => `#${b.color.toString(16).padStart(6, "0")}`;
+
 export function GalaxyMode() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -1057,6 +1177,16 @@ export function GalaxyMode() {
       window.removeEventListener("exit-mode", hide);
     };
   }, []);
+
+  // Fly the camera to whatever is selected (from a click, the directory or the tour)
+  useEffect(() => {
+    if (view === "3d") gs().__galaxyScene?.focus(selected?.id ?? null);
+  }, [selected, view]);
+
+  const step = (dir: 1 | -1) => {
+    const i = selected ? ALL_BODIES.findIndex((b) => b.id === selected.id) : dir === 1 ? -1 : 0;
+    setSelected(ALL_BODIES[(i + dir + ALL_BODIES.length) % ALL_BODIES.length]);
+  };
 
   // Lock body scroll while open
   useEffect(() => {
@@ -1142,29 +1272,23 @@ export function GalaxyMode() {
   const colorStr = `#${colorHex}`;
 
   const kindLabel =
-    selected?.kind === "work"
-      ? "◉ WORK EXPERIENCE"
-      : selected?.kind === "education"
-        ? "◯ EDUCATION"
-        : selected?.kind === "project"
-          ? "◆ PROJECT"
-          : "";
+    selected?.kind === "work" ? "Work" : selected?.kind === "education" ? "Education" : selected?.kind === "project" ? "Project" : "";
 
   // ── View label for hint ───────────────────────────────────────────────────
   const hintText =
     view === "ship"
       ? camMode3D === "cockpit"
-        ? "◈ COCKPIT · W/S thrust · A/D roll · Q/E up-down · mouse to steer · V for chase view ◈"
-        : "◈ CHASE CAM · W/S thrust · A/D roll · mouse to steer · V for cockpit ◈"
+        ? "W/S thrust · A/D roll · Q/E up and down · mouse to steer · V for chase view"
+        : "W/S thrust · A/D roll · mouse to steer · V for cockpit"
       : view === "2d"
-        ? "◈ 2D NAV · scroll or arrow keys to fly ◈"
-        : "◈ GALAXY MODE · drag to explore · scroll to zoom · click to inspect ◈";
+        ? "Drag, scroll or use the arrow keys to travel"
+        : "Drag to look around, pinch or scroll to zoom, tap a planet";
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-500 overflow-hidden"
+          className="fixed inset-0 z-500 overflow-hidden galaxy-root"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -1172,91 +1296,51 @@ export function GalaxyMode() {
         >
           <div ref={containerRef} className="absolute inset-0" />
 
-          {/* Top hint */}
-          <motion.div
-            className="absolute top-5 left-0 right-0 text-center pointer-events-none select-none"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <p className="text-xs font-mono tracking-[0.3em]" style={{ color: "rgba(255,255,255,0.25)" }}>
-              {hintText}
-            </p>
-          </motion.div>
-
-          {/* Top-right controls */}
-          <div className="absolute top-4 right-4 z-10 flex gap-2 flex-wrap justify-end">
-            {/* 3D Explore */}
-            <button
-              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
-              style={{
-                border: `1px solid ${view === "3d" ? "rgba(100,180,255,0.5)" : "rgba(255,255,255,0.15)"}`,
-                color: view === "3d" ? "rgba(140,200,255,0.9)" : "rgba(255,255,255,0.45)",
-                backgroundColor: "rgba(0,0,20,0.65)",
-                borderRadius: "4px",
-                opacity: view === "3d" ? 1 : 0.7,
-              }}
-              onClick={() => setView("3d")}
-            >
-              3D explore
-            </button>
-
-            {/* Ship Nav */}
-            <button
-              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
-              style={{
-                border: `1px solid ${view === "ship" ? "rgba(100,200,255,0.5)" : "rgba(255,255,255,0.15)"}`,
-                color: view === "ship" ? "rgba(140,220,255,0.9)" : "rgba(255,255,255,0.45)",
-                backgroundColor: "rgba(0,0,20,0.65)",
-                borderRadius: "4px",
-                opacity: view === "ship" ? 1 : 0.7,
-              }}
-              onClick={() => setView("ship")}
-            >
-              ship nav
-            </button>
-
-            {/* 2D Nav */}
-            <button
-              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
-              style={{
-                border: `1px solid ${view === "2d" ? "rgba(100,180,255,0.5)" : "rgba(255,255,255,0.15)"}`,
-                color: view === "2d" ? "rgba(140,200,255,0.9)" : "rgba(255,255,255,0.45)",
-                backgroundColor: "rgba(0,0,20,0.65)",
-                borderRadius: "4px",
-                opacity: view === "2d" ? 1 : 0.7,
-              }}
-              onClick={() => setView("2d")}
-            >
-              2D nav
-            </button>
-
-            <button
-              className="text-xs font-mono px-3 py-1.5 transition-opacity hover:opacity-100"
-              style={{
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "rgba(255,255,255,0.45)",
-                backgroundColor: "rgba(0,0,20,0.65)",
-                borderRadius: "4px",
-                opacity: 0.7,
-              }}
-              onClick={() => setVisible(false)}
-            >
-              [ESC] exit
-            </button>
+          {/* Header: title, mode tabs, close */}
+          <div className="gx-header">
+            <div className="min-w-0">
+              <p className="font-display gx-title">Career galaxy</p>
+              <p className="font-accent gx-hint">{hintText}</p>
+            </div>
+            <div className="gx-tabs" role="tablist" aria-label="Galaxy view">
+              {(
+                [
+                  ["3d", "Explore"],
+                  ["ship", "Fly"],
+                  ["2d", "Map"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  role="tab"
+                  aria-selected={view === id}
+                  className={`gx-tab ${id === "ship" ? "gx-desktop-only" : ""}`}
+                  data-active={view === id}
+                  onClick={() => {
+                    setSelected(null);
+                    setView(id);
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+              <button className="gx-close" onClick={() => setVisible(false)} aria-label="Close the galaxy">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* ── Ship mode HUD ─────────────────────────────────────────────── */}
           {view === "ship" && (
             <>
               {/* Cockpit cam mode sub-toggle */}
-              <div className="absolute top-14 right-4 z-10 flex gap-2">
+              <div className="absolute top-[4.6rem] right-4 z-30 flex gap-2">
                 <button
-                  className="text-[10px] font-mono px-2 py-1 transition-opacity hover:opacity-100"
+                  className="text-[10px]  px-2 py-1 transition-opacity hover:opacity-100"
                   style={{
-                    border: `1px solid ${camMode3D === "cockpit" ? "rgba(100,200,255,0.45)" : "rgba(255,255,255,0.1)"}`,
-                    color: camMode3D === "cockpit" ? "rgba(120,210,255,0.85)" : "rgba(255,255,255,0.3)",
-                    backgroundColor: "rgba(0,0,20,0.55)",
+                    border: `1px solid ${camMode3D === "cockpit" ? "rgba(243,235,221,0.45)" : "rgba(255,255,255,0.1)"}`,
+                    color: camMode3D === "cockpit" ? "rgba(243,235,221,0.85)" : "rgba(255,255,255,0.3)",
+                    backgroundColor: "rgba(1,38,36,0.8)",
                     borderRadius: "4px",
                   }}
                   onClick={() => {
@@ -1267,11 +1351,11 @@ export function GalaxyMode() {
                   cockpit
                 </button>
                 <button
-                  className="text-[10px] font-mono px-2 py-1 transition-opacity hover:opacity-100"
+                  className="text-[10px]  px-2 py-1 transition-opacity hover:opacity-100"
                   style={{
-                    border: `1px solid ${camMode3D === "chase" ? "rgba(100,200,255,0.45)" : "rgba(255,255,255,0.1)"}`,
-                    color: camMode3D === "chase" ? "rgba(120,210,255,0.85)" : "rgba(255,255,255,0.3)",
-                    backgroundColor: "rgba(0,0,20,0.55)",
+                    border: `1px solid ${camMode3D === "chase" ? "rgba(243,235,221,0.45)" : "rgba(255,255,255,0.1)"}`,
+                    color: camMode3D === "chase" ? "rgba(243,235,221,0.85)" : "rgba(255,255,255,0.3)",
+                    backgroundColor: "rgba(1,38,36,0.8)",
                     borderRadius: "4px",
                   }}
                   onClick={() => {
@@ -1295,22 +1379,22 @@ export function GalaxyMode() {
                     style={{ opacity: 0.55 }}
                   >
                     {/* Left A-pillar: bottom-left → upper-center-left */}
-                    <line x1="0" y1="100" x2="46" y2="10" stroke="rgba(80,130,200,0.5)" strokeWidth="0.55" />
+                    <line x1="0" y1="100" x2="46" y2="10" stroke="rgba(243,235,221,0.5)" strokeWidth="0.55" />
                     {/* Right A-pillar */}
-                    <line x1="100" y1="100" x2="54" y2="10" stroke="rgba(80,130,200,0.5)" strokeWidth="0.55" />
+                    <line x1="100" y1="100" x2="54" y2="10" stroke="rgba(243,235,221,0.5)" strokeWidth="0.55" />
                     {/* Canopy bow (horizontal bar across top) */}
-                    <line x1="46" y1="10" x2="54" y2="10" stroke="rgba(80,130,200,0.4)" strokeWidth="0.4" />
+                    <line x1="46" y1="10" x2="54" y2="10" stroke="rgba(243,235,221,0.4)" strokeWidth="0.4" />
                     {/* Center spine */}
-                    <line x1="50" y1="0" x2="50" y2="10" stroke="rgba(80,130,200,0.25)" strokeWidth="0.35" />
+                    <line x1="50" y1="0" x2="50" y2="10" stroke="rgba(243,235,221,0.25)" strokeWidth="0.35" />
                     {/* Mid-frame cross braces */}
-                    <line x1="0" y1="55" x2="12" y2="52" stroke="rgba(60,110,180,0.3)" strokeWidth="0.35" />
-                    <line x1="100" y1="55" x2="88" y2="52" stroke="rgba(60,110,180,0.3)" strokeWidth="0.35" />
+                    <line x1="0" y1="55" x2="12" y2="52" stroke="rgba(243,235,221,0.3)" strokeWidth="0.35" />
+                    <line x1="100" y1="55" x2="88" y2="52" stroke="rgba(243,235,221,0.3)" strokeWidth="0.35" />
                     {/* Bottom side rails */}
-                    <line x1="0" y1="82" x2="18" y2="80" stroke="rgba(60,110,180,0.25)" strokeWidth="0.3" />
-                    <line x1="100" y1="82" x2="82" y2="80" stroke="rgba(60,110,180,0.25)" strokeWidth="0.3" />
+                    <line x1="0" y1="82" x2="18" y2="80" stroke="rgba(243,235,221,0.25)" strokeWidth="0.3" />
+                    <line x1="100" y1="82" x2="82" y2="80" stroke="rgba(243,235,221,0.25)" strokeWidth="0.3" />
                     {/* Subtle edge glow lines */}
-                    <line x1="0" y1="0" x2="0" y2="100" stroke="rgba(40,80,160,0.2)" strokeWidth="1.2" />
-                    <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(40,80,160,0.2)" strokeWidth="1.2" />
+                    <line x1="0" y1="0" x2="0" y2="100" stroke="rgba(243,235,221,0.2)" strokeWidth="1.2" />
+                    <line x1="100" y1="0" x2="100" y2="100" stroke="rgba(243,235,221,0.2)" strokeWidth="1.2" />
                   </svg>
 
                   {/* ── Edge vignette (cockpit walls) ── */}
@@ -1327,21 +1411,21 @@ export function GalaxyMode() {
                   {/* ── Crosshair + center telemetry ── */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <div style={{ position: "relative", width: 32, height: 32 }}>
-                      <div style={{ position:"absolute", top:"50%", left:0, right:0, height:1, background:"rgba(100,200,255,0.45)", transform:"translateY(-50%)" }} />
-                      <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:1, background:"rgba(100,200,255,0.45)", transform:"translateX(-50%)" }} />
-                      <div style={{ position:"absolute", top:"50%", left:"50%", width:8, height:8, border:"1px solid rgba(100,200,255,0.55)", borderRadius:"50%", transform:"translate(-50%,-50%)" }} />
+                      <div style={{ position:"absolute", top:"50%", left:0, right:0, height:1, background:"rgba(243,235,221,0.45)", transform:"translateY(-50%)" }} />
+                      <div style={{ position:"absolute", left:"50%", top:0, bottom:0, width:1, background:"rgba(243,235,221,0.45)", transform:"translateX(-50%)" }} />
+                      <div style={{ position:"absolute", top:"50%", left:"50%", width:8, height:8, border:"1px solid rgba(243,235,221,0.55)", borderRadius:"50%", transform:"translate(-50%,-50%)" }} />
                     </div>
                     {/* Speed + heading just below reticle */}
-                    <div style={{ marginTop:14, display:"flex", gap:20, fontFamily:"monospace", fontSize:10, color:"rgba(120,200,255,0.6)", letterSpacing:"0.08em" }}>
+                    <div style={{ marginTop:14, display:"flex", gap:20, fontFamily:"var(--stack-sans)", fontSize:10, color:"rgba(243,235,221,0.6)", letterSpacing:"0.08em" }}>
                       <span>
                         <span style={{ fontSize:8, opacity:0.5, marginRight:4 }}>VEL</span>
-                        <span style={{ color:"rgba(160,230,255,0.85)", fontWeight:"bold" }}>{String(shipStats.speed).padStart(3,"0")}</span>
+                        <span style={{ color:"rgba(243,235,221,0.85)", fontWeight:"bold" }}>{String(shipStats.speed).padStart(3,"0")}</span>
                         <span style={{ fontSize:8, opacity:0.45, marginLeft:2 }}>u/s</span>
                       </span>
                       <span style={{ opacity:0.3 }}>|</span>
                       <span>
                         <span style={{ fontSize:8, opacity:0.5, marginRight:4 }}>HDG</span>
-                        <span style={{ color:"rgba(160,230,255,0.85)", fontWeight:"bold" }}>{String(Math.round(shipStats.heading)).padStart(3,"0")}°</span>
+                        <span style={{ color:"rgba(243,235,221,0.85)", fontWeight:"bold" }}>{String(Math.round(shipStats.heading)).padStart(3,"0")}°</span>
                       </span>
                     </div>
                   </div>
@@ -1353,22 +1437,22 @@ export function GalaxyMode() {
                     paddingBottom:14, paddingTop:36,
                   }}>
                     {/* Top accent line — inset from edges */}
-                    <div style={{ position:"absolute", top:36, left:"12%", right:"12%", height:1, background:"linear-gradient(to right, transparent, rgba(60,120,220,0.4), transparent)" }} />
+                    <div style={{ position:"absolute", top:36, left:"12%", right:"12%", height:1, background:"linear-gradient(to right, transparent, rgba(243,235,221,0.4), transparent)" }} />
 
                     {/* Instrument row — 14% padding each side keeps panels away from vignette edges */}
                     <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"center", gap:0, paddingLeft:"14%", paddingRight:"14%" }}>
 
                       {/* LEFT PANEL — throttle + engine */}
-                      <div style={{ flex:1, fontFamily:"monospace", color:"rgba(100,180,255,0.8)" }}>
-                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>THROTTLE</div>
-                        <div style={{ height:5, background:"rgba(20,40,80,0.8)", borderRadius:3, marginBottom:4, overflow:"hidden", border:"1px solid rgba(40,80,160,0.3)" }}>
-                          <div style={{ height:"100%", width:`${shipStats.throttle * 100}%`, background:"linear-gradient(to right, rgba(60,120,220,0.8), rgba(100,200,255,0.9))", borderRadius:3, transition:"width 0.1s" }} />
+                      <div style={{ flex:1, fontFamily:"var(--stack-sans)", color:"rgba(243,235,221,0.8)" }}>
+                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(243,235,221,0.5)", marginBottom:6 }}>THROTTLE</div>
+                        <div style={{ height:5, background:"rgba(243,235,221,0.8)", borderRadius:3, marginBottom:4, overflow:"hidden", border:"1px solid rgba(243,235,221,0.3)" }}>
+                          <div style={{ height:"100%", width:`${shipStats.throttle * 100}%`, background:"linear-gradient(to right, rgba(243,235,221,0.8), rgba(243,235,221,0.9))", borderRadius:3, transition:"width 0.1s" }} />
                         </div>
-                        <div style={{ fontSize:10, color:"rgba(100,180,255,0.55)" }}>{Math.round(shipStats.throttle * 100)}%</div>
+                        <div style={{ fontSize:10, color:"rgba(243,235,221,0.55)" }}>{Math.round(shipStats.throttle * 100)}%</div>
                         <div style={{ marginTop:8, display:"flex", gap:8 }}>
                           {["ENG-L","ENG-R"].map(l => (
-                            <div key={l} style={{ fontSize:8, letterSpacing:"0.1em", color: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.7)" : "rgba(80,100,140,0.5)", display:"flex", alignItems:"center", gap:4 }}>
-                              <div style={{ width:5, height:5, borderRadius:"50%", background: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.8)" : "rgba(60,80,120,0.5)" }} />
+                            <div key={l} style={{ fontSize:8, letterSpacing:"0.1em", color: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.7)" : "rgba(243,235,221,0.5)", display:"flex", alignItems:"center", gap:4 }}>
+                              <div style={{ width:5, height:5, borderRadius:"50%", background: shipStats.throttle > 0.05 ? "rgba(60,220,120,0.8)" : "rgba(243,235,221,0.5)" }} />
                               {l}
                             </div>
                           ))}
@@ -1376,10 +1460,10 @@ export function GalaxyMode() {
                       </div>
 
                       {/* CENTER PANEL — compass + heading readout */}
-                      <div style={{ flex:"0 0 200px", fontFamily:"monospace", textAlign:"center", paddingBottom:4 }}>
+                      <div style={{ flex:"0 0 200px", fontFamily:"var(--stack-sans)", textAlign:"center", paddingBottom:4 }}>
                         <div style={{ position:"relative", height:44, overflow:"hidden", marginBottom:6 }}>
                           <svg width="200" height="44" style={{ overflow:"visible" }}>
-                            <path d="M 10 44 A 90 90 0 0 1 190 44" fill="none" stroke="rgba(40,80,160,0.3)" strokeWidth="1" />
+                            <path d="M 10 44 A 90 90 0 0 1 190 44" fill="none" stroke="rgba(243,235,221,0.3)" strokeWidth="1" />
                             {[0,30,60,90,120,150,180].map(deg => {
                               const a = ((deg - shipStats.heading + 180) * Math.PI) / 180;
                               const cx2 = 100 + 90 * Math.cos(Math.PI - a);
@@ -1387,22 +1471,22 @@ export function GalaxyMode() {
                               const isMain = deg % 90 === 0;
                               return cy2 > 0 && cy2 < 50 ? (
                                 <line key={deg} x1={cx2} y1={cy2} x2={cx2} y2={cy2 + (isMain ? 8 : 5)}
-                                  stroke={isMain ? "rgba(100,180,255,0.6)" : "rgba(60,120,180,0.35)"} strokeWidth={isMain ? 1.5 : 0.8} />
+                                  stroke={isMain ? "rgba(243,235,221,0.6)" : "rgba(243,235,221,0.35)"} strokeWidth={isMain ? 1.5 : 0.8} />
                               ) : null;
                             })}
-                            <line x1="100" y1="28" x2="100" y2="44" stroke="rgba(140,220,255,0.9)" strokeWidth="2" />
-                            <polygon points="100,22 96,30 104,30" fill="rgba(140,220,255,0.8)" />
+                            <line x1="100" y1="28" x2="100" y2="44" stroke="rgba(243,235,221,0.9)" strokeWidth="2" />
+                            <polygon points="100,22 96,30 104,30" fill="rgba(243,235,221,0.8)" />
                           </svg>
                         </div>
-                        <div style={{ fontSize:18, fontWeight:"bold", color:"rgba(160,230,255,0.95)", letterSpacing:"0.08em" }}>
+                        <div style={{ fontSize:18, fontWeight:"bold", color:"rgba(243,235,221,0.95)", letterSpacing:"0.08em" }}>
                           {String(Math.round(shipStats.heading)).padStart(3,"0")}°
                         </div>
-                        <div style={{ fontSize:8, letterSpacing:"0.25em", color:"rgba(80,140,200,0.45)", marginTop:2 }}>HEADING</div>
+                        <div style={{ fontSize:8, letterSpacing:"0.25em", color:"rgba(243,235,221,0.45)", marginTop:2 }}>HEADING</div>
                       </div>
 
                       {/* RIGHT PANEL — system status */}
-                      <div style={{ flex:1, fontFamily:"monospace", color:"rgba(100,180,255,0.8)", display:"flex", flexDirection:"column", alignItems:"flex-end" }}>
-                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(80,140,200,0.5)", marginBottom:6 }}>SYSTEMS</div>
+                      <div style={{ flex:1, fontFamily:"var(--stack-sans)", color:"rgba(243,235,221,0.8)", display:"flex", flexDirection:"column", alignItems:"flex-end" }}>
+                        <div style={{ fontSize:8, letterSpacing:"0.2em", color:"rgba(243,235,221,0.5)", marginBottom:6 }}>SYSTEMS</div>
                         {[
                           { label:"HULL" },
                           { label:"DRIVE" },
@@ -1410,7 +1494,7 @@ export function GalaxyMode() {
                           { label:"COMMS" },
                         ].map(s => (
                           <div key={s.label} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
-                            <span style={{ fontSize:9, letterSpacing:"0.12em", color:"rgba(80,130,180,0.6)" }}>{s.label}</span>
+                            <span style={{ fontSize:9, letterSpacing:"0.12em", color:"rgba(243,235,221,0.6)" }}>{s.label}</span>
                             <div style={{ width:6, height:6, borderRadius:"50%", background:"rgba(60,220,120,0.8)", boxShadow:"0 0 6px rgba(60,220,120,0.5)" }} />
                           </div>
                         ))}
@@ -1420,13 +1504,13 @@ export function GalaxyMode() {
 
                     {/* Bottom status bar — also padded 14% */}
                     <div style={{ marginTop:10, paddingLeft:"14%", paddingRight:"14%", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                      <div style={{ fontSize:8, fontFamily:"var(--stack-sans)", color:"rgba(243,235,221,0.4)", letterSpacing:"0.12em" }}>
                         {shipStats.speed > 0 ? "THRUST" : "DRIFT"}
                       </div>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                      <div style={{ fontSize:8, fontFamily:"var(--stack-sans)", color:"rgba(243,235,221,0.4)", letterSpacing:"0.12em" }}>
                         {!ptrLocked ? "CLICK TO TAKE CONTROL" : "MOUSE LOCKED · ESC TO RELEASE"}
                       </div>
-                      <div style={{ fontSize:8, fontFamily:"monospace", color:"rgba(60,120,180,0.4)", letterSpacing:"0.12em" }}>
+                      <div style={{ fontSize:8, fontFamily:"var(--stack-sans)", color:"rgba(243,235,221,0.4)", letterSpacing:"0.12em" }}>
                         W/S · A/D · Q/E · V
                       </div>
                     </div>
@@ -1444,108 +1528,122 @@ export function GalaxyMode() {
             </div>
           )}
 
-          {/* Legend (hide during ship cockpit to reduce clutter) */}
-          {!(view === "ship" && camMode3D === "cockpit") && (
-            <motion.div
-              className="absolute bottom-5 left-5 text-xs font-mono space-y-1.5 pointer-events-none select-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-            >
-              <p style={{ color: "rgba(255,200,70,0.55)" }}>✦ sun — that&apos;s me</p>
-              <p style={{ color: "rgba(100,150,255,0.5)" }}>◉ inner planets — work experience</p>
-              <p style={{ color: "rgba(245,200,66,0.5)" }}>◉ gold ring — education</p>
-              <p style={{ color: "rgba(200,150,255,0.45)" }}>◆ outer ring — projects</p>
-              <p style={{ color: "rgba(100,120,180,0.4)" }}>◌ asteroid belt — skills &amp; languages</p>
+          {/* Directory: jump straight to any body */}
+          {view === "3d" && (
+            <nav className="gx-directory" aria-label="Jump to a planet">
+              {DIRECTORY.map((group) => (
+                <div key={group.title} className="gx-group">
+                  <p className="gx-group-title">{group.title}</p>
+                  {group.bodies.map((b) => (
+                    <button key={b.id} className="gx-item" data-active={selected?.id === b.id} onClick={() => setSelected(b)}>
+                      <span className="gx-dot" style={{ background: bodyColor(b) }} />
+                      {bodyLabel(b)}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </nav>
+          )}
+
+          {/* Legend */}
+          {view === "3d" && !selected && (
+            <motion.div className="gx-legend" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+              <span>
+                <i style={{ background: "#ff6a1f" }} /> The sun is me
+              </span>
+              <span>
+                <i style={{ background: "#f3ebdd" }} /> Inner planets: work
+              </span>
+              <span>
+                <i style={{ background: "#ffb347" }} /> Ringed planet: education
+              </span>
+              <span>
+                <i style={{ background: "#9bdcab" }} /> Outer planets: projects
+              </span>
+              <span>
+                <i style={{ background: "#7f9a94" }} /> Asteroid belt: skills
+              </span>
+              <button className="gx-tour" onClick={() => step(1)}>
+                Take the tour <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </motion.div>
           )}
 
           {/* Info card */}
-          <AnimatePresence>
-            {selected && (
+          <AnimatePresence mode="wait">
+            {selected && view !== "2d" && (
               <motion.div
-                className="absolute bottom-5 left-1/2 -translate-x-1/2 font-mono text-sm pointer-events-auto"
-                style={{
-                  backgroundColor: "rgba(0,0,22,0.93)",
-                  border: `1px solid #${colorHex}44`,
-                  borderRadius: "6px",
-                  padding: "16px 20px",
-                  boxShadow: `0 0 50px #${colorHex}1a`,
-                  width: "clamp(280px, 92vw, 420px)",
-                }}
-                initial={{ opacity: 0, y: 14 }}
+                key={selected.id}
+                className="gx-card"
+                initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 14 }}
+                exit={{ opacity: 0, y: 18 }}
                 transition={{ duration: 0.25 }}
               >
-                <div className="flex items-start justify-between mb-1">
-                  <p className="text-[10px] tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <span className="gx-kind">
+                    <span className="gx-dot" style={{ background: colorStr }} />
                     {kindLabel}
-                  </p>
-                  <button
-                    className="text-white/30 hover:text-white/60 text-xs ml-3 -mt-0.5"
-                    onClick={() => setSelected(null)}
-                  >
-                    ✕
+                  </span>
+                  <button className="gx-x" onClick={() => setSelected(null)} aria-label="Close this card">
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 {selected.kind === "work" && (
                   <>
-                    <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
-                      {selected.role}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
+                    <p className="font-display gx-card-title">{selected.role}</p>
+                    <p className="font-accent gx-card-sub">
                       {selected.name}
-                      {selected.period ? ` · ${selected.period}` : ""}
+                      {selected.period ? `, ${selected.period}` : ""}
                     </p>
                   </>
                 )}
-
                 {selected.kind === "education" && (
                   <>
-                    <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
-                      {selected.degree}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
-                      {selected.name}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: `#${colorHex}99` }}>
-                      {selected.honor} · {selected.period}
+                    <p className="font-display gx-card-title">{selected.degree}</p>
+                    <p className="font-accent gx-card-sub">
+                      {selected.name} · {selected.period}
                     </p>
                   </>
                 )}
-
                 {selected.kind === "project" && (
                   <>
-                    <p className="font-bold text-sm leading-tight" style={{ color: colorStr }}>
-                      {selected.name}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
-                      {selected.tagline} · {selected.year}
+                    <p className="font-display gx-card-title">{selected.name}</p>
+                    <p className="font-accent gx-card-sub">
+                      {selected.tagline}
+                      {selected.year ? `, ${selected.year}` : ""}
                     </p>
                   </>
                 )}
 
-                <ul className="space-y-1 mt-3">
+                <ul className="gx-points">
                   {selected.description.map((line, i) => (
-                    <li key={i} className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
-                      <span style={{ color: `#${colorHex}77` }}>◈</span> {line}
-                    </li>
+                    <li key={i}>{line}</li>
                   ))}
                 </ul>
 
-                {selected.kind === "project" && (
-                  <p
-                    className="text-[10px] mt-3 pt-3"
-                    style={{
-                      color: "rgba(255,255,255,0.3)",
-                      borderTop: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                  >
-                    ↗ {selected.github}
-                  </p>
-                )}
+                <div className="gx-actions">
+                  <button className="gx-step" onClick={() => step(-1)} aria-label="Previous">
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <button className="gx-step" onClick={() => step(1)} aria-label="Next">
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <span className="gx-count">
+                    {ALL_BODIES.findIndex((b) => b.id === selected.id) + 1} / {ALL_BODIES.length}
+                  </span>
+                  {selected.kind === "work" && caseStudyForJob(selected.id) && (
+                    <Link href={`/works/${caseStudyForJob(selected.id)!.slug}`} className="gx-link" onClick={() => setVisible(false)}>
+                      Case study <ArrowUpRight className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
+                  {selected.kind === "project" && selected.github && (
+                    <a href={selected.github} target="_blank" rel="noopener noreferrer" className="gx-link">
+                      GitHub <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

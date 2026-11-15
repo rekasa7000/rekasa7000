@@ -92,14 +92,14 @@ const ASTEROIDS = Array.from({ length: 130 }, (_, i) => {
 
 // Nebula clouds
 const NEBULAE = [
-  { x:  1200, y: -120, r: 500, r2: 220, c: "rgba(60,20,100,0.18)"  },
-  { x:  6500, y:  140, r: 420, r2: 180, c: "rgba(10,60,130,0.14)"  },
-  { x: 11000, y:  -80, r: 480, r2: 200, c: "rgba(80,10,80,0.15)"   },
-  { x: 16000, y:  100, r: 600, r2: 280, c: "rgba(20,50,120,0.12)"  },
-  { x: 22000, y: -150, r: 450, r2: 190, c: "rgba(40,80,40,0.11)"   },
-  { x: 30000, y:   90, r: 500, r2: 210, c: "rgba(100,20,60,0.13)"  },
-  { x: 38000, y: -110, r: 460, r2: 195, c: "rgba(20,70,110,0.12)"  },
-  { x: 45000, y:   60, r: 500, r2: 230, c: "rgba(60,10,100,0.15)"  },
+  { x:  1200, y: -120, r: 500, r2: 220, c: "rgba(8,90,80,0.2)"  },
+  { x:  6500, y:  140, r: 420, r2: 180, c: "rgba(110,44,10,0.14)"  },
+  { x: 11000, y:  -80, r: 480, r2: 200, c: "rgba(6,70,64,0.18)"   },
+  { x: 16000, y:  100, r: 600, r2: 280, c: "rgba(14,100,88,0.14)"  },
+  { x: 22000, y: -150, r: 450, r2: 190, c: "rgba(90,70,40,0.1)"   },
+  { x: 30000, y:   90, r: 500, r2: 210, c: "rgba(110,44,10,0.12)"  },
+  { x: 38000, y: -110, r: 460, r2: 195, c: "rgba(8,80,70,0.16)"  },
+  { x: 45000, y:   60, r: 500, r2: 230, c: "rgba(6,64,58,0.18)"  },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -109,6 +109,7 @@ interface Props { onClose: () => void; onSwitch3D: () => void; }
 export function Galaxy2D({ onClose, onSwitch3D }: Props) {
   const canvasRef  = useRef<HTMLCanvasElement>(null);
   const selectedRef = useRef<SpaceBody | null>(null);
+  const dismissRef = useRef<() => void>(() => {});
   const [selected, setSelected] = useState<SpaceBody | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -134,6 +135,11 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       img.src = src;
     }
 
+    let dismissed: string | null = null;
+    dismissRef.current = () => {
+      dismissed = selectedRef.current?.name ?? null;
+    };
+
     // ── Resize ─────────────────────────────────────────────────────────────
     const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     onResize();
@@ -147,6 +153,34 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
     };
     canvas.addEventListener("wheel", onWheel, { passive: false });
 
+    // Drag (touch or mouse) to travel: the only way to move on a phone
+    let dragging = false;
+    let dragMoved = 0;
+    let lastX = 0;
+    const DRAG_SPEED = 9;
+    const onDown = (e: PointerEvent) => {
+      dragging = true;
+      dragMoved = 0;
+      lastX = e.clientX;
+      canvas.setPointerCapture(e.pointerId);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      lastX = e.clientX;
+      dragMoved += Math.abs(dx);
+      targetX = Math.max(0, Math.min(WORLD_END, targetX - dx * DRAG_SPEED));
+    };
+    const onUp = () => {
+      dragging = false;
+    };
+    canvas.style.touchAction = "none";
+    canvas.style.cursor = "grab";
+    canvas.addEventListener("pointerdown", onDown);
+    canvas.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointercancel", onUp);
+
     const keys: Record<string, boolean> = {};
     const onKeyDown = (e: KeyboardEvent) => {
       keys[e.key] = true;
@@ -158,6 +192,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
 
     // Click to select/deselect
     const onClick = () => {
+      if (dragMoved > 8) return; // that was a drag, not a tap
       const near = getNearBody(canvas.width);
       if (near) {
         const next = selectedRef.current?.name === near.name ? null : near;
@@ -280,7 +315,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       // "Me" label
       if (sx > -100 && sx < W + 100) {
         ctx.globalAlpha = Math.max(0, 1 - Math.abs(sx - W / 2) / (W * 0.6));
-        ctx.fillStyle = "#ffe566"; ctx.font = "bold 13px monospace";
+        ctx.fillStyle = "#ffe566"; ctx.font = "bold 13px 'Space Grotesk', sans-serif";
         ctx.textAlign = "center"; ctx.fillText("— me —", sx, sy + SUN_R + 20);
         ctx.globalAlpha = 1;
       }
@@ -318,7 +353,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         if (fadeIn > 0.35) {
           ctx.globalAlpha = fadeIn * 0.7;
           ctx.fillStyle = "#ccddee";
-          ctx.font = "8px monospace";
+          ctx.font = "8px 'Space Grotesk', sans-serif";
           ctx.textAlign = "center";
           const labelY = my + (Math.sin(angle) < 0 ? -sz - 5 : sz + 10);
           ctx.fillText(sat.label, mx, labelY);
@@ -364,19 +399,19 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       if (labelA > 0.02) {
         ctx.globalAlpha = labelA;
         ctx.fillStyle = "#fff";
-        ctx.font = `bold ${Math.round(11 + b.radius * 0.1)}px monospace`;
+        ctx.font = `bold ${Math.round(11 + b.radius * 0.1)}px 'Space Grotesk', sans-serif`;
         ctx.textAlign = "center";
         ctx.fillText(b.name, sx, sy + b.radius + 20);
 
         if (labelA > 0.45 && b.title) {
           ctx.globalAlpha = labelA * 0.5;
-          ctx.font = "10px monospace";
+          ctx.font = "10px 'Space Grotesk', sans-serif";
           ctx.fillStyle = b.color;
           ctx.fillText(b.title, sx, sy + b.radius + 34);
         }
         if (labelA > 0.7 && b.period) {
           ctx.globalAlpha = labelA * 0.35;
-          ctx.font = "9px monospace";
+          ctx.font = "9px 'Space Grotesk', sans-serif";
           ctx.fillStyle = "#aaa";
           ctx.fillText(b.period, sx, sy + b.radius + 46);
         }
@@ -405,7 +440,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
             const la = Math.max(0, 1 - d / 180) * 0.7;
             ctx.globalAlpha = la;
             ctx.fillStyle = "#99aacc";
-            ctx.font = "9px monospace";
+            ctx.font = "9px 'Space Grotesk', sans-serif";
             ctx.textAlign = "center";
             ctx.fillText(a.skill, sx, sy - a.sz - 6);
           }
@@ -423,7 +458,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         if (a < 0.01) continue;
         ctx.globalAlpha = a;
         ctx.fillStyle = "#ffffff";
-        ctx.font = "12px monospace";
+        ctx.font = "12px 'Space Grotesk', sans-serif";
         ctx.textAlign = "center";
         ctx.fillText(wp.text, sx, H / 2 + 155);
         ctx.globalAlpha = 1;
@@ -607,7 +642,7 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       const W = canvas.width, H = canvas.height;
 
       // ── Background ──
-      ctx.fillStyle = "#00000c"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#011a19"; ctx.fillRect(0, 0, W, H);
 
       drawNebulae(W, H);
       drawStars(W, H);
@@ -627,8 +662,15 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       // ── Nearby check (every 6 frames) ──
       if (Math.floor(now / 16) % 6 === 0) {
         const near = getNearBody(W);
-        if (!near && selectedRef.current) {
-          selectedRef.current = null; setSelected(null);
+        if (!near) {
+          dismissed = null;
+          if (selectedRef.current) {
+            selectedRef.current = null;
+            setSelected(null);
+          }
+        } else if (speed < 120 && selectedRef.current?.name !== near.name && dismissed !== near.name) {
+          selectedRef.current = near;
+          setSelected(near);
         }
       }
     };
@@ -640,6 +682,10 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
       cancelAnimationFrame(rafId);
       canvas.removeEventListener("wheel", onWheel);
       canvas.removeEventListener("click", onClick);
+      canvas.removeEventListener("pointerdown", onDown);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointercancel", onUp);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
@@ -649,11 +695,10 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
   // ── JSX ────────────────────────────────────────────────────────────────────
 
   const kindLabel =
-    selected?.kind === "work"      ? "◉ WORK EXPERIENCE" :
-    selected?.kind === "education" ? "◯ EDUCATION"       : "◆ PROJECT";
+    selected?.kind === "work" ? "Work" : selected?.kind === "education" ? "Education" : "Project";
 
   return (
-    <div className="relative w-full h-full bg-black">
+    <div className="relative w-full h-full" style={{ background: "#011a19" }}>
       <canvas ref={canvasRef} className="block w-full h-full" />
 
       {/* Info card */}
@@ -661,39 +706,45 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
         {selected && (
           <motion.div
             key={selected.name}
-            className="absolute bottom-16 left-1/2 -translate-x-1/2 w-80 rounded-lg font-mono text-sm pointer-events-auto"
-            style={{
-              background: "rgba(0,0,18,0.92)",
-              border: `1px solid ${selected.color}44`,
-              boxShadow: `0 0 40px ${selected.color}18`,
-              backdropFilter: "blur(14px)",
-              padding: "16px 18px",
-            }}
+            className="gx-card"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 18 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="flex justify-between items-start mb-2">
-              <p className="text-[10px] tracking-widest" style={{ color: "rgba(255,255,255,0.28)" }}>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <span className="gx-kind">
+                <span className="gx-dot" style={{ background: selected.color }} />
                 {kindLabel}
-              </p>
-              <button className="text-white/30 hover:text-white/70 text-xs ml-3 -mt-0.5"
-                onClick={() => { selectedRef.current = null; setSelected(null); }}>✕</button>
+              </span>
+              <button
+                className="gx-x"
+                aria-label="Close this card"
+                onClick={() => {
+                  dismissRef.current();
+                  selectedRef.current = null;
+                  setSelected(null);
+                }}
+              >
+                ✕
+              </button>
             </div>
-            <p className="font-bold text-sm leading-snug" style={{ color: selected.color }}>{selected.title}</p>
-            {selected.sub    && <p className="text-white/50 text-xs mt-0.5">{selected.sub}</p>}
-            {selected.period && <p className="text-[10px] mt-1" style={{ color: selected.color + "99" }}>{selected.period}</p>}
-            <p className="text-white/60 text-xs mt-2 leading-relaxed">{selected.desc}</p>
+            <p className="font-display gx-card-title">{selected.title}</p>
+            {(selected.sub || selected.period) && (
+              <p className="font-accent gx-card-sub">{[selected.sub, selected.period].filter(Boolean).join(", ")}</p>
+            )}
+            <p className="gx-points" style={{ marginTop: "0.7rem" }}>
+              {selected.desc}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
+      <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: "rgba(243,235,221,0.12)" }}>
         <motion.div
           className="h-full"
-          style={{ width: `${progress * 100}%`, background: "linear-gradient(to right, #f97316, #facc15, #22c55e, #60a5fa)" }}
+          style={{ width: `${progress * 100}%`, background: "#ff6a1f" }}
           transition={{ duration: 0 }}
         />
       </div>
@@ -705,35 +756,11 @@ export function Galaxy2D({ onClose, onSwitch3D }: Props) {
 
       {/* Controls hint */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 pointer-events-none">
-        <p className="text-[10px] font-mono text-white/20 tracking-widest">
-          scroll / ←→ keys to travel · click to inspect · ESC exit
+        <p className="font-accent" style={{ color: "rgba(243,235,221,0.5)", fontSize: "0.9rem" }}>
+          Drag sideways to travel
         </p>
       </div>
 
-      {/* Top-right controls */}
-      <div className="absolute top-4 right-4 flex gap-2">
-        {(["3D explore", "2D nav"] as const).map((label, i) => (
-          <button key={label}
-            onClick={i === 0 ? onSwitch3D : undefined}
-            className="text-[10px] font-mono px-3 py-1.5 rounded"
-            style={{
-              border: "1px solid rgba(255,255,255,0.18)",
-              color: i === 1 ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.4)",
-              background: i === 1 ? "rgba(255,255,255,0.08)" : "rgba(0,0,20,0.6)",
-              cursor: i === 0 ? "pointer" : "default",
-            }}
-          >{label}</button>
-        ))}
-        <button onClick={onClose}
-          className="text-[10px] font-mono px-3 py-1.5 rounded"
-          style={{ border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.4)", background: "rgba(0,0,20,0.6)" }}
-        >[ESC] exit</button>
-      </div>
-
-      {/* Mode label */}
-      <div className="absolute top-5 left-1/2 -translate-x-1/2 pointer-events-none">
-        <p className="text-[10px] font-mono tracking-[0.3em] text-white/20 uppercase">◈ 2D navigation · scroll to travel ◈</p>
-      </div>
     </div>
   );
 }
