@@ -11,6 +11,12 @@ export type CaseStudy = {
   job: string;
   /** which 3D scene opens the page */
   scene: "rain" | "languages" | "carbon" | "water" | "music";
+  /** false = hide from the homepage "Selected Works" grid; still reachable via its job card */
+  showOnHome?: boolean;
+  /** short period shown on the homepage work card, e.g. "2024–Present" */
+  year: string;
+  /** pre-made cover image for the homepage work card, e.g. "/images/works/kloudtrack.webp" */
+  coverImage?: string;
   title: string;
   tagline: string;
   /** entries marked `detail` are left off the page while SIMPLE_TIMELINE is on */
@@ -29,6 +35,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     project: "KloudTrack Weather System",
     job: "kloudtech-swe",
     scene: "rain",
+    year: "2024–Present",
+    coverImage: "/images/works/kloudtrack.png",
     title: "KloudTrack",
     tagline: "A live weather network for disaster-response offices in the Philippines.",
     facts: [
@@ -113,6 +121,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "zendesk-translation",
     job: "concentrix",
     scene: "languages",
+    showOnHome: false,
+    year: "2025–Present",
+    coverImage: "/images/works/zendesk-translation.webp",
+    project: "Translation for Zendesk",
     title: "Translation for Zendesk",
     tagline: "Live translation inside the help desk, so support agents can answer in languages they don't speak.",
     facts: [
@@ -155,6 +167,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "water-footprint",
     job: "up-ice",
     scene: "water",
+    year: "2026–Present",
+    coverImage: "/images/works/water-footprint.png",
+    project: "Water Footprint DSS",
     title: "Water Footprint DSS",
     tagline:
       "A geospatial decision support system that turns a research team's spreadsheet method into a validated engine.",
@@ -227,6 +242,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "akosi-music",
     job: "akosi",
     scene: "music",
+    year: "2026–Present",
+    coverImage: "/images/works/akosi-music.png",
+    project: "Akosi.Music",
     title: "Akosi.Music",
     tagline: "Physical NFC music cards that unlock an artist's music for the card's registered owner.",
     facts: [
@@ -283,6 +301,9 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "revearth",
     job: "revearth",
     scene: "carbon",
+    year: "2025",
+    coverImage: "/images/works/revearth.png",
+    project: "RevEarth",
     title: "RevEarth",
     tagline: "A carbon-footprint tracker for Philippine organizations, built on published emission science.",
     facts: [

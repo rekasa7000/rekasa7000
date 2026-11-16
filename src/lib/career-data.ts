@@ -32,6 +32,7 @@ export type CareerEntry = {
   homeDesc: string; // single prose line → homepage projects list
   homeBullets: string[]; // detailed paragraphs → homepage experience timeline
   showOnHome?: boolean; // false = galaxy only, not shown on homepage
+  coverImage?: string; // pre-made cover image for the homepage work card, e.g. "/images/works/databox.webp"
   github?: string;
   technologies: string[];
 
@@ -594,6 +595,7 @@ const ALL_ENTRIES: CareerEntry[] = [
   {
     id: "databox",
     kind: "project",
+    coverImage: "/images/works/databox.png",
     name: "Databox",
     title: "Desktop Time Management App",
     period: "2022",
@@ -632,6 +634,7 @@ const ALL_ENTRIES: CareerEntry[] = [
   {
     id: "knowt",
     kind: "project",
+    coverImage: "/images/works/knowt.png",
     name: "Knowt",
     title: "Article Summarization App",
     period: "2023",
@@ -823,13 +826,19 @@ export const SKILLS = [
 
 // ── Homepage helpers ──────────────────────────────────────────────────────────
 
-/** Projects list for the homepage "Selected Works" section */
-export const homeProjects = PROJECT_ENTRIES.filter((e) => e.showOnHome !== false).map((e) => ({
+/** School/personal projects shown alongside the real case studies in "Selected Works", tagged as academic work */
+const ACADEMIC_SHOWCASE_IDS = ["databox", "knowt", "cultureconnect"];
+
+export const academicProjects = ACADEMIC_SHOWCASE_IDS.map(
+  (id) => PROJECT_ENTRIES.find((e) => e.id === id)!
+).map((e) => ({
+  slug: e.id,
   title: e.homeTitle ?? e.name,
   description: e.homeDesc,
   githubUrl: e.github ?? "",
   technologies: e.technologies,
   year: e.period ?? "",
+  coverImage: e.coverImage,
 }));
 
 /** Experience timeline entries for the homepage (reverse-chronological) */

@@ -14,7 +14,7 @@ import { MissionStats } from "@/components/showcase/mission-stats";
 import { Trajectory } from "@/components/showcase/trajectory";
 import { Missions } from "@/components/showcase/missions";
 import { SkillOrbit } from "@/components/showcase/skill-orbit";
-import { ProjectPosters } from "@/components/showcase/project-posters";
+import { WorkGrid } from "@/components/showcase/work-grid";
 import { Guestbook } from "@/components/showcase/guestbook";
 import { CERTIFICATIONS, TICKER_TEXT } from "@/lib/career-data";
 import { NOW } from "@/lib/now";
@@ -429,8 +429,8 @@ export function HomeContent() {
 
           {/* Works Section */}
           <section id="works" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <SectionHeading index="04" title="Selected Works" track="Seed packets" />
-            <ProjectPosters />
+            <SectionHeading index="04" title="Selected Works" track="Case studies" />
+            <WorkGrid />
           </section>
 
           {/* Guestbook Section */}
