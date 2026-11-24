@@ -351,7 +351,12 @@ const SPRITE_FILES = [
   "turnip-ripe",
   "rice-mid",
   "rice-ripe",
+  "strawberry-mid",
   "strawberry-ripe",
+  "pumpkin-mid",
+  "pumpkin-ripe",
+  "melon-mid",
+  "melon-ripe",
 ];
 const sprites: Record<string, HTMLImageElement> = {};
 
