@@ -364,6 +364,11 @@ const SPRITE_FILES = [
   "carlos-front",
   "carlos-back",
   "carlos-side",
+  "house",
+  "stall",
+  "bin",
+  "tree",
+  "fruit-tree",
 ];
 const sprites: Record<string, HTMLImageElement> = {};
 
@@ -381,7 +386,14 @@ function loadSprites() {
 function drawCrop(c: Ctx, id: CropId, stage: number, T: number, t: number) {
   // origin = tile centre bottom-ish
   const u = T / 16;
-  const sprite = sprites[stage === 0 ? "seeds" : stage === 1 ? "sprout" : `${id}-${stage === 2 ? "mid" : "ripe"}`];
+  const sprite =
+    sprites[
+      stage === 0
+        ? "seeds"
+        : stage === 1
+          ? "sprout"
+          : `${id}-${stage === 2 ? "mid" : "ripe"}`
+    ];
   if (sprite) {
     // sprites sit on the bottom edge of their square; ripe crops stand a little taller and sway
     const size = T * (stage === 3 ? 1.25 : stage === 2 ? 1.1 : 0.9);
@@ -540,7 +552,13 @@ function drawCarlos(
   c.ellipse(0, 6.5 * u, 5 * u, 1.8 * u, 0, 0, Math.PI * 2);
   c.fill();
   const sprite =
-    sprites[dir === "up" ? "carlos-back" : dir === "side" ? "carlos-side" : "carlos-front"];
+    sprites[
+      dir === "up"
+        ? "carlos-back"
+        : dir === "side"
+          ? "carlos-side"
+          : "carlos-front"
+    ];
   if (sprite) {
     const size = T * 1.3;
     c.save();
@@ -734,62 +752,87 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
     c.stroke();
   }
 
-  // house (a small dome, like the paintings)
-  c.fillStyle = "#e8dcc4";
-  c.strokeStyle = "#0b2a2a";
-  c.lineWidth = u * 1.2;
-  c.beginPath();
-  c.moveTo(2 * T, 4 * T);
-  c.lineTo(2 * T, 2.6 * T);
-  c.quadraticCurveTo(3.5 * T, 0.3 * T, 5 * T, 2.6 * T);
-  c.lineTo(5 * T, 4 * T);
-  c.closePath();
-  c.fill();
-  c.stroke();
-  c.fillStyle = "#ffb357";
-  c.beginPath();
-  c.roundRect(2.3 * T, 2.6 * T, 0.9 * T, 0.8 * T, u * 3);
-  c.fill();
-  c.stroke();
-  c.fillStyle = "#ff6a1f";
-  c.beginPath();
-  c.moveTo(3.5 * T, 4 * T);
-  c.lineTo(3.5 * T, 3.2 * T);
-  c.arc(3.9 * T, 3.2 * T, 0.4 * T, Math.PI, 0);
-  c.lineTo(4.3 * T, 4 * T);
-  c.closePath();
-  c.fill();
-  c.stroke();
+  // painted sprite, bottom-centred on a point; false when the image isn't there yet
+  const blit = (name: string, cx: number, bottom: number, size: number) => {
+    const img = sprites[name];
+    if (!img) return false;
+    c.drawImage(img, cx - size / 2, bottom - size, size, size);
+    return true;
+  };
 
-  // stall
-  c.fillStyle = "#8a6238";
-  c.fillRect(7 * T + u, 2.45 * T, 2 * T - 2 * u, 0.55 * T);
-  c.strokeRect(7 * T + u, 2.45 * T, 2 * T - 2 * u, 0.55 * T);
-  for (let i = 0; i < 6; i++) {
-    c.fillStyle = i % 2 ? "#f3ebdd" : "#ff6a1f";
-    c.fillRect(7 * T + (i * 2 * T) / 6, 1.7 * T, (2 * T) / 6 + 1, 0.5 * T);
+  if (!blit("house", 3.5 * T, 4.15 * T, 3.5 * T)) {
+    // house (a small dome, like the paintings)
+    c.fillStyle = "#e8dcc4";
+    c.strokeStyle = "#0b2a2a";
+    c.lineWidth = u * 1.2;
+    c.beginPath();
+    c.moveTo(2 * T, 4 * T);
+    c.lineTo(2 * T, 2.6 * T);
+    c.quadraticCurveTo(3.5 * T, 0.3 * T, 5 * T, 2.6 * T);
+    c.lineTo(5 * T, 4 * T);
+    c.closePath();
+    c.fill();
+    c.stroke();
+    c.fillStyle = "#ffb357";
+    c.beginPath();
+    c.roundRect(2.3 * T, 2.6 * T, 0.9 * T, 0.8 * T, u * 3);
+    c.fill();
+    c.stroke();
+    c.fillStyle = "#ff6a1f";
+    c.beginPath();
+    c.moveTo(3.5 * T, 4 * T);
+    c.lineTo(3.5 * T, 3.2 * T);
+    c.arc(3.9 * T, 3.2 * T, 0.4 * T, Math.PI, 0);
+    c.lineTo(4.3 * T, 4 * T);
+    c.closePath();
+    c.fill();
+    c.stroke();
   }
-  c.strokeRect(7 * T, 1.7 * T, 2 * T, 0.5 * T);
-  c.fillStyle = "#8a6238";
-  c.fillRect(7 * T + u, 2.2 * T, u * 1.5, 0.3 * T);
-  c.fillRect(9 * T - 2.5 * u, 2.2 * T, u * 1.5, 0.3 * T);
 
-  // shipping bin
-  c.fillStyle = "#a9773f";
-  c.beginPath();
-  c.roundRect(11 * T + 2 * u, 2 * T + 4 * u, T - 4 * u, T - 5 * u, u * 2);
-  c.fill();
-  c.stroke();
-  c.fillStyle = "#c08a4c";
-  c.beginPath();
-  c.roundRect(11 * T + u, 2 * T + 2 * u, T - 2 * u, 5 * u, u * 2);
-  c.fill();
-  c.stroke();
+  if (!blit("stall", 8 * T, 3.1 * T, 2.5 * T)) {
+    // stall
+    c.fillStyle = "#8a6238";
+    c.fillRect(7 * T + u, 2.45 * T, 2 * T - 2 * u, 0.55 * T);
+    c.strokeRect(7 * T + u, 2.45 * T, 2 * T - 2 * u, 0.55 * T);
+    for (let i = 0; i < 6; i++) {
+      c.fillStyle = i % 2 ? "#f3ebdd" : "#ff6a1f";
+      c.fillRect(7 * T + (i * 2 * T) / 6, 1.7 * T, (2 * T) / 6 + 1, 0.5 * T);
+    }
+    c.strokeRect(7 * T, 1.7 * T, 2 * T, 0.5 * T);
+    c.fillStyle = "#8a6238";
+    c.fillRect(7 * T + u, 2.2 * T, u * 1.5, 0.3 * T);
+    c.fillRect(9 * T - 2.5 * u, 2.2 * T, u * 1.5, 0.3 * T);
+  }
+
+  if (!blit("bin", 11.5 * T, 3.05 * T, 1.3 * T)) {
+    // shipping bin
+    c.fillStyle = "#a9773f";
+    c.beginPath();
+    c.roundRect(11 * T + 2 * u, 2 * T + 4 * u, T - 4 * u, T - 5 * u, u * 2);
+    c.fill();
+    c.stroke();
+    c.fillStyle = "#c08a4c";
+    c.beginPath();
+    c.roundRect(11 * T + u, 2 * T + 2 * u, T - 2 * u, 5 * u, u * 2);
+    c.fill();
+    c.stroke();
+  }
 
   // things with height, sorted with Carlos by row
   const py = rt.fy;
   const drawTall = (x: number, y: number, k: Solid | null) => {
     if (k === "tree") {
+      // the hedge of trees round the edge is plain; the ones inside the farm bear fruit
+      const edge = x === 0 || y === 0 || x === W - 1 || y === H - 1;
+      if (
+        blit(
+          edge ? "tree" : "fruit-tree",
+          x * T + T / 2,
+          y * T + T * 1.02,
+          T * 1.5,
+        )
+      )
+        return;
       c.fillStyle = "#6b4a2f";
       c.fillRect(x * T + 6.5 * u, y * T + 8 * u, 3 * u, 7 * u);
       c.fillStyle = (x * 7 + y * 3) % 2 ? "#17523f" : "#1b5c45";
@@ -1287,7 +1330,9 @@ export function Farm() {
         const step = SPEED * dt;
         if (dx > 0.01) rt.face = 1;
         else if (dx < -0.01) rt.face = -1;
-        if (dist > 0.01) rt.dir = Math.abs(dx) > Math.abs(dy) ? "side" : dy < 0 ? "up" : "down";
+        if (dist > 0.01)
+          rt.dir =
+            Math.abs(dx) > Math.abs(dy) ? "side" : dy < 0 ? "up" : "down";
         if (dist <= step) {
           rt.fx = nx;
           rt.fy = ny;
