@@ -344,7 +344,15 @@ type Ctx = CanvasRenderingContext2D;
  * Painted sprites, used when the file exists; anything missing falls back to the drawn version.
  * Files live in /public/images/farm, e.g. carrot-mid.webp, carrot-ripe.webp, seeds.webp, sprout.webp.
  */
-const SPRITE_FILES = ["carrot-mid", "carrot-ripe"];
+const SPRITE_FILES = [
+  "carrot-mid",
+  "carrot-ripe",
+  "turnip-mid",
+  "turnip-ripe",
+  "rice-mid",
+  "rice-ripe",
+  "strawberry-ripe",
+];
 const sprites: Record<string, HTMLImageElement> = {};
 
 function loadSprites() {
