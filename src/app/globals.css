@@ -2894,3 +2894,71 @@ body {
     min-height: 170px;
   }
 }
+
+/* ---------- Painted work scenes: slow pan, rain and firefly glow ---------- */
+.scene-art-img {
+  object-fit: cover;
+  object-position: var(--pan-from, 30%) 50%;
+  animation: scene-pan 38s ease-in-out infinite alternate;
+}
+
+@keyframes scene-pan {
+  from {
+    object-position: var(--pan-from, 30%) 50%;
+  }
+  to {
+    object-position: var(--pan-to, 70%) 50%;
+  }
+}
+
+.scene-rain,
+.scene-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene-rain {
+  inset: -40% 0 0 -20%;
+  background-image:
+    repeating-linear-gradient(104deg, transparent 0 46px, rgba(214, 240, 236, 0.22) 46px 47px, transparent 47px 92px),
+    repeating-linear-gradient(104deg, transparent 0 71px, rgba(214, 240, 236, 0.14) 71px 72px, transparent 72px 131px);
+  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 26px, transparent 26px 64px);
+  mask-image: repeating-linear-gradient(180deg, #000 0 26px, transparent 26px 64px);
+  animation: scene-rain 0.9s linear infinite;
+}
+
+@keyframes scene-rain {
+  to {
+    transform: translate3d(-16px, 64px, 0);
+  }
+}
+
+.scene-glow {
+  background-image:
+    radial-gradient(circle at 18% 62%, rgba(255, 206, 120, 0.55) 0 2px, transparent 3px),
+    radial-gradient(circle at 43% 38%, rgba(255, 206, 120, 0.45) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 67% 71%, rgba(255, 206, 120, 0.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 44%, rgba(255, 206, 120, 0.4) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 30% 82%, rgba(255, 206, 120, 0.45) 0 1.5px, transparent 2.5px);
+  animation: scene-glow 5s ease-in-out infinite alternate;
+}
+
+@keyframes scene-glow {
+  from {
+    opacity: 0.15;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-art-img,
+  .scene-rain,
+  .scene-glow {
+    animation: none;
+  }
+}

@@ -6,8 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { caseStudyForJob } from "@/lib/case-studies";
 import { SIMPLE_TIMELINE, WORK_ENTRIES } from "@/lib/career-data";
-import { Carbon3D, Music3D, Rain3D, Sprout3D, Water3D } from "@/components/three/garden-3d";
-import { OneixShot } from "./product-shot";
+import { CarbonArt, MusicArt, OneixArt, RainArt, SproutArt, WaterArt } from "./scene-art";
 
 type MissionMeta = {
   codename: string;
@@ -25,7 +24,7 @@ const META: Record<string, MissionMeta> = {
       { value: "5", label: "Industries in the ONEix demo" },
       { value: "10+", label: "Zendesk apps shipped" },
     ],
-    Screen: OneixShot,
+    Screen: OneixArt,
   },
   "kloudtech-swe": {
     codename: "Rain field",
@@ -37,7 +36,7 @@ const META: Record<string, MissionMeta> = {
       { value: "99.9%", label: "Uptime" },
       { value: "<100ms", label: "Telemetry latency" },
     ],
-    Screen: Rain3D,
+    Screen: RainArt,
   },
   "up-ice": {
     codename: "Watershed",
@@ -47,7 +46,7 @@ const META: Record<string, MissionMeta> = {
       { value: "25", label: "Barangays" },
       { value: "±2%", label: "Accuracy vs. the method" },
     ],
-    Screen: Water3D,
+    Screen: WaterArt,
   },
   akosi: {
     codename: "Music card",
@@ -57,7 +56,7 @@ const META: Record<string, MissionMeta> = {
       { value: "0", label: "Native apps needed" },
       SIMPLE_TIMELINE ? { value: "NFC", label: "NTAG 424 DNA chips" } : { value: "Jun '27", label: "Planned launch" },
     ],
-    Screen: Music3D,
+    Screen: MusicArt,
   },
   revearth: {
     codename: "Carbon tree",
@@ -67,7 +66,7 @@ const META: Record<string, MissionMeta> = {
       { value: "13", label: "Data models" },
       { value: "3", label: "Emission scopes" },
     ],
-    Screen: Carbon3D,
+    Screen: CarbonArt,
   },
   "kloudtech-intern": {
     codename: "First sprout",
@@ -77,7 +76,7 @@ const META: Record<string, MissionMeta> = {
       { value: "IoT", label: "Embedded systems" },
       { value: "SEC", label: "Applied cybersecurity" },
     ],
-    Screen: Sprout3D,
+    Screen: SproutArt,
   },
 };
 

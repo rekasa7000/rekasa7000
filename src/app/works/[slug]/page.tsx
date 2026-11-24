@@ -6,7 +6,8 @@ import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
 import { OneixShot } from "@/components/showcase/product-shot";
-import { Carbon3D, Languages3D, Music3D, Rain3D, Water3D } from "@/components/three/garden-3d";
+import { Languages3D } from "@/components/three/garden-3d";
+import { CarbonArt, MusicArt, RainArt, WaterArt } from "@/components/showcase/scene-art";
 import { CASE_STUDIES, visibleFacts, visibleResults } from "@/lib/case-studies";
 
 export function generateStaticParams() {
@@ -25,7 +26,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   if (!study) notFound();
 
   const rule = { borderColor: "var(--border-color)" };
-  const Scene = { rain: Rain3D, languages: Languages3D, carbon: Carbon3D, water: Water3D, music: Music3D }[study.scene];
+  const Scene = { rain: RainArt, languages: Languages3D, carbon: CarbonArt, water: WaterArt, music: MusicArt }[study.scene];
 
   return (
     <div

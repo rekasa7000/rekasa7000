@@ -408,10 +408,10 @@ export function HomeContent() {
             <figure className="pb-24">
               <div className="print-frame">
                 <Image
-                  src="/images/homestead.webp"
-                  alt="Storybook illustration of a flower and vegetable farm on another planet: a farmhouse with a rocking chair, a cat and a dog, a barn and windmill, giant sunflowers and tulips, with Earth and a ringed planet in the night sky"
-                  width={1568}
-                  height={826}
+                  src="/images/scenes/farm.webp"
+                  alt="Storybook illustration of a farm on another planet at night: a domed farmhouse glowing warm, vegetable beds lit by lanterns, a greenhouse dome, a wind turbine and solar panels, with Carlos the cat resting on a rock under a ringed planet"
+                  width={1672}
+                  height={941}
                   sizes="(min-width: 1024px) 976px, 100vw"
                   className="w-full h-auto block"
                 />
