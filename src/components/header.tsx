@@ -34,11 +34,12 @@ export function Header({ activePage }: HeaderProps) {
         {/* Wordmark + seal */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
           <Image
-            src="/logo.png"
-            alt="re7000 logo"
+            src="/logo.svg"
+            alt="Regee Casaña logo: a sprout between two brackets"
             width={36}
             height={36}
             priority
+            unoptimized
             className="brand-logo transition-transform duration-300 group-hover:-rotate-6"
           />
           <span className="hidden sm:flex flex-col leading-none gap-1">

@@ -29,7 +29,7 @@ export default async function ArtifactPage({ params }: { params: Promise<{ slug:
         style={{ borderColor: "var(--border-color)" }}
       >
         <Link href="/" className="flex items-center gap-3 group">
-          <Image src="/logo.png" alt="re7000 logo" width={28} height={28} className="brand-logo" />
+          <Image src="/logo.svg" alt="Regee Casaña logo" width={28} height={28} className="brand-logo" unoptimized />
           <span className="link-underline meta-label" style={{ color: "var(--text-secondary)" }}>
             ← Back home
           </span>
