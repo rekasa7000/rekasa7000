@@ -3076,3 +3076,10 @@ body {
   font-size: 1.05rem;
   color: var(--accent);
 }
+
+.farm-coin {
+  display: inline-block;
+  width: 1.05rem;
+  height: 1.05rem;
+  background: url("/images/farm/coin.webp") center / contain no-repeat;
+}

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CloudRain,
-  Coins,
   Moon,
   RotateCcw,
   ShoppingBasket,
@@ -104,12 +103,20 @@ const SPEED = 5.5; // tiles per second
 const STORAGE_KEY = "rekasa-farm-v2";
 const OLD_STORAGE_KEY = "rekasa-farm-v1";
 
-type Solid = "tree" | "house" | "stall" | "bin" | "pond" | "rock";
+type Solid = "tree" | "house" | "stall" | "bin" | "pond" | "rock" | "lantern";
 type ObjectKind = "house" | "stall" | "bin";
 
 const FIELD = { x0: 4, y0: 6, x1: 15, y1: 12 };
 const inField = (x: number, y: number) =>
   x >= FIELD.x0 && x <= FIELD.x1 && y >= FIELD.y0 && y <= FIELD.y1;
+
+/** lamp posts: they block the way and glow after dark */
+const LANTERNS: [number, number][] = [
+  [6, 2],
+  [10, 2],
+  [3, 13],
+  [16, 13],
+];
 
 function buildSolids(): (Solid | null)[] {
   const s: (Solid | null)[] = Array(W * H).fill(null);
@@ -130,6 +137,7 @@ function buildSolids(): (Solid | null)[] {
   set(11, 2, "bin");
   for (let x = 14; x <= 17; x++) for (let y = 2; y <= 4; y++) set(x, y, "pond");
   set(2, 8, "rock");
+  for (const [lx, ly] of LANTERNS) set(lx, ly, "lantern");
   set(17, 9, "rock");
   set(2, 12, "tree");
   set(17, 12, "tree");
@@ -228,6 +236,8 @@ interface Float {
   text: string;
   color: string;
   life: number;
+  /** show a coin beside the text */
+  coin?: boolean;
 }
 
 interface Runtime {
@@ -369,6 +379,11 @@ const SPRITE_FILES = [
   "bin",
   "tree",
   "fruit-tree",
+  "rock",
+  "lantern",
+  "coin",
+  "grass",
+  "soil",
 ];
 const sprites: Record<string, HTMLImageElement> = {};
 
@@ -652,6 +667,8 @@ function drawCarlos(
   c.restore();
 }
 
+let grassPattern: { T: number; pat: CanvasPattern } | null = null;
+
 function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
   const { s, t } = rt;
   const u = T / 16;
@@ -662,7 +679,32 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
   const x1 = Math.min(W - 1, Math.ceil(rt.camX + vw / T));
   const y1 = Math.min(H - 1, Math.ceil(rt.camY + vh / T));
 
-  // ground
+  // ground: the painted grass repeats every four tiles; the field is a touch lighter
+  const grass = sprites.grass;
+  if (grass) {
+    if (!grassPattern || grassPattern.T !== T) {
+      const size = T * 4;
+      const tileCanvas = document.createElement("canvas");
+      tileCanvas.width = size;
+      tileCanvas.height = size;
+      tileCanvas.getContext("2d")?.drawImage(grass, 0, 0, size, size);
+      const pat = c.createPattern(tileCanvas, "repeat");
+      grassPattern = pat ? { T, pat } : null;
+    }
+    if (grassPattern) {
+      c.fillStyle = grassPattern.pat;
+      c.fillRect(x0 * T, y0 * T, (x1 - x0 + 1) * T, (y1 - y0 + 1) * T);
+      c.fillStyle = "rgba(1,40,38,0.22)";
+      c.fillRect(x0 * T, y0 * T, (x1 - x0 + 1) * T, (y1 - y0 + 1) * T);
+      c.fillStyle = "rgba(255,255,255,0.07)";
+      c.fillRect(
+        FIELD.x0 * T,
+        FIELD.y0 * T,
+        (FIELD.x1 - FIELD.x0 + 1) * T,
+        (FIELD.y1 - FIELD.y0 + 1) * T,
+      );
+    }
+  }
   for (let y = y0; y <= y1; y++) {
     for (let x = x0; x <= x1; x++) {
       const h = hash(x, y);
@@ -674,9 +716,20 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
         : (x + y) % 2
           ? "#24604a"
           : "#215a46";
-      c.fillRect(x * T, y * T, T, T);
+      if (!grass) c.fillRect(x * T, y * T, T, T);
       const tile = s.tiles[y * W + x];
-      if (tile) {
+      if (tile && sprites.soil) {
+        c.save();
+        c.beginPath();
+        c.roundRect(x * T + u, y * T + u, T - 2 * u, T - 2 * u, u * 2.5);
+        c.clip();
+        c.drawImage(sprites.soil, x * T + u, y * T + u, T - 2 * u, T - 2 * u);
+        if (tile.w) {
+          c.fillStyle = "rgba(24,10,4,0.42)";
+          c.fillRect(x * T, y * T, T, T);
+        }
+        c.restore();
+      } else if (tile) {
         c.fillStyle = tile.w ? "#4a3222" : "#7a5536";
         c.beginPath();
         c.roundRect(x * T + u, y * T + u, T - 2 * u, T - 2 * u, u * 2);
@@ -701,7 +754,7 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
             Math.PI * 2,
           );
           c.fill();
-        } else if (h > 0.55) {
+        } else if (h > 0.55 && !grass) {
           c.strokeStyle = "#3a8560";
           c.lineWidth = u;
           const gx = x * T + T * hash(y + 3, x);
@@ -731,26 +784,54 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
   );
   c.setLineDash([]);
 
-  // pond
-  c.fillStyle = "#1f8f96";
+  // pond: calm teal water with pale wavy ripples that drift slowly
+  const pond = {
+    x: 14 * T + 2 * u,
+    y: 2 * T + 2 * u,
+    w: 4 * T - 4 * u,
+    h: 3 * T - 4 * u,
+  };
+  c.save();
   c.beginPath();
-  c.roundRect(
-    14 * T + 2 * u,
-    2 * T + 2 * u,
-    4 * T - 4 * u,
-    3 * T - 4 * u,
-    T * 0.8,
-  );
+  c.roundRect(pond.x, pond.y, pond.w, pond.h, T * 0.8);
+  c.fillStyle = "#17918f";
   c.fill();
-  c.strokeStyle = "rgba(243,235,221,0.5)";
-  c.lineWidth = u;
-  for (let i = 0; i < 3; i++) {
-    const rx = 14.8 * T + i * T * 1.1;
-    const ry = 3 * T + ((i * 13) % 20) * u + Math.sin(t * 1.5 + i) * u * 2;
-    c.beginPath();
-    c.ellipse(rx, ry, 5 * u + Math.sin(t + i) * u, 1.6 * u, 0, 0, Math.PI * 2);
-    c.stroke();
+  c.clip();
+  c.lineCap = "round";
+  for (let i = 0; i < 9; i++) {
+    const len = T * (0.5 + hash(i, 11) * 0.5);
+    const span = pond.w + len * 2;
+    const rx =
+      pond.x -
+      len +
+      ((hash(i, 3) * span + t * T * 0.12 * (0.6 + hash(i, 5))) % span);
+    const ry =
+      pond.y + pond.h * (0.1 + 0.8 * hash(i, 8)) + Math.sin(t * 1.2 + i) * u;
+    for (const [dy, alpha, scale] of [
+      [0, 0.55, 1],
+      [2.2 * u, 0.3, 0.6],
+    ]) {
+      c.strokeStyle = `rgba(214,240,232,${alpha})`;
+      c.lineWidth = u * 0.8;
+      c.beginPath();
+      c.moveTo(rx, ry + dy);
+      c.bezierCurveTo(
+        rx + len * scale * 0.3,
+        ry + dy - 2 * u,
+        rx + len * scale * 0.6,
+        ry + dy + 2 * u,
+        rx + len * scale,
+        ry + dy - u,
+      );
+      c.stroke();
+    }
   }
+  c.restore();
+  c.strokeStyle = "#0b2a2a";
+  c.lineWidth = u * 1.2;
+  c.beginPath();
+  c.roundRect(pond.x, pond.y, pond.w, pond.h, T * 0.8);
+  c.stroke();
 
   // painted sprite, bottom-centred on a point; false when the image isn't there yet
   const blit = (name: string, cx: number, bottom: number, size: number) => {
@@ -846,7 +927,15 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
       c.beginPath();
       c.arc(x * T + 6 * u, y * T + 3 * u, 3 * u, 0, Math.PI * 2);
       c.fill();
+    } else if (k === "lantern") {
+      if (!blit("lantern", x * T + T / 2, y * T + T * 1.02, T * 1.55)) {
+        c.fillStyle = "#8a6238";
+        c.fillRect(x * T + 7 * u, y * T + 4 * u, 2 * u, 11 * u);
+        c.fillStyle = "#ffb357";
+        c.fillRect(x * T + 5.5 * u, y * T + 1 * u, 5 * u, 4 * u);
+      }
     } else if (k === "rock") {
+      if (blit("rock", x * T + T / 2, y * T + T * 0.98, T * 1.05)) return;
       c.fillStyle = "#7d8a8a";
       c.strokeStyle = "#0b2a2a";
       c.lineWidth = u;
@@ -914,6 +1003,17 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
     c.fillText(f.text, f.x * T + T / 2 + 1, f.y * T + 1);
     c.fillStyle = f.color;
     c.fillText(f.text, f.x * T + T / 2, f.y * T);
+    if (f.coin && sprites.coin) {
+      const cs = T * 0.6;
+      const half = c.measureText(f.text).width / 2;
+      c.drawImage(
+        sprites.coin,
+        f.x * T + T / 2 - half - cs * 1.05,
+        f.y * T - cs * 0.8,
+        cs,
+        cs,
+      );
+    }
   }
   c.globalAlpha = 1;
   c.restore();
@@ -931,6 +1031,7 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
     for (const [lx, ly] of [
       [3.9, 3.3],
       [8, 2.4],
+      ...LANTERNS.map(([lx, ly]) => [lx + 0.5, ly - 0.1]),
     ]) {
       const gx = (lx - rt.camX) * T;
       const gy = (ly - rt.camY) * T;
@@ -1071,8 +1172,13 @@ export function Farm() {
       rt.dirty = false;
     };
 
-    const float = (x: number, y: number, text: string, color = "#f3ebdd") =>
-      rt.floats.push({ x, y, text, color, life: 1.2 });
+    const float = (
+      x: number,
+      y: number,
+      text: string,
+      color = "#f3ebdd",
+      coin = false,
+    ) => rt.floats.push({ x, y, text, color, life: coin ? 1.8 : 1.2, coin });
 
     const nextDay = () => {
       const st = rt.s;
@@ -1122,7 +1228,7 @@ export function Farm() {
         st.coins += total;
         st.lifetime += total;
         st.bag = zeroCounts();
-        float(11, 1.6, `+${fmt(total)}`, "#ffd76a");
+        float(11, 1.6, `+${fmt(total)}`, "#ffd76a", true);
         const unlocked = CROPS.find(
           (cr) =>
             cr.unlockAt > st.lifetime - total && cr.unlockAt <= st.lifetime,
@@ -1470,7 +1576,7 @@ export function Farm() {
               {hud.clock}
             </span>
             <span className="chip flex items-center gap-1.5" data-active="true">
-              <Coins className="w-3.5 h-3.5" /> {fmt(hud.coins)}
+              <span className="farm-coin" aria-hidden="true" /> {fmt(hud.coins)}
             </span>
             <span
               className="chip flex items-center gap-1.5"
