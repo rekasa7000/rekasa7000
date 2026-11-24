@@ -164,6 +164,7 @@ export function HomeContent() {
       {/* Main Content */}
       <main className="relative z-10">
         <div className="relative overflow-hidden">
+          <div className="hero-sky" aria-hidden="true" />
           <Starfield className="absolute inset-0 w-full h-full" />
           <div className="hero-band" aria-hidden="true" />
           <span className="hero-side left" aria-hidden="true">
@@ -493,8 +494,10 @@ export function HomeContent() {
         </div>
       </main>
 
+      <div className="horizon-strip" aria-hidden="true" />
+
       {/* Footer */}
-      <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
+      <footer className="border-t" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Carlos pose="sitting" size={44} />
