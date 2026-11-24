@@ -2962,3 +2962,117 @@ body {
     animation: none;
   }
 }
+
+/* ---------- Carlos's farm (playground game) ---------- */
+.farm-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border: 1.5px solid var(--border-strong, var(--text-primary));
+  border-radius: 16px;
+  overflow: hidden;
+  background: #153f33;
+  box-shadow: 6px 6px 0 var(--shadow-hard, rgba(255, 106, 31, 0.28));
+}
+
+.farm-canvas {
+  display: block;
+  touch-action: manipulation;
+  cursor: pointer;
+  image-rendering: auto;
+}
+
+.farm-toast {
+  position: absolute;
+  left: 50%;
+  top: 0.8rem;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 1.6rem);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid #012624;
+  background: #f3ebdd;
+  color: #013230;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  animation: farm-toast 0.25s ease-out;
+  pointer-events: none;
+}
+
+@keyframes farm-toast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+}
+
+.farm-shop {
+  position: absolute;
+  inset: 0.75rem;
+  margin: auto;
+  max-width: 26rem;
+  height: max-content;
+  max-height: calc(100% - 1.5rem);
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.1rem;
+  border-radius: 14px;
+  border: 1.5px solid #012624;
+  background: #f3ebdd;
+  color: #013230;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.farm-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(1, 50, 48, 0.07);
+}
+
+.farm-dot {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  border: 1.5px solid #013230;
+}
+
+.farm-buy {
+  flex: none;
+  min-width: 2.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  border: 1.5px solid #013230;
+  background: #ff6a1f;
+  color: #013230;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.farm-buy:disabled {
+  background: transparent;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.farm-x {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1.5px solid #013230;
+}
+
+.farm-hint {
+  margin-top: 0.9rem;
+  font-family: var(--stack-accent);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--accent);
+}
