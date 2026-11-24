@@ -237,6 +237,8 @@ interface Runtime {
   fy: number;
   path: [number, number][];
   face: 1 | -1;
+  /** which way Carlos looks: toward the camera, away from it, or sideways */
+  dir: "down" | "up" | "side";
   moving: boolean;
   pending: { x: number; y: number } | null;
   target: { x: number; y: number; life: number } | null;
@@ -357,6 +359,11 @@ const SPRITE_FILES = [
   "pumpkin-ripe",
   "melon-mid",
   "melon-ripe",
+  "seeds",
+  "sprout",
+  "carlos-front",
+  "carlos-back",
+  "carlos-side",
 ];
 const sprites: Record<string, HTMLImageElement> = {};
 
@@ -522,6 +529,7 @@ function drawCarlos(
   moving: boolean,
   t: number,
   asleep: boolean,
+  dir: "down" | "up" | "side",
 ) {
   const u = T / 16;
   const bob = moving
@@ -531,6 +539,19 @@ function drawCarlos(
   c.beginPath();
   c.ellipse(0, 6.5 * u, 5 * u, 1.8 * u, 0, 0, Math.PI * 2);
   c.fill();
+  const sprite =
+    sprites[dir === "up" ? "carlos-back" : dir === "side" ? "carlos-side" : "carlos-front"];
+  if (sprite) {
+    const size = T * 1.3;
+    c.save();
+    c.translate(0, -bob);
+    // the side sprite faces right; a little waddle while walking
+    if (dir === "side") c.scale(face, 1);
+    if (moving) c.rotate(Math.sin(t * 12) * 0.06);
+    c.drawImage(sprite, -size / 2, 7.2 * u - size, size, size);
+    c.restore();
+    return;
+  }
   c.save();
   c.translate(0, -bob);
   c.scale(face, 1);
@@ -821,7 +842,7 @@ function drawWorld(c: Ctx, rt: Runtime, T: number, vw: number, vh: number) {
     if (Math.round(py) === y) {
       c.save();
       c.translate(rt.fx * T + T / 2, rt.fy * T + T / 2);
-      drawCarlos(c, T, rt.face, rt.moving, t, rt.sleeping);
+      drawCarlos(c, T, rt.face, rt.moving, t, rt.sleeping, rt.dir);
       c.restore();
     }
   }
@@ -960,6 +981,7 @@ export function Farm() {
       fy: s.py,
       path: [],
       face: 1,
+      dir: "down",
       moving: false,
       pending: null,
       target: null,
@@ -1121,6 +1143,7 @@ export function Farm() {
       const kind = objectAt(p.x, p.y);
       if (kind) {
         rt.face = p.x < rt.s.px ? -1 : 1;
+        rt.dir = p.y < rt.s.py ? "up" : p.y > rt.s.py ? "down" : "side";
         actObject(kind);
       } else if (p.x === rt.s.px && p.y === rt.s.py) actTile(p.x, p.y);
     };
@@ -1249,6 +1272,7 @@ export function Farm() {
             rt.pending = null;
           }
           if (dx) rt.face = dx as 1 | -1;
+          rt.dir = dx ? "side" : dy < 0 ? "up" : "down";
           break;
         }
       }
@@ -1263,6 +1287,7 @@ export function Farm() {
         const step = SPEED * dt;
         if (dx > 0.01) rt.face = 1;
         else if (dx < -0.01) rt.face = -1;
+        if (dist > 0.01) rt.dir = Math.abs(dx) > Math.abs(dy) ? "side" : dy < 0 ? "up" : "down";
         if (dist <= step) {
           rt.fx = nx;
           rt.fy = ny;
