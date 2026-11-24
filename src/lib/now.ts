@@ -6,7 +6,7 @@ import { SIMPLE_TIMELINE } from "./career-data";
  */
 const ITEMS: { label: string; text: string; detail?: boolean }[] = [
   { label: "Leading", text: "A team of eight engineers at Concentrix TPS Philippines." },
-  { label: "Starting", text: "A new product initiative for Concentrix TPS Manila." },
+  { label: "Architecting", text: "ONEix, a customer-experience orchestration platform at Concentrix." },
   { label: "Building", text: "Akosi.Music NFC cards and a water-footprint tool with UP Diliman.", detail: true },
   { label: "Staying", text: "Hands-on: still in the architecture and the code." },
   { label: "Dreaming of", text: "A small farm, a rocking chair, a cat and a dog." },

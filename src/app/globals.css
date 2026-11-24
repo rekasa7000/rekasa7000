@@ -2832,3 +2832,23 @@ body {
     animation: none;
   }
 }
+
+/* ---------- Real product screenshot in a scene frame ---------- */
+.product-shot {
+  background: #f3ebdd;
+}
+
+.product-shot-img {
+  object-fit: cover;
+  object-position: 34% 0;
+  transition: transform 0.6s ease;
+}
+
+.product-shot:hover .product-shot-img {
+  transform: scale(1.04);
+}
+
+.product-shot-caption {
+  top: auto;
+  bottom: 0.8rem;
+}

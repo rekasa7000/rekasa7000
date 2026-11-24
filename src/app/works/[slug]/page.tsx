@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import { BlockHeading } from "@/components/showcase/about-me-visuals";
+import { OneixShot } from "@/components/showcase/product-shot";
 import { Carbon3D, Languages3D, Music3D, Rain3D, Water3D } from "@/components/three/garden-3d";
 import { CASE_STUDIES, visibleFacts, visibleResults } from "@/lib/case-studies";
 
@@ -59,7 +60,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               </dl>
             </div>
             <div className="md:col-span-6 h-[320px] md:h-[440px]">
-              <Scene />
+              {study.slug === "oneix" ? <OneixShot /> : <Scene />}
             </div>
           </div>
         </section>
