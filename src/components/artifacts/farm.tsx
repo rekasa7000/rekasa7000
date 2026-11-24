@@ -340,9 +340,35 @@ function hintFor(s: Save): string {
 
 type Ctx = CanvasRenderingContext2D;
 
+/**
+ * Painted sprites, used when the file exists; anything missing falls back to the drawn version.
+ * Files live in /public/images/farm, e.g. carrot-mid.webp, carrot-ripe.webp, seeds.webp, sprout.webp.
+ */
+const SPRITE_FILES = ["carrot-mid", "carrot-ripe"];
+const sprites: Record<string, HTMLImageElement> = {};
+
+function loadSprites() {
+  for (const name of SPRITE_FILES) {
+    if (sprites[name]) continue;
+    const img = new Image();
+    img.src = `/images/farm/${name}.webp`;
+    img.onload = () => {
+      sprites[name] = img;
+    };
+  }
+}
+
 function drawCrop(c: Ctx, id: CropId, stage: number, T: number, t: number) {
   // origin = tile centre bottom-ish
   const u = T / 16;
+  const sprite = sprites[stage === 0 ? "seeds" : stage === 1 ? "sprout" : `${id}-${stage === 2 ? "mid" : "ripe"}`];
+  if (sprite) {
+    // sprites sit on the bottom edge of their square; ripe crops stand a little taller and sway
+    const size = T * (stage === 3 ? 1.25 : stage === 2 ? 1.1 : 0.9);
+    if (stage === 3) c.rotate(Math.sin(t * 2.2) * 0.05);
+    c.drawImage(sprite, -size / 2, T * 0.42 - size, size, size);
+    return;
+  }
   c.lineCap = "round";
   if (stage === 0) {
     c.fillStyle = "#d9c9a3";
@@ -914,6 +940,7 @@ export function Farm() {
     if (!canvas || !wrap || !ctx) return;
 
     const s = loadSave();
+    loadSprites();
     const rt: Runtime = {
       s,
       fx: s.px,
