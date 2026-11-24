@@ -237,15 +237,15 @@ const ALL_ENTRIES: CareerEntry[] = [
       "Technical Lead | Jul 2026 – Present",
       "Software Developer | Aug 2025 – Jul 2026",
       "Lead a team of 8 at Concentrix TPS Philippines",
-      "ONEix: a CX orchestration platform, architected and built from the ground up",
+      "ONEix: a connected customer experience platform, architected and built from the ground up",
       "Zendesk translation connector: 100+ agents, 20+ languages",
       "10+ private Zendesk apps shipped for enterprise clients",
     ],
     homeDesc:
-      "Technical lead for an eight-person team, and architect of ONEix: one agent workspace in front of AI agents, human routing and ticketing.",
+      "Technical lead for an eight-person team, and architect of ONEix, where an AI agent answers customers first and a human picks up with the full story.",
     homeBullets: [
       "Lead a team of 8, myself plus 7 software developers, owning architecture decisions, code quality, and technical mentorship for the Concentrix TPS Philippines team.",
-      "Architecting and building ONEix, a new multi-tenant CX orchestration platform for Concentrix TPS Manila (MVP in progress): one agent workspace and one customer widget in front of NICE Cognigy AI agents, NICE CXone routing and telephony, and Zendesk ticketing.",
+      "Architecting and building ONEix, a new multi-tenant customer experience platform for Concentrix TPS Manila (MVP in progress): one agent workspace and a website call widget, where a NICE Cognigy AI agent answers first and hands over to a human agent over WebRTC, with Zendesk as the ticket system.",
       "Architected a productized Zendesk connector for a translation platform with an internal Romania-based team: OAuth 2.0/Azure AD B2C and real-time WebSocket/SignalR translation for 100+ agents across 20+ languages.",
       "Shipped 10+ private Zendesk apps to production for multiple enterprise clients, including document generation (PDF/Word receipts and verification slips), verification workflows, and signature capture.",
       "Built integration-as-a-service for an overseas banking client: a Render-hosted middleware that converts TikTok direct messages into Zendesk tickets via Sunshine Conversations, and an IVR automation that updates the client's IVR throughout the day, including agent skills, languages, and related settings.",

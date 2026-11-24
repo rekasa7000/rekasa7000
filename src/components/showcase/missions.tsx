@@ -19,10 +19,10 @@ type MissionMeta = {
 const META: Record<string, MissionMeta> = {
   concentrix: {
     codename: "One workspace",
-    headline: "Leading the team, and building ONEix: one workspace in front of AI agents, human routing and ticketing.",
+    headline: "Leading the team, and building ONEix: an AI agent answers first, a human picks up with the full story.",
     metrics: [
       { value: "8", label: "Engineers led" },
-      { value: "3", label: "Platforms behind ONEix" },
+      { value: "5", label: "Industries in the ONEix demo" },
       { value: "10+", label: "Zendesk apps shipped" },
     ],
     Screen: OneixShot,

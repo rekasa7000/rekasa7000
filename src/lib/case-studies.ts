@@ -38,7 +38,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     coverImage: "/images/works/oneix.png",
     title: "ONEix",
     tagline:
-      "One workspace for support teams, with AI agents, human routing and ticketing running behind it.",
+      "One connected customer experience: an AI agent answers first, and a human picks up with the full story already in front of them.",
     facts: [
       { label: "Role", value: "Architect and lead engineer" },
       { label: "Status", value: "MVP in progress" },
@@ -46,68 +46,50 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "Where", value: "Concentrix, Quezon City" },
     ],
     need: [
-      "A support team usually works across separate tools: one for AI agents, one for calls and queues, one for tickets.",
-      "ONEix gives each client one agent workspace and one customer widget, and runs those three platforms behind them.",
+      "A customer explains the problem to a bot, then again to a person, then again because the person has no history.",
+      "ONEix connects those steps: an AI agent answers first, and when a human takes over, the ticket and the whole conversation are already open in one workspace.",
     ],
     flow: [
-      {
-        step: "01",
-        title: "Customer",
-        detail: "Reaches out from the website by chat or a browser call.",
-      },
+      { step: "01", title: "Customer", detail: "Starts a call from the website through the ONEix call widget." },
       {
         step: "02",
-        title: "AI agent",
-        detail: "NICE Cognigy answers chats and calls first.",
+        title: "Ticket",
+        detail: "ONEix finds or creates the customer in Zendesk and opens a ticket for the call.",
       },
       {
         step: "03",
-        title: "Handover",
-        detail:
-          "NICE CXone routes the conversation to a human when one is needed.",
+        title: "AI agent",
+        detail: "A NICE Cognigy AI agent answers first. The call shows up live in the workspace.",
       },
       {
         step: "04",
-        title: "Workspace",
+        title: "Handover",
         detail:
-          "The agent works in ONEix. Replies and changes are written to Zendesk as that agent.",
+          "Every available agent gets a pop-up. The first to answer gets the call, with the AI conversation already on the ticket.",
       },
-      {
-        step: "05",
-        title: "Ticket",
-        detail:
-          "Zendesk stays the system of record, out of the client's sight.",
-      },
+      { step: "05", title: "Direct call", detail: "The agent's browser and the customer connect directly over WebRTC." },
     ],
     results: [
       {
         value: "3",
-        label: "Platforms orchestrated",
-        note: "NICE Cognigy, NICE CXone and Zendesk",
-      },
-      {
-        value: "1",
-        label: "Workspace for agents",
-        note: "In place of three separate tools",
-      },
-      {
-        value: "2",
         label: "Slices built so far",
-        note: "Ticketing and per-client connections; AI chat and voice are next",
+        note: "Ticketing, per-client connections, and website calls with AI handover",
       },
+      { value: "1", label: "Workspace for agents", note: "Tickets and live calls in one place" },
+      { value: "5", label: "Industries in the demo", note: "Banking, retail, travel, education and healthcare" },
     ],
     role: [
       {
         title: "Designed the architecture",
-        text: "A TypeScript monorepo: a REST API, a background worker, the agent workspace, and shared packages for accounts, tenancy and ticketing.",
+        text: "A TypeScript monorepo: a REST API, a background worker, the agent workspace, the customer-facing site with its call widget, and shared packages for accounts, tenancy and ticketing.",
       },
       {
         title: "Kept clients apart",
         text: "Each client has its own Zendesk connection with encrypted credentials, and every database query is scoped to the agent's client by the data layer itself.",
       },
       {
-        title: "Built the ticketing slice",
-        text: "A fast inbox served from a PostgreSQL cache kept fresh by webhooks and a five-minute backfill, with replies, notes and ticket forms that follow Zendesk's own rules.",
+        title: "Built ticketing and voice",
+        text: "A fast inbox served from a PostgreSQL cache kept fresh by webhooks and a five-minute backfill, and website calls where an AI agent hands over to a human without the customer repeating themselves.",
       },
     ],
     stack: [
@@ -118,8 +100,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Prisma",
       "Redis",
       "BullMQ",
+      "WebRTC",
       "Zendesk",
-      "NICE CXone",
       "NICE Cognigy",
     ],
   },

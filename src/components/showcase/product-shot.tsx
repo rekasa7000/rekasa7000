@@ -27,7 +27,7 @@ export function ProductShot({
 export const OneixShot = () => (
   <ProductShot
     src="/images/works/oneix.png"
-    alt="The ONEix agent workspace: a queue of conversations, an AI-handled chat, and an AI summary"
-    caption="ONEix agent workspace, demo data"
+    alt="The ONEix customer support demo: a banking fraud case with the call widget open"
+    caption="ONEix customer demo, sample data"
   />
 );
