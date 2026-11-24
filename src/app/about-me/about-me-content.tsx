@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { CarlosNote } from "@/components/carlos";
 import { Header } from "@/components/header";
 import { FadeInSection } from "@/components/motion-wrappers";
 import {
@@ -62,6 +63,9 @@ export function AboutMeContent() {
               <p className="text-lg md:text-xl max-w-md" style={{ color: "var(--text-secondary)" }}>
                 The person behind the code: where I started, what I believe, and where I&apos;m headed.
               </p>
+              <CarlosNote pose="desk" className="mt-10">
+                I&apos;m the cat. I supervise every commit from the desk and take credit for most of them.
+              </CarlosNote>
             </div>
             <div className="md:col-span-5">
               <SpeakerBadge />
