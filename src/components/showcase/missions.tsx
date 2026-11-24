@@ -6,7 +6,8 @@ import Link from "next/link";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { caseStudyForJob } from "@/lib/case-studies";
 import { SIMPLE_TIMELINE, WORK_ENTRIES } from "@/lib/career-data";
-import { Carbon3D, Languages3D, Music3D, Rain3D, Sprout3D, Water3D } from "@/components/three/garden-3d";
+import { Carbon3D, Music3D, Rain3D, Sprout3D, Water3D } from "@/components/three/garden-3d";
+import { OneixShot } from "./product-shot";
 
 type MissionMeta = {
   codename: string;
@@ -17,14 +18,14 @@ type MissionMeta = {
 
 const META: Record<string, MissionMeta> = {
   concentrix: {
-    codename: "Language garden",
-    headline: "Leading the team that builds Zendesk integrations and services for enterprise clients.",
+    codename: "One workspace",
+    headline: "Leading the team, and building ONEix: one workspace in front of AI agents, human routing and ticketing.",
     metrics: [
       { value: "8", label: "Engineers led" },
+      { value: "3", label: "Platforms behind ONEix" },
       { value: "10+", label: "Zendesk apps shipped" },
-      { value: "10K+", label: "Tickets migrated" },
     ],
-    Screen: Languages3D,
+    Screen: OneixShot,
   },
   "kloudtech-swe": {
     codename: "Rain field",

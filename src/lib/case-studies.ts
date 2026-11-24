@@ -31,6 +31,99 @@ export type CaseStudy = {
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
+    slug: "oneix",
+    job: "concentrix",
+    scene: "languages",
+    year: "2026–Present",
+    coverImage: "/images/works/oneix.png",
+    title: "ONEix",
+    tagline:
+      "One workspace for support teams, with AI agents, human routing and ticketing running behind it.",
+    facts: [
+      { label: "Role", value: "Architect and lead engineer" },
+      { label: "Status", value: "MVP in progress" },
+      { label: "When", value: "Oct 2026 – present" },
+      { label: "Where", value: "Concentrix, Quezon City" },
+    ],
+    need: [
+      "A support team usually works across separate tools: one for AI agents, one for calls and queues, one for tickets.",
+      "ONEix gives each client one agent workspace and one customer widget, and runs those three platforms behind them.",
+    ],
+    flow: [
+      {
+        step: "01",
+        title: "Customer",
+        detail: "Reaches out from the website by chat or a browser call.",
+      },
+      {
+        step: "02",
+        title: "AI agent",
+        detail: "NICE Cognigy answers chats and calls first.",
+      },
+      {
+        step: "03",
+        title: "Handover",
+        detail:
+          "NICE CXone routes the conversation to a human when one is needed.",
+      },
+      {
+        step: "04",
+        title: "Workspace",
+        detail:
+          "The agent works in ONEix. Replies and changes are written to Zendesk as that agent.",
+      },
+      {
+        step: "05",
+        title: "Ticket",
+        detail:
+          "Zendesk stays the system of record, out of the client's sight.",
+      },
+    ],
+    results: [
+      {
+        value: "3",
+        label: "Platforms orchestrated",
+        note: "NICE Cognigy, NICE CXone and Zendesk",
+      },
+      {
+        value: "1",
+        label: "Workspace for agents",
+        note: "In place of three separate tools",
+      },
+      {
+        value: "2",
+        label: "Slices built so far",
+        note: "Ticketing and per-client connections; AI chat and voice are next",
+      },
+    ],
+    role: [
+      {
+        title: "Designed the architecture",
+        text: "A TypeScript monorepo: a REST API, a background worker, the agent workspace, and shared packages for accounts, tenancy and ticketing.",
+      },
+      {
+        title: "Kept clients apart",
+        text: "Each client has its own Zendesk connection with encrypted credentials, and every database query is scoped to the agent's client by the data layer itself.",
+      },
+      {
+        title: "Built the ticketing slice",
+        text: "A fast inbox served from a PostgreSQL cache kept fresh by webhooks and a five-minute backfill, with replies, notes and ticket forms that follow Zendesk's own rules.",
+      },
+    ],
+    stack: [
+      "TypeScript",
+      "Next.js",
+      "NestJS",
+      "PostgreSQL",
+      "Prisma",
+      "Redis",
+      "BullMQ",
+      "Zendesk",
+      "NICE CXone",
+      "NICE Cognigy",
+    ],
+  },
+  {
     slug: "kloudtrack",
     project: "KloudTrack Weather System",
     job: "kloudtech-swe",
