@@ -1,5 +1,6 @@
 "use client";
 
+import { Carlos } from "@/components/carlos";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Galaxy2D } from "./galaxy-2d";
@@ -1543,6 +1544,12 @@ export function GalaxyMode() {
                 </div>
               ))}
             </nav>
+          )}
+
+          {view === "3d" && !selected && (
+            <div className="gx-carlos">
+              <Carlos pose="astronaut" size={84} float />
+            </div>
           )}
 
           {/* Legend */}

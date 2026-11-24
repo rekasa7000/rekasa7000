@@ -16,6 +16,7 @@ import { Missions } from "@/components/showcase/missions";
 import { SkillOrbit } from "@/components/showcase/skill-orbit";
 import { WorkGrid } from "@/components/showcase/work-grid";
 import { Guestbook } from "@/components/showcase/guestbook";
+import { Carlos, CarlosNote } from "@/components/carlos";
 import { CERTIFICATIONS, TICKER_TEXT } from "@/lib/career-data";
 import { NOW } from "@/lib/now";
 
@@ -437,6 +438,9 @@ export function HomeContent() {
           <section id="guestbook" className="py-24 border-t" style={{ borderColor: "var(--border-color)" }}>
             <SectionHeading index="05" title="Plant a flower" track="The visitors' field" />
             <Guestbook />
+            <CarlosNote pose="gardener" className="mt-10">
+              I water every flower planted here. Leave one and I&apos;ll look after it.
+            </CarlosNote>
           </section>
 
           {/* Contact Section */}
@@ -492,7 +496,15 @@ export function HomeContent() {
       {/* Footer */}
       <footer className="border-t mt-12" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-4">
-          <div className="meta-label">© {new Date().getFullYear()} Regee Casaña · Grown with care</div>
+          <div className="flex items-center gap-3">
+            <Carlos pose="sitting" size={44} />
+            <div className="meta-label">
+              © {new Date().getFullYear()} Regee Casaña · Grown with care
+              <span className="block mt-1" style={{ color: "var(--accent)" }}>
+                Guarded by Carlos
+              </span>
+            </div>
+          </div>
           <div className="flex items-center gap-5">
             <span className="meta-label">Playground</span>
             {["piano", "matrix", "snake", "farm"].map((slug) => (
