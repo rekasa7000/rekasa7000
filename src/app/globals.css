@@ -3407,3 +3407,37 @@ body {
   width: 0.85rem;
   height: 0.85rem;
 }
+
+/* ---------- Ways in to the farm game ---------- */
+.planet-land {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.6rem auto 0;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--on-accent, #013230);
+  background: var(--accent);
+  color: var(--on-accent, #013230);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.15s ease;
+}
+
+.planet-land:hover {
+  transform: translateY(-2px);
+}
+
+.carlos-door {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.carlos-door:hover {
+  transform: rotate(-8deg) scale(1.12);
+}

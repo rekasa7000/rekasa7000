@@ -500,7 +500,9 @@ export function HomeContent() {
       <footer className="border-t" style={{ borderColor: "var(--border-color)" }}>
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Carlos pose="sitting" size={44} />
+            <Link href="/farm" aria-label="Follow Carlos to his farm" title="Follow Carlos to his farm" className="carlos-door">
+              <Carlos pose="sitting" size={44} />
+            </Link>
             <div className="meta-label">
               © {new Date().getFullYear()} Regee Casaña · Grown with care
               <span className="block mt-1" style={{ color: "var(--accent)" }}>

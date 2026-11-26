@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Rocket } from "lucide-react";
 import { GardenPlanet } from "@/components/showcase/garden";
 import { CarbonTree, FirstSprout, LanguageGarden, RainField } from "@/components/showcase/plot-scenes";
 import { buildPlanet } from "./planet";
@@ -18,6 +20,9 @@ export function Planet3D({ className = "" }: { className?: string }) {
         fallback={<GardenPlanet className="w-full h-full" />}
       />
       <p className="meta-label planet-hint">Drag to spin the planet</p>
+      <Link href="/farm" className="planet-land">
+        <Rocket className="w-3.5 h-3.5" /> Land on the farm
+      </Link>
     </div>
   );
 }

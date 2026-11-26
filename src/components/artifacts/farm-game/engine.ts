@@ -200,7 +200,7 @@ export function createGame(
 
   let paused = false;
   let pestId = 0;
-  let pestT = 12;
+  let pestT = 24;
   let ufoT = 10;
   let meteorT = 0;
   let droneT = 3;
@@ -831,7 +831,7 @@ export function createGame(
     }
     const night = isNight();
     if (night && !wasNight) {
-      if (L >= 3) {
+      if (L >= 2) {
         w.shower = 5 + Math.min(7, L);
         meteorT = 4;
         say(
@@ -874,7 +874,7 @@ export function createGame(
     }
 
     // slugs
-    if (L >= 1) {
+    {
       pestT -= dt;
       if (pestT <= 0) {
         if (w.pests.length < Math.min(5, 2 + Math.floor(L / 3))) spawnPest();
@@ -957,7 +957,7 @@ export function createGame(
     }
 
     // UFOs
-    if (L >= 2 && (night || L >= 6)) {
+    if (L >= 1 && (night || L >= 5)) {
       ufoT -= dt;
       if (ufoT <= 0) {
         if (w.ufos.length < (L >= 9 ? 2 : 1)) spawnUfo();
