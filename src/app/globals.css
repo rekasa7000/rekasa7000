@@ -3083,3 +3083,327 @@ body {
   height: 1.05rem;
   background: url("/images/farm/coin.webp") center / contain no-repeat;
 }
+
+/* ---------- Carlos's space farm: the panel around the game ---------- */
+.farm-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 66rem;
+  height: calc(100vh - 61px);
+  height: calc(100dvh - 61px);
+  min-height: 30rem;
+  margin: 0 auto;
+  padding: 0.6rem 0.75rem 0.7rem;
+}
+
+.farm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.1rem;
+}
+
+.farm-stats,
+.farm-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.farm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.farm-chip[data-full="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.farm-tool {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.farm-tool:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong, var(--text-primary));
+}
+
+.farm-order {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.farm-order[data-urgent="true"] {
+  border-color: var(--accent);
+  animation: farm-urgent 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes farm-urgent {
+  to {
+    box-shadow: 0 0 0 3px rgba(255, 106, 31, 0.28);
+  }
+}
+
+.farm-order-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.farm-order-items {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.farm-want {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.55rem 0.15rem 0.3rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-color);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.farm-want[data-have="true"] {
+  border-color: var(--accent);
+}
+
+.farm-want[data-done="true"] {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--on-accent, #013230);
+}
+
+.farm-ico {
+  display: inline-block;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: center / contain no-repeat;
+}
+
+.farm-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: none;
+}
+
+.farm-timer-bar {
+  width: 4.5rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+
+.farm-timer-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.2s linear;
+}
+
+.farm-timer-num {
+  min-width: 2.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.farm-timer-free {
+  min-width: 0;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.farm-root .farm-stage {
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  background: #011a19;
+  box-shadow: none;
+}
+
+.farm-root .farm-canvas {
+  touch-action: none;
+  border-radius: 14px;
+}
+
+.farm-root .farm-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 1.4rem);
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(1, 26, 25, 0.82);
+  color: #f3ebdd;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  text-align: center;
+  pointer-events: none;
+}
+
+.farm-intro {
+  text-align: center;
+}
+
+.farm-rules {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.farm-rules li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.farm-rules svg {
+  justify-self: center;
+}
+
+.farm-play {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid #013230;
+  background: #ff6a1f;
+  color: #013230;
+  font-family: var(--stack-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 #013230;
+}
+
+.farm-play:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #013230;
+}
+
+.farm-pips {
+  display: flex;
+  gap: 0.2rem;
+  margin-top: 0.3rem;
+}
+
+.farm-pips i {
+  width: 0.9rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: rgba(1, 50, 48, 0.18);
+}
+
+.farm-pips i[data-on="true"] {
+  background: #ff6a1f;
+}
+
+.farm-seeds {
+  display: flex;
+  gap: 0.4rem;
+  min-height: 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 1px;
+}
+
+.farm-seed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+  padding: 0.3rem 0.75rem 0.3rem 0.45rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.farm-seed .farm-ico {
+  width: 2rem;
+  height: 2rem;
+}
+
+.farm-seed[data-active="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.farm-seed:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.farm-seed:disabled .farm-ico {
+  filter: grayscale(1);
+}
+
+.farm-seed-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.farm-seed-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.farm-seed-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.farm-seed-cost .farm-coin {
+  width: 0.85rem;
+  height: 0.85rem;
+}
