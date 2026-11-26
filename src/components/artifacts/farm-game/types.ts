@@ -1,4 +1,4 @@
-import type { CropId, ObjectKind, UpgradeId } from "./data";
+import type { CropId, ObjectKind, Stats, UpgradeId } from "./data";
 
 export interface Tile {
   c?: CropId;
@@ -6,6 +6,8 @@ export interface Tile {
   g: number;
   /** seconds of water left; growth stops at 0 */
   wet: number;
+  /** a rare golden crop: pays five times when harvested */
+  gold?: boolean;
 }
 
 export interface Order {
@@ -36,6 +38,11 @@ export interface Save {
   /** which one-time tips have been shown (bit flags) */
   tips: number;
   intro: boolean;
+  /** star power, 0 to 100 */
+  power: number;
+  /** earned badges, as bit flags into BADGES */
+  badges: number;
+  stats: Stats;
 }
 
 export interface Pest {
@@ -47,6 +54,9 @@ export interface Pest {
   state: "seek" | "eat" | "leave";
   t: number;
   seed: number;
+  /** hits left; the slug queen takes three */
+  hp: number;
+  queen?: boolean;
 }
 
 export interface Ufo {
@@ -72,6 +82,8 @@ export interface Pickup {
   y: number;
   value: number;
   life: number;
+  /** an orange dropped by a fruit tree (drawn differently from a star shard) */
+  fruit?: boolean;
 }
 
 export interface Particle {
@@ -132,6 +144,8 @@ export interface World {
   shake: number;
   fade: number;
   napping: boolean;
+  /** Carlos fishing: waiting for a bite, or a bite that must be tapped quickly */
+  fish: { state: "wait" | "bite"; t: number; x: number; y: number } | null;
   t: number;
 }
 
@@ -158,4 +172,7 @@ export interface Hud {
   hint: string;
   muted: boolean;
   intro: boolean;
+  power: number;
+  badges: number;
+  fishing: "wait" | "bite" | null;
 }

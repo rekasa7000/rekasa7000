@@ -607,6 +607,26 @@ export function drawWorld(c: Ctx, w: World, T: number, vw: number, vh: number) {
           x * T + T / 2 + (eaten ? Math.sin(t * 40) * u * 0.8 : 0),
           y * T + T / 2,
         );
+        if (tile.gold && tile.g >= 0.15) {
+          const gg = c.createRadialGradient(0, -2 * u, 0, 0, -2 * u, 11 * u);
+          gg.addColorStop(
+            0,
+            `rgba(255,215,106,${0.5 + 0.2 * Math.sin(t * 5 + x)})`,
+          );
+          gg.addColorStop(1, "rgba(255,215,106,0)");
+          c.fillStyle = gg;
+          c.fillRect(-11 * u, -13 * u, 22 * u, 22 * u);
+          c.fillStyle = "#fff3c4";
+          for (let k = 0; k < 3; k++) {
+            const a = t * 2 + (k * Math.PI * 2) / 3;
+            drawStar(
+              c,
+              Math.cos(a) * 7 * u,
+              -3 * u + Math.sin(a) * 5 * u,
+              1.5 * u,
+            );
+          }
+        }
         drawCrop(c, tile.c, tile.g, T, t + x);
         c.restore();
         if (tile.g >= 1) {
@@ -656,6 +676,28 @@ export function drawWorld(c: Ctx, w: World, T: number, vw: number, vh: number) {
       c.beginPath();
       c.ellipse(p.x * T, p.y * T + 4 * u, 3 * u, 1 * u, 0, 0, Math.PI * 2);
       c.fill();
+      if (p.fruit) {
+        c.fillStyle = "#ff8a2a";
+        c.strokeStyle = OUTLINE;
+        c.lineWidth = u * 0.8;
+        c.beginPath();
+        c.arc(p.x * T, p.y * T + bob * 0.4, 3 * u, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+        c.fillStyle = "#5fbf6a";
+        c.beginPath();
+        c.ellipse(
+          p.x * T + 1.6 * u,
+          p.y * T - 3 * u + bob * 0.4,
+          1.8 * u,
+          0.9 * u,
+          -0.6,
+          0,
+          Math.PI * 2,
+        );
+        c.fill();
+        continue;
+      }
       const glow = c.createRadialGradient(
         p.x * T,
         p.y * T - 2 * u + bob,
@@ -677,7 +719,30 @@ export function drawWorld(c: Ctx, w: World, T: number, vw: number, vh: number) {
       if (Math.floor(p.y) !== y) continue;
       c.save();
       c.translate(p.x * T, p.y * T);
+      if (p.queen) c.scale(1.8, 1.8);
       drawPest(c, T, t + p.seed, p.state === "eat");
+      if (p.queen) {
+        c.fillStyle = "#ffd76a";
+        c.strokeStyle = OUTLINE;
+        c.lineWidth = u * 0.5;
+        c.beginPath();
+        c.moveTo(-2.6 * u, -3.6 * u);
+        c.lineTo(-2.6 * u, -6.4 * u);
+        c.lineTo(-1.2 * u, -5 * u);
+        c.lineTo(0, -6.8 * u);
+        c.lineTo(1.2 * u, -5 * u);
+        c.lineTo(2.6 * u, -6.4 * u);
+        c.lineTo(2.6 * u, -3.6 * u);
+        c.closePath();
+        c.fill();
+        c.stroke();
+        for (let k = 0; k < 3; k++) {
+          c.fillStyle = k < p.hp ? "#ff6a1f" : "rgba(243,235,221,0.35)";
+          c.beginPath();
+          c.arc((k - 1) * 2.4 * u, -9 * u, 0.9 * u, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
       c.restore();
     }
     if (py === y) {
@@ -685,6 +750,40 @@ export function drawWorld(c: Ctx, w: World, T: number, vw: number, vh: number) {
       c.translate(w.fx * T + T / 2, w.fy * T + T / 2);
       drawCarlos(c, w, T);
       c.restore();
+    }
+  }
+
+  // fishing line and bobber
+  if (w.fish) {
+    const bx = w.fish.x * T;
+    const by =
+      w.fish.y * T +
+      Math.sin(t * (w.fish.state === "bite" ? 26 : 3)) *
+        u *
+        (w.fish.state === "bite" ? 1.6 : 0.8);
+    c.strokeStyle = "rgba(243,235,221,0.9)";
+    c.lineWidth = u * 0.5;
+    c.beginPath();
+    c.moveTo(w.fx * T + T / 2, w.fy * T + T / 2 - 9 * u);
+    c.quadraticCurveTo((w.fx * T + T / 2 + bx) / 2, by - 12 * u, bx, by);
+    c.stroke();
+    c.fillStyle = "#ff6a1f";
+    c.strokeStyle = OUTLINE;
+    c.lineWidth = u * 0.7;
+    c.beginPath();
+    c.arc(bx, by, 1.8 * u, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+    if (w.fish.state === "bite") {
+      c.fillStyle = "#ffd76a";
+      c.beginPath();
+      c.arc(bx, by - 9 * u, 4.2 * u, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+      c.fillStyle = OUTLINE;
+      c.font = `900 ${Math.round(6.5 * u)}px sans-serif`;
+      c.textAlign = "center";
+      c.fillText("!", bx, by - 6.8 * u);
     }
   }
 

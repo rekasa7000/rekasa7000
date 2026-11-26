@@ -1,6 +1,9 @@
 import { Sfx } from "./audio";
 import {
   CROPS,
+  zeroStats,
+  SOLIDS,
+  BADGES,
   CROP_IDS,
   CROP_MAP,
   CYCLE,
@@ -41,6 +44,8 @@ export interface GameApi {
   setMuted(muted: boolean): void;
   setPaused(paused: boolean): void;
   reset(): void;
+  /** spend a full star-power meter */
+  nova(): void;
 }
 
 export interface Callbacks {
@@ -103,6 +108,9 @@ function freshSave(): Save {
     py: 4,
     tips: 0,
     intro: false,
+    power: 0,
+    badges: 0,
+    stats: zeroStats(),
   };
 }
 
@@ -118,6 +126,7 @@ function loadSave(): Save {
         v: 3,
         bag: { ...base.bag, ...p.bag },
         up: { ...base.up, ...p.up },
+        stats: { ...base.stats, ...p.stats },
         tiles: p.tiles ?? {},
       };
       if (solidAt(merged.px, merged.py)) {
@@ -157,6 +166,7 @@ export function createGame(
     setMuted() {},
     setPaused() {},
     reset() {},
+    nova() {},
   };
   const maybeCtx = canvas.getContext("2d");
   if (!maybeCtx) return noop;
@@ -195,6 +205,7 @@ export function createGame(
     shake: 0,
     fade: 0,
     napping: false,
+    fish: null,
     t: 0,
   };
 
@@ -207,6 +218,12 @@ export function createGame(
   let combo = 0;
   let comboT = 0;
   let ripeSoundT = 0;
+  let fruitT = 12;
+  let badgeT = 1;
+  let queenFor = 0;
+  const FRUIT_TREES = SOLIDS.map((k, i) => (k === "fruit" ? i : -1)).filter(
+    (i) => i >= 0,
+  );
   let wasNight = s.clock >= DAY_SECS;
   const keys = new Set<string>();
 
@@ -296,6 +313,10 @@ export function createGame(
   };
 
   const hintFor = (): string => {
+    if (w.fish)
+      return w.fish.state === "bite"
+        ? "A bite! Tap the pond now!"
+        : "Fishing... wait for the bite.";
     if (s.launches >= 4) return "";
     const tiles = Object.values(s.tiles);
     const crops = tiles.filter((t) => t.c);
@@ -354,6 +375,9 @@ export function createGame(
               ? 1.6 - w.rocket.t
               : 0,
       up: { ...s.up },
+      power: s.power,
+      badges: s.badges,
+      fishing: w.fish?.state ?? null,
       hint: hintFor(),
       muted: s.muted,
       intro: s.intro,
@@ -361,6 +385,15 @@ export function createGame(
   };
 
   // ── farming ──
+  const addPower = (n: number) => {
+    const before = s.power;
+    s.power = Math.min(100, s.power + n);
+    if (before < 100 && s.power >= 100) {
+      say("Star power is ready. Tap the star button!");
+      sfx.play("buy");
+    }
+  };
+
   const plant = (x: number, y: number) => {
     let crop = CROP_MAP[s.selected];
     if (crop.unlock > s.launches) crop = CROP_MAP.turnip;
@@ -371,6 +404,7 @@ export function createGame(
     }
     s.coins -= crop.cost;
     s.tiles[idx(x, y)] = { c: crop.id, g: 0, wet: wetSecs() };
+    if (s.launches >= 1 && Math.random() < 0.07) s.tiles[idx(x, y)].gold = true;
     burst(x + 0.5, y + 0.6, 6, "#7a5536", 1.8, 7, 1.5, 0.35);
     sfx.play("plant");
   };
@@ -404,6 +438,17 @@ export function createGame(
     }
     const crop = CROP_MAP[tile.c];
     s.bag[tile.c] += 1;
+    s.stats.harvest += 1;
+    addPower(1);
+    if (tile.gold) {
+      const bonus = crop.sell * 5;
+      s.coins += bonus;
+      s.stats.gold += 1;
+      delete tile.gold;
+      float(x + 0.5, y - 0.7, `Golden! +${bonus}`, "#ffd76a", true);
+      burst(x + 0.5, y + 0.2, 14, "#ffd76a", 3.4, 4, 1.8, 0.7);
+      sfx.play("coin");
+    }
     delete tile.c;
     tile.g = 0;
     combo = comboT > 0 ? combo + 1 : 1;
@@ -494,9 +539,52 @@ export function createGame(
     w.path = [];
   };
 
+  const fishAct = () => {
+    const fish = w.fish;
+    if (!fish) {
+      const spot = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ].find(([dx, dy]) => solidAt(s.px + dx, s.py + dy) === "pond");
+      if (!spot) return;
+      w.moving = false;
+      w.fish = {
+        state: "wait",
+        t: 1.2 + Math.random() * 3,
+        x: s.px + spot[0] * 1.1 + 0.5,
+        y: s.py + spot[1] * 1.1 + 0.5,
+      };
+      sfx.play("water");
+      return;
+    }
+    if (fish.state === "bite") {
+      const star = Math.random() < 0.12;
+      const coins = (6 + 2 * s.launches) * (star ? 5 : 1);
+      s.coins += coins;
+      s.stats.fish += 1;
+      addPower(star ? 40 : 12);
+      float(
+        fish.x,
+        fish.y - 0.5,
+        star ? `Star fish! +${coins}` : `+${coins}`,
+        "#ffd76a",
+        true,
+      );
+      burst(fish.x, fish.y, 10, "#7fd0ee", 2.6, 7, 1.5, 0.5);
+      sfx.play("pickup");
+    } else {
+      float(fish.x, fish.y - 0.5, "Too soon", "#ff9d7a");
+      sfx.play("deny");
+    }
+    w.fish = null;
+  };
+
   const actObject = (kind: ObjectKind) => {
     if (kind === "stall") cb.onShop();
     else if (kind === "rocket") deliver();
+    else if (kind === "pond") fishAct();
     else nap();
     syncHud();
   };
@@ -510,22 +598,46 @@ export function createGame(
   const killPest = (id: number, reward: boolean) => {
     const pest = w.pests.find((p) => p.id === id);
     if (!pest) return;
+    if (pest.hp > 1) {
+      // the queen takes three hits, and each one knocks her back
+      pest.hp -= 1;
+      const away = Math.atan2(pest.y - pcy(), pest.x - pcx());
+      pest.x = Math.max(1.5, Math.min(W - 1.5, pest.x + Math.cos(away) * 1.6));
+      pest.y = Math.max(1.5, Math.min(H - 1.5, pest.y + Math.sin(away) * 1.6));
+      pest.state = "seek";
+      burst(pest.x, pest.y, 8, "#8f6fd6", 3, 5, 1.8, 0.5);
+      float(pest.x, pest.y - 0.9, `${pest.hp} more!`, "#f3ebdd");
+      sfx.play("zap");
+      w.shake = Math.max(w.shake, 2);
+      return;
+    }
     w.pests = w.pests.filter((p) => p.id !== id);
+    s.stats.slugs += 1;
+    addPower(pest.queen ? 40 : 6);
+    if (pest.queen) {
+      s.stats.queens += 1;
+      w.shake = Math.max(w.shake, 5);
+      say("The slug queen is gone!");
+    }
     burst(pest.x, pest.y, 12, "#8f6fd6", 3, 5, 1.8, 0.5);
     sfx.play("zap");
     if (reward) {
-      const coins = 1 + Math.floor(s.launches / 3);
+      const coins = pest.queen
+        ? 25 + 5 * s.launches
+        : 1 + Math.floor(s.launches / 3);
       s.coins += coins;
       float(pest.x, pest.y - 0.4, `+${coins}`, "#ffd76a", true);
     }
   };
 
-  const spawnPest = () => {
+  const spawnPest = (queen = false) => {
     const free = cropTiles().filter((i) => !w.pests.some((p) => p.tile === i));
     if (!free.length) return;
     const side = Math.floor(Math.random() * 4);
     w.pests.push({
       id: ++pestId,
+      hp: queen ? 3 : 1,
+      queen,
       x: side === 0 ? 0.6 : side === 1 ? W - 0.6 : 1 + Math.random() * (W - 2),
       y: side === 2 ? 0.6 : side === 3 ? H - 0.6 : 1 + Math.random() * (H - 2),
       tile: free[Math.floor(Math.random() * free.length)],
@@ -682,8 +794,8 @@ export function createGame(
       const near = w.pests.find(
         (p) => Math.hypot(p.x - pcx(), p.y - pcy()) < 1.6,
       );
-      const obj = (["rocket", "stall", "house"] as ObjectKind[]).find((kind) =>
-        adjacent(s.px, s.py, kind),
+      const obj = (["rocket", "stall", "house", "pond"] as ObjectKind[]).find(
+        (kind) => adjacent(s.px, s.py, kind),
       );
       if (near) killPest(near.id, true);
       else if (obj) actObject(obj);
@@ -908,7 +1020,7 @@ export function createGame(
           p.y += ((ty - p.y) / d) * step;
         }
       } else if (p.state === "eat" && tile?.c) {
-        tile.g -= dt * 0.12;
+        tile.g -= dt * (p.queen ? 0.3 : 0.12);
         if (Math.random() < dt * 5)
           burst(p.x, p.y - 0.2, 1, "#5fbf6a", 1.6, 6, 1.2, 0.35);
         if (tile.g <= 0) {
@@ -993,6 +1105,8 @@ export function createGame(
           u.scared = true;
           w.pickups.push({ x: tx, y: ty, value: 6 + 2 * L, life: 22 });
           float(tx, ty - 1.6, "Shoo!", "#bfe8b0");
+          s.stats.ufos += 1;
+          addPower(15);
           sfx.play("zap");
         } else if (u.t >= 5) {
           burst(tx, ty, 10, CROP_MAP[tile.c].color, 2, -6, 1.6, 0.7);
@@ -1043,6 +1157,7 @@ export function createGame(
       if (Math.hypot(pcx() - p.x, pcy() - p.y) < 0.8) {
         p.life = 0;
         s.coins += p.value;
+        addPower(p.fruit ? 3 : 20);
         float(p.x, p.y - 0.5, `+${p.value}`, "#ffd76a", true);
         burst(p.x, p.y, 8, "#ffd76a", 2.4, 3, 1.5, 0.5);
         sfx.play("pickup");
@@ -1084,9 +1199,77 @@ export function createGame(
       } else if (r.t >= 1.6) {
         w.rocket = { state: "pad", t: 0 };
         s.order = makeOrder(s.launches);
+        if (
+          s.launches > 0 &&
+          s.launches % 4 === 0 &&
+          queenFor !== s.launches &&
+          cropTiles().length
+        ) {
+          queenFor = s.launches;
+          spawnPest(true);
+          say("The slug queen is here! She takes three hits.");
+        }
         burst(ROCKET.x + 0.5, ROCKET.y + 0.8, 10, "#d8cdbb", 2.4, 2, 2.2, 0.6);
         w.shake = Math.max(w.shake, 2);
       }
+    }
+
+    // fruit trees drop an orange now and then
+    fruitT -= dt;
+    if (fruitT <= 0) {
+      fruitT = 14 + Math.random() * 10;
+      if (w.pickups.filter((p) => p.fruit).length < 3 && FRUIT_TREES.length) {
+        const tree =
+          FRUIT_TREES[Math.floor(Math.random() * FRUIT_TREES.length)];
+        const spots = [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+        ]
+          .map(([dx, dy]) => [(tree % W) + dx, Math.floor(tree / W) + dy])
+          .filter(([x, y]) => !solidAt(x, y));
+        if (spots.length) {
+          const [x, y] = spots[Math.floor(Math.random() * spots.length)];
+          w.pickups.push({
+            x: x + 0.5,
+            y: y + 0.5,
+            value: 3 + L,
+            life: 30,
+            fruit: true,
+          });
+        }
+      }
+    }
+
+    // fishing: wait, then a short window to tap
+    if (w.fish) {
+      const near = adjacent(s.px, s.py, "pond");
+      if (!near || w.moving) w.fish = null;
+      else {
+        w.fish.t -= dt;
+        if (w.fish.t <= 0) {
+          if (w.fish.state === "wait") {
+            w.fish = { ...w.fish, state: "bite", t: 0.9 };
+            burst(w.fish.x, w.fish.y, 6, "#d6f0e8", 1.8, 6, 1.3, 0.4);
+            sfx.play("pluck", 8);
+          } else {
+            float(w.fish.x, w.fish.y - 0.5, "Got away", "#ff9d7a");
+            w.fish = null;
+          }
+        }
+      }
+    }
+
+    // badges
+    badgeT -= dt;
+    if (badgeT <= 0) {
+      badgeT = 1;
+      BADGES.forEach((badge, i) => {
+        if (s.badges & (1 << i) || !badge.test(s)) return;
+        s.badges |= 1 << i;
+        say(`Badge earned: ${badge.name}`);
+        sfx.play("buy");
+      });
     }
 
     updatePlayer(dt);
@@ -1173,6 +1356,46 @@ export function createGame(
       save();
       sfx.close();
     },
+    nova() {
+      if (s.power < 100 || !s.intro) {
+        sfx.play("deny");
+        return;
+      }
+      s.power = 0;
+      s.stats.novas += 1;
+      for (const pest of [...w.pests]) {
+        pest.hp = 1;
+        killPest(pest.id, true);
+      }
+      for (const u of w.ufos) {
+        if (u.state === "out") continue;
+        u.state = "out";
+        u.t = 0;
+        u.scared = true;
+      }
+      w.meteors = [];
+      w.shower = 0;
+      for (const [key, tile] of Object.entries(s.tiles)) {
+        if (!tile.c) continue;
+        tile.g = 1;
+        const i = Number(key);
+        burst(
+          (i % W) + 0.5,
+          Math.floor(i / W) + 0.3,
+          5,
+          "#ffd76a",
+          2.6,
+          3,
+          1.6,
+          0.7,
+        );
+      }
+      w.shake = 6;
+      sfx.play("boom");
+      sfx.play("coin");
+      say("Star power! The whole field is ripe.");
+      syncHud();
+    },
     start() {
       sfx.unlock();
       s.intro = true;
@@ -1225,6 +1448,8 @@ export function createGame(
       w.craters = [];
       w.rocket = { state: "pad", t: 0 };
       w.rain = 0;
+      w.fish = null;
+      queenFor = 0;
       w.shower = 0;
       w.stun = 0;
       wasNight = false;
