@@ -16,9 +16,12 @@ import {
   VolumeX,
   Wrench,
   X,
+  BookOpen,
+  ChevronRight,
 } from "lucide-react";
 import { BADGES, CROPS, UPGRADES } from "./farm-game/data";
 import { createGame, type GameApi } from "./farm-game/engine";
+import { CHAPTERS, SPEAKER_NAME } from "./farm-game/story";
 import type { Hud } from "./farm-game/types";
 
 /**
@@ -38,6 +41,13 @@ export function Farm() {
   const toastId = useRef(0);
   const [hud, setHud] = useState<Hud | null>(null);
   const [shop, setShop] = useState(false);
+  const [journal, setJournal] = useState(false);
+  // the chapter on screen; `replay` means it was opened from the journal and unlocks nothing
+  const [story, setStory] = useState<{
+    chapter: number;
+    line: number;
+    replay: boolean;
+  } | null>(null);
   const [toast, setToast] = useState<{ id: number; text: string } | null>(null);
 
   useEffect(() => {
@@ -51,6 +61,7 @@ export function Farm() {
         setToast({ id: toastId.current, text });
       },
       onShop: () => setShop(true),
+      onStory: (chapter) => setStory({ chapter, line: 0, replay: false }),
     });
     api.current = game;
     return () => {
@@ -60,8 +71,8 @@ export function Farm() {
   }, []);
 
   useEffect(() => {
-    api.current?.setPaused(shop);
-  }, [shop]);
+    api.current?.setPaused(shop || journal || !!story);
+  }, [shop, journal, story]);
 
   useEffect(() => {
     if (!toast) return;
@@ -77,6 +88,18 @@ export function Farm() {
     )
       api.current?.reset();
   };
+
+  const endStory = () => {
+    if (story && !story.replay) api.current?.storyDone();
+    setStory(null);
+  };
+  const nextLine = () => {
+    if (!story) return;
+    if (story.line + 1 >= CHAPTERS[story.chapter].lines.length) endStory();
+    else setStory({ ...story, line: story.line + 1 });
+  };
+  const line = story ? CHAPTERS[story.chapter].lines[story.line] : null;
+  const overlay = shop || journal || !!story;
 
   const order = hud?.order;
   const urgent = !!order && order.total > 0 && order.time < 15;
@@ -129,6 +152,13 @@ export function Farm() {
               </span>
             </div>
             <div className="farm-tools">
+              <button
+                className="farm-tool"
+                onClick={() => setJournal(true)}
+                aria-label="Story so far"
+              >
+                <BookOpen className="w-4 h-4" />
+              </button>
               <button
                 className="farm-tool"
                 onClick={() => setShop(true)}
@@ -224,7 +254,7 @@ export function Farm() {
           className="farm-canvas"
           aria-label="The farm. Tap a tile to send Carlos there."
         />
-        {hud?.intro && !shop && (
+        {hud?.intro && !overlay && (
           <button
             className="farm-nova"
             data-ready={hud.power >= 100}
@@ -244,7 +274,7 @@ export function Farm() {
             {toast.text}
           </div>
         )}
-        {hud?.intro && hud.hint && !shop && (
+        {hud?.intro && hud.hint && !overlay && (
           <p className="farm-hint" aria-live="polite">
             {hud.hint}
           </p>
@@ -291,6 +321,124 @@ export function Farm() {
             <button className="farm-play" onClick={() => api.current?.start()}>
               Play
             </button>
+          </div>
+        )}
+
+        {story && line && (
+          <div
+            className="farm-story"
+            role="dialog"
+            aria-label={`Chapter ${story.chapter + 1}`}
+            onClick={nextLine}
+          >
+            <div className="farm-story-box" data-who={line.who}>
+              <p className="meta-label farm-story-chapter">
+                Chapter {story.chapter + 1} · {CHAPTERS[story.chapter].title}
+              </p>
+              <div className="farm-story-row">
+                {line.who === "carlos" && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="farm-face"
+                    src={`/images/carlos/${line.pose ?? "sitting"}.webp`}
+                    alt=""
+                  />
+                )}
+                {line.who === "radio" && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="farm-face farm-face-radio"
+                    src="/logo.svg"
+                    alt=""
+                  />
+                )}
+                {line.who === "queen" && (
+                  <span
+                    className="farm-face farm-face-queen"
+                    aria-hidden="true"
+                  />
+                )}
+                <div className="min-w-0 flex-1">
+                  {SPEAKER_NAME[line.who] && (
+                    <p className="farm-story-name">{SPEAKER_NAME[line.who]}</p>
+                  )}
+                  <p
+                    key={`${story.chapter}-${story.line}`}
+                    className="farm-story-text"
+                  >
+                    {line.text}
+                  </p>
+                </div>
+              </div>
+              <div className="farm-story-foot">
+                <button
+                  className="farm-story-skip"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    endStory();
+                  }}
+                >
+                  Skip
+                </button>
+                <span className="farm-story-next">
+                  {story.line + 1}/{CHAPTERS[story.chapter].lines.length}{" "}
+                  <ChevronRight className="w-4 h-4" />
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {journal && hud && (
+          <div className="farm-shop" role="dialog" aria-label="Story so far">
+            <div className="flex items-center justify-between mb-3">
+              <span className="font-display text-xl">The story so far</span>
+              <button
+                className="farm-x"
+                onClick={() => setJournal(false)}
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {CHAPTERS.map((ch, i) =>
+                i < hud.chapter ? (
+                  <button
+                    key={ch.title}
+                    className="farm-row farm-chapter"
+                    onClick={() => {
+                      setJournal(false);
+                      setStory({ chapter: i, line: 0, replay: true });
+                    }}
+                  >
+                    <span className="farm-chapter-num">{i + 1}</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm font-semibold">
+                        {ch.title}
+                      </span>
+                      <span className="block text-xs" style={{ opacity: 0.75 }}>
+                        {ch.summary}
+                      </span>
+                    </span>
+                    <ChevronRight className="w-4 h-4 flex-none" />
+                  </button>
+                ) : (
+                  <div
+                    key={ch.title}
+                    className="farm-row farm-chapter"
+                    style={{ opacity: 0.5 }}
+                  >
+                    <span className="farm-chapter-num">
+                      <Lock className="w-3 h-3" />
+                    </span>
+                    <span className="text-sm">
+                      Chapter {i + 1} unlocks at launch {ch.at}
+                    </span>
+                  </div>
+                ),
+              )}
+            </div>
           </div>
         )}
 
