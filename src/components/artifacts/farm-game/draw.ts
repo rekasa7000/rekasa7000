@@ -202,6 +202,76 @@ function drawPest(c: Ctx, T: number, t: number, eating: boolean) {
   c.restore();
 }
 
+/** the dog from the last chapter: tan, floppy ears, orange collar */
+function drawDog(c: Ctx, T: number, t: number, face: number, moving: boolean) {
+  const u = T / 16;
+  const bob = moving ? Math.abs(Math.sin(t * 14)) * u * 1.4 : 0;
+  c.fillStyle = "rgba(0,0,0,0.25)";
+  c.beginPath();
+  c.ellipse(0, 4.5 * u, 5 * u, 1.6 * u, 0, 0, Math.PI * 2);
+  c.fill();
+  c.save();
+  c.translate(0, -bob);
+  c.scale(face, 1);
+  c.strokeStyle = OUTLINE;
+  c.lineWidth = u * 0.9;
+  c.lineJoin = "round";
+  c.lineCap = "round";
+  // tail, wagging
+  c.strokeStyle = "#c98a4b";
+  c.lineWidth = u * 1.8;
+  c.beginPath();
+  c.moveTo(-4.5 * u, 0);
+  c.lineTo(-7 * u, -3 * u + Math.sin(t * 16) * u * 1.6);
+  c.stroke();
+  c.strokeStyle = OUTLINE;
+  c.lineWidth = u * 0.9;
+  // legs
+  c.fillStyle = "#c98a4b";
+  for (const lx of [-3, 2.4]) {
+    const swing = moving ? Math.sin(t * 14 + lx) * u : 0;
+    c.beginPath();
+    c.roundRect(lx * u + swing, 1.5 * u, 1.8 * u, 3.2 * u, u * 0.7);
+    c.fill();
+    c.stroke();
+  }
+  // body
+  c.beginPath();
+  c.ellipse(-0.5 * u, 0.3 * u, 5 * u, 3.1 * u, 0, 0, Math.PI * 2);
+  c.fill();
+  c.stroke();
+  c.fillStyle = "#f3ebdd";
+  c.beginPath();
+  c.ellipse(0.5 * u, 1.4 * u, 2.6 * u, 1.5 * u, 0, 0, Math.PI * 2);
+  c.fill();
+  // collar
+  c.fillStyle = "#ff6a1f";
+  c.fillRect(2.4 * u, -2.6 * u, 1.4 * u, 3.4 * u);
+  // head
+  c.fillStyle = "#c98a4b";
+  c.beginPath();
+  c.ellipse(5 * u, -3.4 * u, 3.4 * u, 3 * u, 0, 0, Math.PI * 2);
+  c.fill();
+  c.stroke();
+  c.fillStyle = "#f3ebdd";
+  c.beginPath();
+  c.ellipse(7 * u, -2.5 * u, 1.9 * u, 1.5 * u, 0, 0, Math.PI * 2);
+  c.fill();
+  c.stroke();
+  // ear, eye, nose
+  c.fillStyle = "#8a5a2e";
+  c.beginPath();
+  c.ellipse(3.4 * u, -3.6 * u, 1.5 * u, 2.8 * u, 0.35, 0, Math.PI * 2);
+  c.fill();
+  c.stroke();
+  c.fillStyle = OUTLINE;
+  c.beginPath();
+  c.arc(5.8 * u, -4.2 * u, 0.6 * u, 0, Math.PI * 2);
+  c.arc(8.4 * u, -3 * u, 0.7 * u, 0, Math.PI * 2);
+  c.fill();
+  c.restore();
+}
+
 function drawRocket(c: Ctx, T: number, t: number, flame: number) {
   // origin = centre of the pad, at ground level
   const u = T / 16;
@@ -749,6 +819,13 @@ export function drawWorld(c: Ctx, w: World, T: number, vw: number, vh: number) {
       c.save();
       c.translate(w.fx * T + T / 2, w.fy * T + T / 2);
       drawCarlos(c, w, T);
+      c.restore();
+    }
+    if (w.dog && Math.floor(w.dog.y) === y) {
+      c.save();
+      c.translate(w.dog.x * T, w.dog.y * T);
+      c.scale(1.45, 1.45);
+      drawDog(c, T, t, w.dog.face, w.dog.moving);
       c.restore();
     }
   }

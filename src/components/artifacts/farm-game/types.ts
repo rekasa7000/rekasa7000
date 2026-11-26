@@ -43,6 +43,8 @@ export interface Save {
   /** earned badges, as bit flags into BADGES */
   badges: number;
   stats: Stats;
+  /** index of the next story chapter to play */
+  chapter: number;
 }
 
 export interface Pest {
@@ -146,6 +148,8 @@ export interface World {
   napping: boolean;
   /** Carlos fishing: waiting for a bite, or a bite that must be tapped quickly */
   fish: { state: "wait" | "bite"; t: number; x: number; y: number } | null;
+  /** the dog who arrives when the story ends: he fetches whatever falls */
+  dog: { x: number; y: number; face: 1 | -1; moving: boolean } | null;
   t: number;
 }
 
@@ -175,4 +179,5 @@ export interface Hud {
   power: number;
   badges: number;
   fishing: "wait" | "bite" | null;
+  chapter: number;
 }

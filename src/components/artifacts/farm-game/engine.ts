@@ -22,6 +22,7 @@ import {
   type UpgradeId,
 } from "./data";
 import { drawWorld, loadSprites } from "./draw";
+import { CHAPTERS, TRUCE } from "./story";
 import type { Hud, Order, Save, Task, World } from "./types";
 
 const KEY = "rekasa-farm-v3";
@@ -46,12 +47,15 @@ export interface GameApi {
   reset(): void;
   /** spend a full star-power meter */
   nova(): void;
+  storyDone(): void;
 }
 
 export interface Callbacks {
   onHud(hud: Hud): void;
   onToast(text: string): void;
   onShop(): void;
+  /** a story chapter is ready: show it, then call storyDone() */
+  onStory(chapter: number): void;
 }
 
 const zeroCounts = () =>
@@ -111,6 +115,7 @@ function freshSave(): Save {
     power: 0,
     badges: 0,
     stats: zeroStats(),
+    chapter: 0,
   };
 }
 
@@ -127,6 +132,10 @@ function loadSave(): Save {
         bag: { ...base.bag, ...p.bag },
         up: { ...base.up, ...p.up },
         stats: { ...base.stats, ...p.stats },
+        // a save from before the story existed skips the chapters it has already passed
+        chapter:
+          p.chapter ??
+          CHAPTERS.filter((ch) => ch.at < (p.launches ?? 0)).length,
         tiles: p.tiles ?? {},
       };
       if (solidAt(merged.px, merged.py)) {
@@ -167,6 +176,7 @@ export function createGame(
     setPaused() {},
     reset() {},
     nova() {},
+    storyDone() {},
   };
   const maybeCtx = canvas.getContext("2d");
   if (!maybeCtx) return noop;
@@ -206,6 +216,7 @@ export function createGame(
     fade: 0,
     napping: false,
     fish: null,
+    dog: null,
     t: 0,
   };
 
@@ -219,6 +230,7 @@ export function createGame(
   let comboT = 0;
   let ripeSoundT = 0;
   let fruitT = 12;
+  let storyOpen = false;
   let badgeT = 1;
   let queenFor = 0;
   const FRUIT_TREES = SOLIDS.map((k, i) => (k === "fruit" ? i : -1)).filter(
@@ -378,6 +390,7 @@ export function createGame(
       power: s.power,
       badges: s.badges,
       fishing: w.fish?.state ?? null,
+      chapter: s.chapter,
       hint: hintFor(),
       muted: s.muted,
       intro: s.intro,
@@ -992,6 +1005,7 @@ export function createGame(
         if (w.pests.length < Math.min(5, 2 + Math.floor(L / 3))) spawnPest();
         pestT =
           Math.max(7, 20 - 1.3 * L) *
+          (s.chapter > TRUCE ? 1.7 : 1) *
           (night ? 0.6 : 1) *
           (0.7 + Math.random() * 0.6);
       }
@@ -1152,9 +1166,37 @@ export function createGame(
     w.craters = w.craters.filter((cr) => cr.life > 0);
 
     // things to pick up
+    // the dog runs to whatever has fallen, and otherwise trots after Carlos
+    if (s.chapter >= CHAPTERS.length && !w.dog)
+      w.dog = { x: ROCKET.x + 0.5, y: ROCKET.y + 1.5, face: 1, moving: false };
+    const dog = w.dog;
+    if (dog) {
+      const target = w.pickups.reduce<{ x: number; y: number } | null>(
+        (best, p) =>
+          !best ||
+          Math.hypot(p.x - dog.x, p.y - dog.y) <
+            Math.hypot(best.x - dog.x, best.y - dog.y)
+            ? p
+            : best,
+        null,
+      );
+      const gx = target ? target.x : pcx() - w.face * 0.9;
+      const gy = target ? target.y : pcy() + 0.35;
+      const d = Math.hypot(gx - dog.x, gy - dog.y);
+      dog.moving = d > 0.25;
+      if (dog.moving) {
+        const step = Math.min(d, (target ? 7 : 5.5) * dt);
+        dog.x += ((gx - dog.x) / d) * step;
+        dog.y += ((gy - dog.y) / d) * step;
+        if (Math.abs(gx - dog.x) > 0.05) dog.face = gx > dog.x ? 1 : -1;
+      }
+    }
     for (const p of w.pickups) {
       p.life -= dt;
-      if (Math.hypot(pcx() - p.x, pcy() - p.y) < 0.8) {
+      if (
+        Math.hypot(pcx() - p.x, pcy() - p.y) < 0.8 ||
+        (dog && Math.hypot(dog.x - p.x, dog.y - p.y) < 0.5)
+      ) {
         p.life = 0;
         s.coins += p.value;
         addPower(p.fruit ? 3 : 20);
@@ -1202,6 +1244,7 @@ export function createGame(
         if (
           s.launches > 0 &&
           s.launches % 4 === 0 &&
+          s.launches < 8 &&
           queenFor !== s.launches &&
           cropTiles().length
         ) {
@@ -1299,7 +1342,20 @@ export function createGame(
       }
     } else {
       w.fade = Math.max(0, w.fade - dt * 1.4);
-      if (!paused && s.intro) update(dt);
+      if (!paused && s.intro) {
+        // the next chapter plays once the rocket is back on its pad
+        const next = CHAPTERS[s.chapter];
+        if (
+          next &&
+          !storyOpen &&
+          next.at <= s.launches &&
+          w.rocket.state === "pad"
+        ) {
+          storyOpen = true;
+          keys.clear();
+          cb.onStory(s.chapter);
+        } else if (!storyOpen) update(dt);
+      }
     }
 
     for (const p of w.particles) {
@@ -1355,6 +1411,13 @@ export function createGame(
       window.removeEventListener("pagehide", onHide);
       save();
       sfx.close();
+    },
+    storyDone() {
+      if (!storyOpen) return;
+      storyOpen = false;
+      s.chapter += 1;
+      save();
+      syncHud();
     },
     nova() {
       if (s.power < 100 || !s.intro) {
@@ -1450,6 +1513,8 @@ export function createGame(
       w.rain = 0;
       w.fish = null;
       queenFor = 0;
+      w.dog = null;
+      storyOpen = false;
       w.shower = 0;
       w.stun = 0;
       wasNight = false;
