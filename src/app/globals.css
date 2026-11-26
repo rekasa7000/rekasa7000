@@ -3441,3 +3441,68 @@ body {
 .carlos-door:hover {
   transform: rotate(-8deg) scale(1.12);
 }
+
+/* ---------- Space farm: star power button and badges ---------- */
+.farm-nova {
+  position: absolute;
+  right: 0.7rem;
+  top: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 999px;
+  border: 2px solid #012624;
+  color: #f3ebdd;
+  background: conic-gradient(#ff6a1f var(--p, 0%), rgba(1, 26, 25, 0.85) 0);
+  box-shadow: inset 0 0 0 0.3rem rgba(1, 26, 25, 0.85);
+}
+
+.farm-nova[data-ready="true"] {
+  color: #013230;
+  background: #ffd76a;
+  box-shadow: 0 0 0 0 rgba(255, 215, 106, 0.7);
+  animation: farm-nova 0.9s ease-out infinite;
+}
+
+@keyframes farm-nova {
+  to {
+    box-shadow: 0 0 0 1rem rgba(255, 215, 106, 0);
+  }
+}
+
+.farm-badges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.farm-badge {
+  padding: 0.4rem 0.55rem;
+  border-radius: 10px;
+  border: 1.5px dashed rgba(1, 50, 48, 0.3);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  opacity: 0.55;
+}
+
+.farm-badge small {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.farm-badge[data-on="true"] {
+  border: 1.5px solid #013230;
+  background: #ffd76a;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .farm-nova[data-ready="true"],
+  .farm-order[data-urgent="true"] {
+    animation: none;
+  }
+}

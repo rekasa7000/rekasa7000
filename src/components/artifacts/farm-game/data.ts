@@ -158,7 +158,7 @@ export type Solid =
   | "pond"
   | "rock"
   | "lantern";
-export type ObjectKind = "house" | "stall" | "rocket";
+export type ObjectKind = "house" | "stall" | "rocket" | "pond";
 
 /** lamp posts: they block the way and glow after dark */
 export const LANTERNS: [number, number][] = [
@@ -209,7 +209,9 @@ export const solidAt = (x: number, y: number): Solid | null =>
   x < 0 || y < 0 || x >= W || y >= H ? "void" : SOLIDS[y * W + x];
 export const objectAt = (x: number, y: number): ObjectKind | null => {
   const s = solidAt(x, y);
-  return s === "house" || s === "stall" || s === "rocket" ? s : null;
+  return s === "house" || s === "stall" || s === "rocket" || s === "pond"
+    ? s
+    : null;
 };
 
 /** stable pseudo-random number per pair, for stars, ripples and scatter */
@@ -258,3 +260,100 @@ export function bfs(
   }
   return null;
 }
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+
+export interface Stats {
+  harvest: number;
+  slugs: number;
+  ufos: number;
+  fish: number;
+  gold: number;
+  queens: number;
+  novas: number;
+}
+
+export const zeroStats = (): Stats => ({
+  harvest: 0,
+  slugs: 0,
+  ufos: 0,
+  fish: 0,
+  gold: 0,
+  queens: 0,
+  novas: 0,
+});
+
+interface Progress {
+  launches: number;
+  best: number;
+  stats: Stats;
+  up: Record<UpgradeId, number>;
+}
+
+/** at most 30 entries: earned badges are stored as bit flags */
+export const BADGES: {
+  name: string;
+  desc: string;
+  test: (p: Progress) => boolean;
+}[] = [
+  {
+    name: "Lift-off",
+    desc: "Launch your first rocket.",
+    test: (p) => p.launches >= 1,
+  },
+  {
+    name: "Regular route",
+    desc: "Launch 5 rockets.",
+    test: (p) => p.launches >= 5,
+  },
+  {
+    name: "Space trucker",
+    desc: "Launch 12 rockets.",
+    test: (p) => p.launches >= 12,
+  },
+  {
+    name: "Hot streak",
+    desc: "5 on-time launches in a row.",
+    test: (p) => p.best >= 5,
+  },
+  {
+    name: "Green paws",
+    desc: "Harvest 150 crops.",
+    test: (p) => p.stats.harvest >= 150,
+  },
+  {
+    name: "Midas",
+    desc: "Harvest 5 golden crops.",
+    test: (p) => p.stats.gold >= 5,
+  },
+  {
+    name: "Slug buster",
+    desc: "Chase off 25 slugs.",
+    test: (p) => p.stats.slugs >= 25,
+  },
+  {
+    name: "Queen slayer",
+    desc: "Defeat a slug queen.",
+    test: (p) => p.stats.queens >= 1,
+  },
+  {
+    name: "Not today",
+    desc: "Scare away 5 UFOs.",
+    test: (p) => p.stats.ufos >= 5,
+  },
+  {
+    name: "Gone fishing",
+    desc: "Catch 10 fish.",
+    test: (p) => p.stats.fish >= 10,
+  },
+  {
+    name: "Supernova",
+    desc: "Use star power 3 times.",
+    test: (p) => p.stats.novas >= 3,
+  },
+  {
+    name: "Fully kitted",
+    desc: "Max out every upgrade.",
+    test: (p) => UPGRADES.every((u) => p.up[u.id] >= u.costs.length),
+  },
+];

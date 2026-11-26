@@ -17,7 +17,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { CROPS, UPGRADES } from "./farm-game/data";
+import { BADGES, CROPS, UPGRADES } from "./farm-game/data";
 import { createGame, type GameApi } from "./farm-game/engine";
 import type { Hud } from "./farm-game/types";
 
@@ -224,6 +224,21 @@ export function Farm() {
           className="farm-canvas"
           aria-label="The farm. Tap a tile to send Carlos there."
         />
+        {hud?.intro && !shop && (
+          <button
+            className="farm-nova"
+            data-ready={hud.power >= 100}
+            onClick={() => api.current?.nova()}
+            aria-label={
+              hud.power >= 100
+                ? "Use star power"
+                : `Star power ${Math.floor(hud.power)}%`
+            }
+            style={{ "--p": `${hud.power}%` } as React.CSSProperties}
+          >
+            <Sparkles className="w-5 h-5" />
+          </button>
+        )}
         {toast && (
           <div key={toast.id} className="farm-toast" role="status">
             {toast.text}
@@ -270,7 +285,7 @@ export function Farm() {
               </li>
               <li>
                 <Sparkles className="w-5 h-5" />
-                Chase off slugs and UFOs. Dodge meteors at night.
+                Chase off slugs and UFOs, dodge meteors, fish in the pond.
               </li>
             </ul>
             <button className="farm-play" onClick={() => api.current?.start()}>
@@ -334,6 +349,23 @@ export function Farm() {
                   </div>
                 );
               })}
+            </div>
+            <p className="meta-label mt-4 mb-2">
+              Badges {BADGES.filter((_, i) => hud.badges & (1 << i)).length}/
+              {BADGES.length}
+            </p>
+            <div className="farm-badges">
+              {BADGES.map((b, i) => (
+                <span
+                  key={b.name}
+                  className="farm-badge"
+                  data-on={!!(hud.badges & (1 << i))}
+                  title={b.desc}
+                >
+                  {b.name}
+                  <small>{b.desc}</small>
+                </span>
+              ))}
             </div>
             {hud.best > 1 && (
               <p className="text-xs mt-3" style={{ opacity: 0.75 }}>
